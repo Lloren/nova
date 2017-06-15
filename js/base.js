@@ -47,7 +47,7 @@ function Settings(save_key, def_data){
 		}
 	};
 }
-window.settings = new Settings(false, '{"sort":"price","show_external_conf":true,"full_map_settings":true,"time_display":"at","extra_rout":"","expanded_results":true}');
+window.settings = new Settings(false, "{}");
 
 var last_touch = {x: 0, y:0, trigger:""};
 function set_touch(e, trigger){
@@ -264,7 +264,7 @@ function iads(){
 	this.failed_at = 0;
 	this.active = false;
 	this.priority = 1;
-
+	
 	this.init = function(){
 		if (!this.loaded){
 			this.loaded = true;
@@ -292,14 +292,14 @@ function iads(){
 			this.dshow();
 		}
 	};
-
+	
 	this.dshow = function (){
 		var s = this;
 		setTimeout(function (){
 			s.show();
 		}, 1000);
 	};
-
+	
 	this.show = function(){
 		if (this.priority <= ad_manager.pri_active && !this.active){
 			ad_manager.pri_active = this.priority;
@@ -310,7 +310,7 @@ function iads(){
 			}, 1000);
 		}
 	};
-
+	
 	this.hide = function(){
 		if (this.active){
 			ad_manager.pri_active = 999;
@@ -327,7 +327,7 @@ function admob(){
 	this.failed_at = 0;
 	this.active = false;
 	this.priority = 2;
-
+	
 	this.init = function(){
 		if (!this.loaded){
 			this.loaded = true;
@@ -342,7 +342,7 @@ function admob(){
 				isTesting: dev,
 				adExtras: {color_bg: "333333"}
 			});
-
+			
 			document.addEventListener("onAdFailLoad", function(data) {
 				scope.failed_at = new Date().getTime();
 				ad_manager.ad_fail("AdMob");
@@ -357,14 +357,14 @@ function admob(){
 			this.dshow();
 		}
 	};
-
+	
 	this.dshow = function (){
 		var s = this;
 		setTimeout(function (){
 			s.show();
 		}, 1000);
 	};
-
+	
 	this.show = function(){
 		if (this.priority <= ad_manager.pri_active && !this.active){
 			ad_manager.pri_active = this.priority;
@@ -375,7 +375,7 @@ function admob(){
 			}, 1000);
 		}
 	};
-
+	
 	this.hide = function(){
 		if (this.active){
 			ad_manager.pri_active = 999;
@@ -391,7 +391,7 @@ function house_ads(){
 	this.failed_at = 0;
 	this.active = false;
 	this.priority = 3;
-
+	
 	this.init = function(){
 		if (!this.loaded) {
 			this.loaded = true;
@@ -399,17 +399,17 @@ function house_ads(){
 			this.show();
 		}
 	};
-
+	
 	this.dshow = function (){
 		var s = this;
 		setTimeout(function (){
 			s.show();
 		}, 5000);
 	};
-
+	
 	this.show = function(){
 	};
-
+	
 	this.hide = function(){
 	};
 }
@@ -417,7 +417,7 @@ function house_ads(){
 function admanager() {
 	this.ads = {"iads": new iads(), "AdMob": new admob(), "house": new house_ads()};
 	this.pri_active = 999;
-
+	
 	this.init = function(){
 		for (var key in this.ads){
 			if (this.ads[key].available){
@@ -426,7 +426,7 @@ function admanager() {
 			}
 		}
 	};
-
+	
 	this.ad_fail = function(who){
 		this.ads[who].hide();
 		for(var key in this.ads){
@@ -436,7 +436,7 @@ function admanager() {
 			}
 		}
 	};
-
+	
 	this.hide_others = function(who){
 		if (this.ads[who].priority <= this.pri_active){
 			for(var key in this.ads){
@@ -491,24 +491,24 @@ function on_ready(){
 		if (typeof device != "undefined"){
 			navigator.splashscreen.show();
 			thePlatform = device.platform.toLowerCase();
-
+			
 			GA.startTrackerWithId(ga_code);
 			track("Load", "load");
-
+			
 			has_internet = navigator.connection.type != Connection.NONE;
-
+			
 			if(ads){
 				ad_manager = new admanager();
 				ad_manager.init();
 			}
-
+			
 			var ver = device.version.split(".");
 			document.body.className = "v"+ver[0]+" version"+device.version.replace(/\./g, "_");
-
+			
 			uuid = device.uuid;
 			
 			cordova.plugins.Keyboard.disableScroll(true);
-
+			
 			//if (fb_app_id)
 			//	FB.init({appId: fb_app_id, nativeInterface: CDV.FB, useCachedDialogs: false});
 		} else {
@@ -566,15 +566,15 @@ function onunload(){
 
 $(function () {
 	if (!dev)
-		$(".dev").remove();
-
+		$(".dev").hide();
+	
 	jQuery["postJSON"] = function( url, data, callback ) {
 		// shift arguments if data argument was omitted
 		if ( jQuery.isFunction( data ) ) {
 			callback = data;
 			data = undefined;
 		}
-
+		
 		return jQuery.ajax({
 			url: url,
 			type: "POST",
@@ -594,4 +594,13 @@ $(function () {
 	$(document).on("touchend", ".touch_click", function(e){
 		$(this).click();
 	});
+	
+	if (typeof AppVersion != "undefined"){
+		$(".version").html("("+AppVersion.version+")");
+		$(".build").html(AppVersion.build);
+	} else {
+		var device = device_info();
+		$(".version").html(device.version);
+	}
+	
 });
