@@ -159,6 +159,13 @@ function startup(){
 	});
 
 	$("#song_upload_form").on("submit", function (){
+		window.plugins.mediapicker.getAudio(function (data){
+			console.log("song data", data);
+		},function (error){
+			console.log("error", error);
+		}, false, true, "song to upload");
+
+		return false;
 		var form_data = new FormData($(this)[0]);
 		console.log(form_data);
 		$.ajax({

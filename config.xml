@@ -81,6 +81,8 @@
 	<gap:plugin name="cordova-plugin-camera" source="npm" />
 	<gap:plugin name="cordova-plugin-file-transfer" source="npm" />
 
+	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
+
 	<gap:plugin name="cordova-plugin-facebook4" source="npm">
 		<param name="APP_ID" value="884526071687505" /><!--170066436859871-->
 		<param name="APP_NAME" value="Nova" />
