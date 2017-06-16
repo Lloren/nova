@@ -161,6 +161,23 @@ function startup(){
 	$("#song_upload_form").on("submit", function (){
 		window.plugins.mediapicker.getAudio(function (data){
 			console.log("song data", data);
+			open_modala("Uploading");
+			console.log(imageURI);
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = data.exportedurl.substr(data.exportedurl.lastIndexOf('/') + 1);
+			options.params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "new_song", band_id: $("#band_dashboard").data("band_id")};
+			options.chunkedMode = false;
+			console.log(options);
+
+			var ft = new FileTransfer();
+			ft.upload(data.exportedurl, base_url+"/ajax/settings.php", function(result){
+				close_modala();
+				console.log(JSON.stringify(result));
+			}, function(error){
+				close_modala();
+				console.log(JSON.stringify(error));
+			}, options);
 		},function (error){
 			console.log("error", error);
 		}, false, true, "song to upload");
