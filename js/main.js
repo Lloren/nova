@@ -7,6 +7,11 @@ function open_band_dashboard(band_id){
 		$("#band_dashboard .profile_image").attr("src", data.image);
 		$("#band_dashboard .profile_name").html(data.name);
 		$("#band_dashboard .change_photo").data("id", data.id);
+		var song_html = "";
+		for (var i=0;i<data.songs.length;i++){
+			song_html += template(song_list, data.songs[i]);
+		}
+		$("#band_dashboard #dash_songs").html(song_html);
 		page("band_dashboard");
 	});
 }
@@ -156,53 +161,54 @@ function startup(){
 			destinationType: navigator.camera.DestinationType.FILE_URI,
 			sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
 		});
-	});
+	}, true);
 
+	var saved_song_data = false;
 	function upload_song(data){
 		console.log("song data", data);
 		open_modala("Uploading");
 		var options = new FileUploadOptions();
 		options.fileKey = "file";
 		options.fileName = data.exportedurl.substr(data.exportedurl.lastIndexOf('/') + 1);
-		options.params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "new_song", band_id: $("#band_dashboard").data("band_id")};
+		options.params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "new_song", name: $("#song_name").val(), band_id: $("#band_dashboard").data("band_id")};
 		options.chunkedMode = false;
 		console.log(options);
 
 		var ft = new FileTransfer();
 		ft.upload(data.exportedurl, base_url+"/ajax/settings.php", function(result){
 			close_modala();
-			console.log(JSON.stringify(result));
+			saved_song_data = false;
+			$("#song_name").val("");
+			console.log(result);
 		}, function(error){
 			close_modala();
-			console.log(JSON.stringify(error));
+			console.log(error);
 		}, options);
 	}
 
-	$("#song_upload_form").on("submit", function (){
+	click_event("#song_button", function (e){
 		window.plugins.mediapicker.getAudio(function (data){
-			setTimeout(function (){
-				upload_song(data);
-			}, 100);
+			saved_song_data = data;
 		},function (error){
 			console.log("error", error);
 		}, false, true, "song to upload");
+	});
 
-		return false;
-		var form_data = new FormData($(this)[0]);
-		console.log(form_data);
-		$.ajax({
-			type:"POST",
-			url: base_url+"/ajax/settings.php?action=new_song&user_id="+settings.get("user_id")+'&uuid='+settings.get("uuid")+"&band_id="+$("#band_dashboard").data("band_id"),
-			data:form_data,
-			contentType: false,
-			processData: false,
-			error:function (jqXHR, textStatus, errorThrown) {
-				alert("Failed to upload file", jqXHR, textStatus, errorThrown);
-			},
-			success:function (data) {
-				console.log("File uploaded", data);
-			}
-		})
+	click_event("#song_submit", function (e){
+		var mess = [];
+		if ($("#song_name").val() == ""){
+			mess.push("You need to enter a song name");
+		}
+		if (!saved_song_data){
+			mess.push("You need to select a song");
+		}
+		if (mess.length == 0){
+			setTimeout(function (){
+				upload_song(saved_song_data);
+			}, 10);
+		} else {
+			open_modal({title: "Error"+(mess.length > 1?"s":""), content:"<div>"+mess.join("</div><div>")+"</div>"});
+		}
 	});
 	
 	click_event("#band_create", function (e){

@@ -46,6 +46,12 @@
 			##name##
 		</div>
 	</div>
+	<div data-key="song_list">
+		<div>
+			<img class="change_photo" src="##image_url##" data-id="##id##">
+			<span>##name##</span>
+		</div>
+	</div>
 </div>
 
 <div id="cont">
@@ -185,11 +191,12 @@
 			<div class="profile_name"></div>
 			<i class="fa fa-camera change_photo" data-action="band_image" data-id="" aria-hidden="true"></i>
 		</div>
-		<form id="song_upload_form">
-			<input type="text" name="name" placeholder="Name" />
-			<input type="file" name="song" id="upload_song" />
-			<input type="submit" name="submit" value="Upload Song" />
-		</form>
+		<div id="dash_songs">
+
+		</div>
+		<input type="button" id="song_button" value="Select Song" />
+		<input type="text" id="song_name" placeholder="Name" />
+		<input type="button" id="song_submit" value="Upload Song" />
 	</div>
 
 	<div id="footer">
