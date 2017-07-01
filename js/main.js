@@ -9,10 +9,10 @@ function open_band_dashboard(band_id){
 		$("#band_dashboard .change_photo").data("id", data.id);
 		var song_html = "";
 		for (var i=0;i<data.songs.length;i++){
-			song_html += template(song_list, data.songs[i]);
+			song_html += template("song_list", data.songs[i]);
 		}
 		$("#band_dashboard #dash_songs").html(song_html);
-		page("band_dashboard");
+		open_page("band_dashboard");
 	});
 }
 
@@ -25,7 +25,7 @@ function save_settings(){
 }
 
 var pages = [];
-function page(key){
+function open_page(key){
 	if ($("#"+key).data("back")){
 		pages = [];
 		if ($("#"+key).data("back") == "hide")
@@ -64,7 +64,7 @@ function startup(){
 					settings.set("user_id", data.user_id);
 					$(".logged_in").show();
 					$(".logged_out").hide();
-					page("discover");
+					open_page("discover");
 				}
 				login_responce(data);
 				console.log("fb Result: ", data);
@@ -87,7 +87,7 @@ function startup(){
 			}
 			if (data.user_id){
 				settings.set("user_id", data.user_id);
-				page("discover");
+				open_page("discover");
 			}
 		});
 	});
@@ -105,7 +105,7 @@ function startup(){
 			}
 			if (data.user_id){
 				settings.set("user_id", data.user_id);
-				page("discover");
+				open_page("discover");
 			}
 		});
 	});
@@ -120,7 +120,7 @@ function startup(){
 				band_html += template("band_list", data.bands[i]);
 			}
 			$("#settings_bands").html(band_html);
-			page("your_profile");
+			open_page("your_profile");
 		});
 	}, true);
 	
@@ -129,7 +129,7 @@ function startup(){
 			$("#profile .profile_background").css("background-image", "url("+data.image+")");
 			$("#profile .profile_image").attr("src", data.image);
 			$("#profile .profile_name").html(data.name);
-			page("profile");
+			open_page("profile");
 		});
 	}, true);
 
@@ -238,7 +238,7 @@ function startup(){
 			$("#band .profile_background").css("background-image", "url("+data.image+")");
 			$("#band .profile_image").attr("src", data.image);
 			$("#band .profile_name").html(data.name);
-			page("band");
+			open_page("band");
 		});
 	}, true);
 
@@ -248,20 +248,20 @@ function startup(){
 	
 	click_event("#head_back", function (e){
 		if ($(".page:visible").data("back")){
-			page($(".page:visible").data("back"));
+			open_page($(".page:visible").data("back"));
 		} else if (pages.length > 0){
-			page(pages.pop());
+			open_page(pages.pop());
 		}
 	});
 
 	click_event(".open_page", function (e){
 		$("#menu-overlay").trigger("click_event");
-		page($(e.currentTarget).data("page"));
+		open_page($(e.currentTarget).data("page"));
 	}, true, true);
 	
 	
 	if (settings.get("user_id") > 0){
-		page("discover");
+		open_page("discover");
 		$(".logged_in").show();
 		$(".logged_out").hide();
 	} else {

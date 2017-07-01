@@ -71,6 +71,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 #head_back{
 	float: left;
 	font-size: 30px;
+	padding: 0 10px;
 }
 
 #discover_nav{
