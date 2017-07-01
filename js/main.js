@@ -40,6 +40,8 @@ function page(key){
 	$("#"+key).show();
 }
 
+var saved_song_data = false;
+
 function startup(){
 	console.log("startup");
 	if (!has_internet){
@@ -163,7 +165,6 @@ function startup(){
 		});
 	}, true);
 
-	var saved_song_data = false;
 	function upload_song(data){
 		console.log("song data", data);
 		open_modala("Uploading");
@@ -189,6 +190,11 @@ function startup(){
 	click_event("#song_button", function (e){
 		window.plugins.mediapicker.getAudio(function (data){
 			saved_song_data = data;
+			setTimeout(function (){
+				if ($("#song_name").val() == ""){
+					$("#song_name").val(saved_song_data.title);
+				}
+			}, 10);
 		},function (error){
 			console.log("error", error);
 		}, false, true, "song to upload");
