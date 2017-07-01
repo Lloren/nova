@@ -1,7 +1,7 @@
 "use strict"
 
 function open_band_dashboard(band_id){
-	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id}, function (data){
+	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, action:'dashboard'}, function (data){
 		$("#band_dashboard").data("band_id", data.id);
 		$("#band_dashboard .profile_background").css("background-image", "url("+data.image+")");
 		$("#band_dashboard .profile_image").attr("src", data.image);
