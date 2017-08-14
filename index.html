@@ -12,7 +12,7 @@
 	<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' gap://ready file:; style-src * 'self' 'unsafe-inline' 'unsafe-eval'; script-src * 'self' 'unsafe-inline' 'unsafe-eval'; media-src *; img-src * data: 'unsafe-inline'">
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 
-	<link rel="stylesheet" type="text/css" href="css/font-awesome-4.2.0.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
 
 	<script>
@@ -52,14 +52,66 @@
 			<span>##name##</span>
 		</div>
 	</div>
+	<div data-key="full_list">
+		<div class="list_song play_song" data-id="##song_id##">
+			<img src="##image_url##">
+			<div class="full_list_cont">
+				<div class="song_name"><span>##num##</span>. ##name##</div>
+				<div class="band_name">##band_name##</div>
+			</div>
+		</div>
+	</div>
+	<div data-key="search_results">
+		<div class="search_item##added##">
+			<img src="##image_url##">
+			<div class="search_text">##text##</div>
+		</div>
+	</div>
+	<div data-key="search_result_group">
+		<div class="search_result_group">##name##</div>
+	</div>
+	<div data-key="song_disp">
+		<div class="song ##add_class##" data-song_id="##id##" data-id="##data_id##">
+			<div class="profile_image_cont">
+				<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
+				<img class="profile_image" src="##image_url##">
+				<i class="fa fa-pause-circle-o stop_audio" aria-hidden="true"></i>
+				<i class="fa fa-cog song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" aria-hidden="true"></i>
+			</div>
+			<div class="song_info">
+				<div class="song_playback">
+					<div class="song_played"></div>
+				</div>
+				<div class="song_name">##name##</div>
+				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
+				<div class="song_controls">
+					<div class="song_pass">
+						<i class="fa fa-check" aria-hidden="true"></i>
+					</div><div class="song_like">
+						<i class="fa fa-times" aria-hidden="true"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div id="cont">
 	<div id="header">
-		<div id="head_back" style="display: none;">
-			<
+		<div id="head_left">
+			<div id="head_back" style="display: none;">
+				<
+			</div>
 		</div>
 		<img id="header_logo" src="images/header_logo.png" />
+		<div id="header_admin" class="open_page is_admin" data-page="admin" data-on_open="load_admin">
+			<i class="fa fa-cog" aria-hidden="true"></i>
+		</div>
+		<div id="head_right">
+			<div id="head_search">
+				<i class="fa fa-search open_page" data-page="search"></i>
+			</div>
+		</div>
 	</div>
 
 	<div id="modal-overlay"></div>
@@ -83,6 +135,13 @@
 		</ul>
 	</div>
 
+	<div class="page" id="admin">
+		<h3>Admin</h3>
+		<div id="admin_bands">
+
+		</div>
+	</div>
+
 	<div class="page" id="login" style="display: block;">
 		<a class="fb_login">BF Login</a>
 		<input type="text" id="login_email" placeholder="Email" />
@@ -100,13 +159,22 @@
 		<a class="open_page" data-page="login">Login</a>
 	</div>
 
-	<div class="page" id="discover" data-back="hide">
-		Logged In
+	<div class="page" id="search">
+		<input id="search_field" type="text" placeholder="Search" autocomplete="off" />
+		<div id="search_results">
+
+		</div>
+	</div>
+
+	<div class="page" id="discover" data-on_open="load_discover" data-back="hide">
+		<div id="discover_songs">
+			Loading...
+		</div>
 		<div id="discover_nav">
 			<div class="nav_item open_profile_yours">
 				<img src="images/icon_1.png" />
 			</div>
-			<div class="nav_item">
+			<div class="nav_item open_page" data-page="featured">
 				<img src="images/icon_2.png" />
 			</div>
 			<div class="nav_item">
@@ -157,6 +225,7 @@
 	</div>
 
 	<div class="page" id="settings" data-back="your_profile">
+		<a class="logout">Logout</a>
 		<input id="settings_name" type="text" value="" placeholder="name" />
 		<input id="settings_password" type="password" value="" placeholder="New password" />
 		<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" />
@@ -182,6 +251,50 @@
 			<div class="profile_name"></div>
 			<i class="fa fa-cog band_panel" data-band_id="" aria-hidden="true"></i>
 		</div>
+		<div style="margin:10px 0;">
+			<div class="circle_value">
+				<div class="circle_cont">
+					<div class="circle_back"></div>
+					<div class="circle_outer"></div>
+					<div class="circle_inner"><div class="center">123</div></div>
+				</div>
+				<div class="circle_sub">Followers</div>
+			</div>
+			<div class="circle_value">
+				<div class="circle_cont">
+					<div class="circle_back"></div>
+					<div class="circle_outer"></div>
+					<div class="circle_inner"><div class="center">$1,234</div></div>
+				</div>
+				<div class="circle_sub">Donations</div>
+			</div>
+			<div class="circle_value">
+				<div class="circle_cont">
+					<div class="circle_back"></div>
+					<div class="circle_outer"></div>
+					<div class="circle_inner"><div class="center">44%</div></div>
+				</div>
+				<div class="circle_sub">Traction</div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<div id="band_nav" style="height: 70px;">
+			<div class="nav_item open_profile_yours">
+				<img src="images/icon_1.png" />
+			</div>
+			<div class="nav_item open_page" data-page="featured">
+				<img src="images/icon_2.png" />
+			</div>
+			<div class="nav_item">
+				<img src="images/icon_3.png" />
+			</div>
+			<div class="nav_item">
+				<img src="images/icon_4.png" />
+			</div>
+		</div>
+		<div id="donate">
+			Donate
+		</div>
 	</div>
 
 	<div class="page" id="band_dashboard" data-band_id="">
@@ -197,6 +310,32 @@
 		<input type="button" id="song_button" value="Select Song" />
 		<input type="text" id="song_name" placeholder="Name" />
 		<input type="button" id="song_submit" value="Upload Song" />
+		<div class="is_admin">
+			<h3>Admin Controls</h3>
+			<select id="band_status" class="admin_band_update">
+				<option value="-1">Disabled</option>
+				<option value="0">Unapproved</option>
+				<option value="1">Active</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="page" id="featured" data-on_open="load_featured" data-back="discover">
+		<h2>Featured</h2>
+		<div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+			<img id="featured_band_image" style="max-width: 100%; max-height: 100%; margin: auto; left: 0; right: 0; position: absolute;" />
+		</div>
+		<div class="large_menu_item open_full_list_100" style="color:#f74692">Top 100 <i class="fa fa-chevron-right"></i></div>
+		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On Tht Rise <i class="fa fa-chevron-right"></i></div>
+		<div class="large_menu_item open_full_list_local">Local <i class="fa fa-chevron-right"></i></div>
+		<div class="large_menu_item open_full_list_curated">Curated <i class="fa fa-chevron-right"></i></div>
+	</div>
+
+	<div class="page" id="full_list" data-back="featured">
+		<h2 id="full_list_title"></h2>
+		<div id="full_list_content">
+
+		</div>
 	</div>
 
 	<div id="footer">
