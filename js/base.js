@@ -49,6 +49,27 @@ function Settings(save_key, def_data){
 }
 window.settings = new Settings(false, "{}");
 
+var back_logs = [];
+var last_back = false;
+function back_log(func, args){
+	last_back = false;
+	args = args || [];
+	if (typeof args != "array")
+		args = [args];
+	console.log("logged", [func, args]);
+	back_logs.push([func, args]);
+	window[func](...args);
+}
+
+function back_recent(){
+	if (back_logs.length > 1)
+		back_logs.pop();
+	var last = back_logs.pop();
+	back_logs.push(last);
+	console.log("back", last);
+	window[last[0]](...last[1]);
+}
+
 var last_touch = {x: 0, y:0, trigger:""};
 function set_touch(e, trigger){
 	var touch = e.originalEvent.changedTouches[0];
@@ -168,6 +189,10 @@ function argdump(){
 
 function template(key, data){
 	var dat = templates[key];
+	if (!templates[key]){
+		console.error("template '" + key + "' does not exist");
+		return key;
+	}
 	for(var key in data){
 		dat = dat.replace(new RegExp("##"+key+"##", "g"), data[key]);
 		dat = dat.replace(new RegExp("{{"+key+"\\?([^}]*)}}", "gm"), "$1");
@@ -484,7 +509,9 @@ function on_ready(){
 		}
 		started = true;
 		thePlatform = "";
+		console.log($("#templates>div"));
 		$("#templates>div").each(function (i, data){
+			console.log("template", $(data).data("key"));
 			templates[$(data).data("key")] = $(data).html();
 		});
 		$("#templates").remove();

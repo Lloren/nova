@@ -48,16 +48,16 @@
 	</div>
 	<div data-key="song_list">
 		<div>
-			<img class="change_photo" src="##image_url##" data-action="song_image" data-id="##id##">
-			<span>##name##</span>
+			<img class="change_photo" src="##image_url##" data-action="song_image" data-id="##id##" />
+			<span>##name## {{play_now?<i class="fa fa-play play_now" data-song_key="##key##"></i>}}</span>
 		</div>
 	</div>
 	<div data-key="full_list">
-		<div class="list_song play_song" data-id="##song_id##">
+		<div class="list_song play_song" data-song_id="##id##">
 			<img src="##image_url##">
 			<div class="full_list_cont">
 				<div class="song_name"><span>##num##</span>. ##name##</div>
-				<div class="band_name">##band_name##</div>
+				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
 			</div>
 		</div>
 	</div>
@@ -69,6 +69,9 @@
 	</div>
 	<div data-key="search_result_group">
 		<div class="search_result_group">##name##</div>
+	</div>
+	<div data-key="text_list_item">
+		<div class="large_menu_item open_genre" data-genre_id="##id##">##name## <i class="fa fa-chevron-right"></i></div>
 	</div>
 	<div data-key="song_disp">
 		<div class="song ##add_class##" data-song_id="##id##" data-id="##data_id##">
@@ -86,9 +89,10 @@
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
 				<div class="song_controls">
 					<div class="song_pass">
-						<i class="fa fa-check" aria-hidden="true"></i>
-					</div><div class="song_like">
 						<i class="fa fa-times" aria-hidden="true"></i>
+					</div>
+					<div class="song_like">
+						<i class="fa fa-check" aria-hidden="true"></i>
 					</div>
 				</div>
 			</div>
@@ -104,7 +108,7 @@
 			</div>
 		</div>
 		<img id="header_logo" src="images/header_logo.png" />
-		<div id="header_admin" class="open_page is_admin" data-page="admin" data-on_open="load_admin">
+		<div id="header_admin" class="open_page is_admin" data-page="admin">
 			<i class="fa fa-cog" aria-hidden="true"></i>
 		</div>
 		<div id="head_right">
@@ -135,10 +139,10 @@
 		</ul>
 	</div>
 
-	<div class="page" id="admin">
+	<div class="page" id="admin" data-on_open="load_admin">
 		<h3>Admin</h3>
+		<h4>New Bands</h4>
 		<div id="admin_bands">
-
 		</div>
 	</div>
 
@@ -177,27 +181,53 @@
 			<div class="nav_item open_page" data-page="featured">
 				<img src="images/icon_2.png" />
 			</div>
-			<div class="nav_item">
+			<div class="nav_item open_page" data-page="genre">
 				<img src="images/icon_3.png" />
 			</div>
-			<div class="nav_item">
+			<div class="nav_item open_page" data-page="social">
 				<img src="images/icon_4.png" />
 			</div>
 		</div>
 	</div>
 
-	<div class="page" id="profile" data-back="discover">
+	<div class="page" id="profile">
 		<div class="profile_image_cont">
 			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-camera add_friend" data-user_id="" aria-hidden="true"></i>
+			<i class="fa fa-user-plus add_friend" data-user_id="" aria-hidden="true"></i>
 		</div>
 		<div class="profile_stats">
-			Profile_stats
+			<div style="margin:10px 0;">
+				<div class="circle_value">
+					<div class="circle_cont">
+						<div class="circle_back"></div>
+						<div class="circle_outer"></div>
+						<div class="circle_inner"><div class="center">35%</div></div>
+					</div>
+					<div class="circle_sub">Rap</div>
+				</div>
+				<div class="circle_value">
+					<div class="circle_cont">
+						<div class="circle_back"></div>
+						<div class="circle_outer"></div>
+						<div class="circle_inner"><div class="center">22%</div></div>
+					</div>
+					<div class="circle_sub">Rock</div>
+				</div>
+				<div class="circle_value">
+					<div class="circle_cont">
+						<div class="circle_back"></div>
+						<div class="circle_outer"></div>
+						<div class="circle_inner"><div class="center">44%</div></div>
+					</div>
+					<div class="circle_sub">Alt</div>
+				</div>
+				<div class="clear"></div>
+			</div>
 		</div>
-		<div class="profile_albums">
-			Profile_albums
+		<div class="profile_songs">
+			profile_songs
 		</div>
 	</div>
 
@@ -323,7 +353,7 @@
 	<div class="page" id="featured" data-on_open="load_featured" data-back="discover">
 		<h2>Featured</h2>
 		<div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
-			<img id="featured_band_image" style="max-width: 100%; max-height: 100%; margin: auto; left: 0; right: 0; position: absolute;" />
+			<img id="featured_band_image" class="open_band" data-band_id="" style="max-width: 100%; max-height: 100%; margin: auto; left: 0; right: 0; position: absolute;" />
 		</div>
 		<div class="large_menu_item open_full_list_100" style="color:#f74692">Top 100 <i class="fa fa-chevron-right"></i></div>
 		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On Tht Rise <i class="fa fa-chevron-right"></i></div>
@@ -331,11 +361,25 @@
 		<div class="large_menu_item open_full_list_curated">Curated <i class="fa fa-chevron-right"></i></div>
 	</div>
 
-	<div class="page" id="full_list" data-back="featured">
+	<div class="page" id="full_list">
 		<h2 id="full_list_title"></h2>
 		<div id="full_list_content">
 
 		</div>
+	</div>
+
+	<div class="page" id="genre" data-on_open="load_genres">
+		<h2>Genre</h2>
+		<div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+			<img id="genre_band_image" class="open_band" data-band_id="" style="max-width: 100%; max-height: 100%; margin: auto; left: 0; right: 0; position: absolute;" />
+		</div>
+		<div id="genre_list">
+		</div>
+	</div>
+
+	<div class="page" id="social" data-on_open="load_social">
+		<h2>Social</h2>
+		Soon
 	</div>
 
 	<div id="footer">
