@@ -400,6 +400,10 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	border-radius: 999px;
 }
 
+.admin_bands img{
+	width: 60px;
+}
+
 /* iOS only */
 
 /* Android only */

@@ -52,6 +52,7 @@ function open_band_dashboard(band_id){
 			data.songs[i].play_now = true;
 			song_html += template("song_list", data.songs[i]);
 		}
+		$("#band_dashboard .song_genres_selector").remove();
 		$("#band_dashboard #dash_songs").html(song_html);
 		if ($("#song_genre").children().length <= 1){
 			var genre_html = "";
