@@ -485,7 +485,7 @@ function startup(){
 		open_modala("Uploading");
 
 		var genres = [];
-		$("#song_genres_selector").each(function (){
+		$(".song_genres_selector").each(function (){
 			genres.push({id: $(this).find(".song_genres").val(), val: $(this).find("select").val()});
 		});
 
@@ -498,10 +498,22 @@ function startup(){
 
 		var ft = new FileTransfer();
 		ft.upload(data.exportedurl, base_url+"/ajax/settings.php", function(result){
+			var resp = JSON.parse(result.response);
 			close_modala();
-			saved_song_data = false;
-			$("#song_name").val("");
-			$("#song_genres_selector").remove();
+			if (resp.song_id){
+				saved_song_data = false;
+				$("#song_name").val("");
+				$(".song_genres_selector").remove();
+			} else {
+				if (resp.mess.Error){
+					var mess = "";
+					for (var i=0;i<data.mess.Error.length;i++)
+						mess += "<div>"+data.mess.Error[i].message+"</div>";
+					open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
+				} else {
+					open_modal({title: "Error", content: "Unknown upload fail"});
+				}
+			}
 			console.log(result);
 		}, function(error){
 			close_modala();
