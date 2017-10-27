@@ -6,6 +6,7 @@ function Audio_player(){
 	this.queue = [];
 	this.playing = false;
 	this.output_handle = false;
+	this.pause_time = 0;
 
 	this.add = function (audio){
 
@@ -36,7 +37,17 @@ function Audio_player(){
 			var prev = this.playing;
 			$(prev).animate({volume: 0}, 1000, function (){});
 		}
-	}
+	};
+
+	this.pause = function (){
+		this.pause_time = this.playing.currentTime;
+		this.playing.pause();
+	};
+
+	this.resume = function (){
+		this.playing.currentTime = this.pause_time;
+		this.playing.play();
+	};
 }
 var player = new Audio_player();
 
@@ -72,6 +83,11 @@ function open_band(band_id){
 		$("#band .profile_background").css("background-image", "url("+data.image+")");
 		$("#band .profile_image").attr("src", data.image);
 		$("#band .profile_name").html(data.name);
+		if (data.show_dash_button){
+			$("#band .open_band_dashboard").show().data("band_id", data.id);
+		} else {
+			$("#band .open_band_dashboard").hide();
+		}
 		show_page("band");
 	});
 }
@@ -289,6 +305,8 @@ function show_page(key, onload){
 		$("#head_back").show();
 	}*/
 	$("#head_back").show();
+	if (page.data("no_back"))
+		$("#head_back").hide();
 	if (onload && page.data("on_open")){
 		window[page.data("on_open")]();
 	}
@@ -378,10 +396,11 @@ function startup(){
 		});
 	});
 	click_event(".logout", function (){
+		settings.get("user_id", 0);
 		$(".is_admin").hide();
 		$(".logged_in").hide();
 		$(".logged_out").show();
-		open_page("login");
+		show_page("login");
 	});
 
 	$("#discover_songs").on("touchstart", function(e){
@@ -423,8 +442,13 @@ function startup(){
 	}, true);
 
 	click_event(".stop_audio", function (e){
-		$(e.currentTarget).hide();
-		player.stop();
+		$(e.currentTarget).siblings(".song_pause_menu").show();
+		player.pause();
+	}, true);
+
+	click_event(".start_audio", function (e){
+		$(e.currentTarget).parents(".song_pause_menu").hide();
+		player.resume();
 	}, true);
 	
 	click_event(".open_profile_yours", function (e){

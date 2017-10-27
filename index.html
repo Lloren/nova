@@ -87,8 +87,11 @@
 		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
 			<div class="profile_image_cont">
 				<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
-				<img class="profile_image" src="##image_url##">
-				<i class="fa fa-pause-circle-o stop_audio" aria-hidden="true"></i>
+				<img class="profile_image stop_audio" src="##image_url##">
+				<div class="song_pause_menu" style="display: none;">
+					<i class="fa fa-pause-circle-o start_audio" aria-hidden="true"></i>
+					replay, "report"
+				</div>
 				<i class="fa fa-cog song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" aria-hidden="true"></i>
 			</div>
 			<div class="song_info">
@@ -174,7 +177,7 @@
 		</div>
 	</div>
 
-	<div class="page" id="login" style="display: block;">
+	<div class="page" id="login" style="display: block;" data-no_back="true">
 		<a class="fb_login">BF Login</a>
 		<input type="text" id="login_email" placeholder="Email" />
 		<input type="password" id="login_password" placeholder="Password" />
@@ -182,7 +185,7 @@
 		<a class="open_page" data-page="signup">Signup</a>
 	</div>
 
-	<div class="page" id="signup">
+	<div class="page" id="signup" data-no_back="true">
 		<input type="text" id="signup_name" placeholder="Name" />
 		<input type="email" id="signup_email" placeholder="Email" />
 		<input type="password" id="signup_password" placeholder="Password" />
@@ -310,7 +313,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-cog band_panel" data-band_id="" aria-hidden="true"></i>
+			<i class="fa fa-cog open_band_dashboard" data-band_id="" aria-hidden="true"></i>
 		</div>
 		<div style="margin:10px 0;">
 			<div class="circle_value">
