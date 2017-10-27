@@ -396,7 +396,8 @@ function startup(){
 		});
 	});
 	click_event(".logout", function (){
-		settings.get("user_id", 0);
+		player.stop();
+		settings.set("user_id", 0);
 		$(".is_admin").hide();
 		$(".logged_in").hide();
 		$(".logged_out").show();

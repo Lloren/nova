@@ -98,6 +98,16 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	font-size: 30px;
 }
 
+.main_form{
+	text-align: center;
+	margin-top: 100px;
+	line-height: 50px;
+}
+
+.main_form input{
+	font-size: 20px;
+}
+
 #discover_nav{
 	position: absolute;
 	bottom: 0;
