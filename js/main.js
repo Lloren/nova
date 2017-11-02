@@ -180,7 +180,7 @@ function load_discover(){
 					song.add_class = "next_song";
 				htmls.push(template("song_disp", song));
 			}
-			player.play_url(base_url+"/data/band_songs/"+data.songs[0].key);
+			player.play_url(base_url+"/data/band_songs/"+data.songs[0].key+".mp3");
 			$("#discover_songs").html(htmls.join(""));
 		}
 	});
@@ -194,7 +194,7 @@ function next_discover(){
 			$(".song.next_song").removeClass("next_song").addClass("current_song");
 			$(".song.next_song").next().addClass("next_song");
 		});
-		player.play_url(base_url+"/data/band_songs/"+$(".song.next_song").data("key"));
+		player.play_url(base_url+"/data/band_songs/"+$(".song.next_song").data("key")+".mp3");
 	} else {
 		$("#discover_songs").html("<br /><br /><br /><br />No new Discover songs, try Genre or top lists.");
 	}
@@ -207,7 +207,7 @@ function play_song(song_id){
 		if (data.songs[0]){
 			var song = data.songs[0];
 			song.add_class = "current_song";
-			player.play_url(base_url+"/data/band_songs/"+song.key);
+			player.play_url(base_url+"/data/band_songs/"+song.key+".mp3");
 			$("#discover_songs").html(template("song_disp", song));
 		}
 	});
@@ -688,7 +688,7 @@ function startup(){
 	});
 
 	click_event(".play_now", function (e){
-		player.play_url(base_url+"/data/band_songs/"+$(e.currentTarget).data("song_key"));
+		player.play_url(base_url+"/data/band_songs/"+$(e.currentTarget).data("song_key")+".mp3");
 	}, true);
 	
 	click_event(".open_full_list_100", function (e){
