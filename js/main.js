@@ -91,6 +91,7 @@ function Audio_player2(){
 	};
 
 	this.stop = function (){
+		console.log("stop", this.playing);
 		if (this.playing){
 			clearInterval(this.output_handle);
 			var prev = this.playing;
