@@ -62,7 +62,7 @@ function Audio_player2(){
 	this.pause_time = 0;
 
 	this.new = function (url){
-		return new Media(url);
+		return new Media(url, function (){}, function (){}, function (){});
 	};
 
 	this.add = function (audio){
