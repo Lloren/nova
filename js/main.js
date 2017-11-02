@@ -16,6 +16,7 @@ function Audio_player(){
 		this.stop();
 		this.playing = audio;
 		this.playing.volume = 0.05;
+		this.playing.load();
 		this.playing.play();
 		var length = this.playing.duration;
 		console.log(this.playing, length);
