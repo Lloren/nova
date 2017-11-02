@@ -78,7 +78,9 @@ function Audio_player2(){
 		console.log(this.playing, length);
 		var scope = this;
 		this.output_handle = setInterval(function (){
-			$(".song_played").css("width", (scope.playing.getCurrentPosition() / scope.playing.getDuration() * 100) + "%");
+			scope.playing.getCurrentPosition(function (pos){
+				$(".song_played").css("width", (pos / scope.playing.getDuration() * 100) + "%");
+			});
 		}, 100);
 	};
 
