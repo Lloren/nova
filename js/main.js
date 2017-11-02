@@ -60,6 +60,7 @@ function Audio_player2(){
 	this.playing = false;
 	this.output_handle = false;
 	this.pause_time = 0;
+	this.is_playing = false;
 
 	this.new = function (url){
 		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, function (dat){console.log("media_status", dat)});
@@ -74,6 +75,7 @@ function Audio_player2(){
 		this.playing = audio;
 		this.playing.setVolume(0.05);
 		this.playing.play();
+		this.is_playing = true;
 		var length = this.playing.getDuration();
 		console.log(this.playing, length);
 		var scope = this;
@@ -92,9 +94,9 @@ function Audio_player2(){
 
 	this.stop = function (){
 		console.log("stop", this.playing);
-		if (this.playing){
+		if (this.is_playing){
 			clearInterval(this.output_handle);
-			var prev = this.playing;
+			/*var prev = this.playing;
 			var vol = 1.0;
 			var aud_down = setInterval(function (){
 				if (vol <= 0){
@@ -105,17 +107,21 @@ function Audio_player2(){
 					prev.setVolume(vol);
 					vol -= 0.1;
 				}
-			}, 100);
-			$(prev).animate({volume: 0}, 1000, function (){});
+			}, 100);*/
+			this.playing.stop();
+			this.playing.release();
+			this.is_playing = false;
 		}
 	};
 
 	this.pause = function (){
 		this.playing.pause();
+		this.is_playing = false;
 	};
 
 	this.resume = function (){
 		this.playing.play();
+		this.is_playing = true;
 	};
 }
 var player = new Audio_player2();
