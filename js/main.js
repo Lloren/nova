@@ -71,7 +71,16 @@ function Audio_player2(){
 	};
 
 	this.play = function(audio){
-		this.stop();
+		if (this.stop()){
+			setTimeout(function (){
+				player._play(audio);
+			}, 100);
+		} else {
+			this._play(audio);
+		}
+	};
+
+	this._play = function (audio){
 		this.playing = audio;
 		this.playing.setVolume(0.05);
 		this.playing.play();
@@ -93,7 +102,7 @@ function Audio_player2(){
 	};
 
 	this.stop = function (){
-		console.log("stop", this.playing);
+		console.log("stop", this.playing, this.is_playing);
 		if (this.is_playing){
 			clearInterval(this.output_handle);
 			/*var prev = this.playing;
@@ -111,6 +120,7 @@ function Audio_player2(){
 			this.playing.stop();
 			this.playing.release();
 			this.is_playing = false;
+			return true;
 		}
 	};
 
