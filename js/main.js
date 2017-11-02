@@ -32,7 +32,7 @@ function Audio_player(){
 
 	this.play_url = function(url){
 		if (!this.playing || this.playing.src != url){
-			this.play(new Audio(url));
+			this.play(this.new(url));
 		}
 	};
 
@@ -62,7 +62,7 @@ function Audio_player2(){
 	this.pause_time = 0;
 
 	this.new = function (url){
-		return new Media(url, function (){}, function (){}, function (){});
+		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, function (dat){console.log("media_status", dat)});
 	};
 
 	this.add = function (audio){
@@ -86,7 +86,7 @@ function Audio_player2(){
 
 	this.play_url = function(url){
 		if (!this.playing || this.playing.src != url){
-			this.play(new Media(url));
+			this.play(this.new(url));
 		}
 	};
 
