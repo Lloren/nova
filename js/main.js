@@ -8,6 +8,10 @@ function Audio_player(){
 	this.output_handle = false;
 	this.pause_time = 0;
 
+	this.new = function (url){
+		return new Audio(url);
+	};
+
 	this.add = function (audio){
 
 	};
@@ -50,7 +54,68 @@ function Audio_player(){
 		this.playing.play();
 	};
 }
-var player = new Audio_player();
+
+function Audio_player2(){
+	this.queue = [];
+	this.playing = false;
+	this.output_handle = false;
+	this.pause_time = 0;
+
+	this.new = function (url){
+		return new Media(url);
+	};
+
+	this.add = function (audio){
+
+	};
+
+	this.play = function(audio){
+		this.stop();
+		this.playing = audio;
+		this.playing.setVolume(0.05);
+		this.playing.play();
+		var length = this.playing.getDuration();
+		console.log(this.playing, length);
+		var scope = this;
+		this.output_handle = setInterval(function (){
+			$(".song_played").css("width", (scope.playing.getCurrentPosition() / scope.playing.getDuration() * 100) + "%");
+		}, 100);
+	};
+
+	this.play_url = function(url){
+		if (!this.playing || this.playing.src != url){
+			this.play(new Media(url));
+		}
+	};
+
+	this.stop = function (){
+		if (this.playing){
+			clearInterval(this.output_handle);
+			var prev = this.playing;
+			var vol = 1.0;
+			var aud_down = setInterval(function (){
+				if (vol <= 0){
+					clearInterval(aud_down);
+					prev.stop();
+					prev.release();
+				} else {
+					prev.setVolume(vol);
+					vol -= 0.1;
+				}
+			}, 100);
+			$(prev).animate({volume: 0}, 1000, function (){});
+		}
+	};
+
+	this.pause = function (){
+		this.playing.pause();
+	};
+
+	this.resume = function (){
+		this.playing.play();
+	};
+}
+var player = new Audio_player2();
 
 function open_band_dashboard(band_id){
 	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, action:'dashboard'}, function (data){
