@@ -71,7 +71,7 @@ function Audio_player2(){
 	};
 
 	this.play = function(audio){
-		if (this.stop()){
+		if (this.stop() && false){
 			setTimeout(function (){
 				player._play(audio);
 			}, 100);
@@ -105,20 +105,22 @@ function Audio_player2(){
 		console.log("stop", this.playing, this.is_playing);
 		if (this.is_playing){
 			clearInterval(this.output_handle);
-			/*var prev = this.playing;
-			var vol = 1.0;
-			var aud_down = setInterval(function (){
-				if (vol <= 0){
-					clearInterval(aud_down);
-					prev.stop();
-					prev.release();
-				} else {
-					prev.setVolume(vol);
-					vol -= 0.1;
-				}
-			}, 100);*/
-			this.playing.stop();
-			this.playing.release();
+			if (thePlatform == "ios"){
+				this.playing.pause();
+			} else {
+				var prev = this.playing;
+				var vol = 1.0;
+				var aud_down = setInterval(function (){
+					if (vol <= 0){
+						clearInterval(aud_down);
+						prev.stop();
+						prev.release();
+					} else {
+						prev.setVolume(vol);
+						vol -= 0.1;
+					}
+				}, 100);
+			}
 			this.is_playing = false;
 			return true;
 		}
