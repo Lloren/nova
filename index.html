@@ -90,7 +90,9 @@
 				<img class="profile_image stop_audio" src="##image_url##">
 				<div class="song_pause_menu" style="display: none;">
 					<i class="fa fa-pause-circle-o start_audio" aria-hidden="true"></i>
-					replay, "report"
+					<i class="fa fa-repeat repeat_audio" aria-hidden="true"></i>
+					<i class="fa fa-trash-o report_audio" aria-hidden="true"></i>
+					<div class="song_lyrics" style="position: absolute; bottom: 10px; right: 40px;">lyrics</div>
 				</div>
 				<i class="fa fa-cog song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" aria-hidden="true"></i>
 			</div>
@@ -109,6 +111,13 @@
 					</div>
 				</div>
 			</div>
+			<div class="band_info" data-band_id="##band_id##">
+				<div class="profile_image_cont">
+					<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
+					<img class="profile_image" src="##band_image_url##">
+					<div class="profile_name">##band_name##</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div data-key="genre_adder">
@@ -124,6 +133,7 @@
 				<option value="30">30%</option>
 				<option value="20">20%</option>
 				<option value="10">10%</option>
+				<option value="0">Remove</option>
 			</select>
 			##name##
 			<input type="hidden" class="song_genres" value="##id##" />
@@ -294,10 +304,10 @@
 	</div>
 
 	<div class="page" id="settings">
-		<a class="logout">Logout</a>
-		<input id="settings_name" type="text" value="" placeholder="name" />
-		<input id="settings_password" type="password" value="" placeholder="New password" />
-		<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" />
+		<a class="logout">Logout</a><br /><br />
+		<input id="settings_name" type="text" value="" placeholder="name" /><br />
+		<input id="settings_password" type="password" value="" placeholder="New password" /><br />
+		<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
 
 		<div>
 			<h3>Bands</h3>
@@ -348,17 +358,17 @@
 			<div class="clear"></div>
 		</div>
 		<div id="band_nav" style="height: 70px;">
-			<div class="nav_item open_profile_yours">
-				<img src="images/icon_1.png" />
+			<div class="nav_item" title="Private social">
+				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
 			</div>
-			<div class="nav_item open_page" data-page="featured">
-				<img src="images/icon_2.png" />
+			<div class="nav_item" title="Public social">
+				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+			</div>
+			<div class="nav_item" title="Share">
+				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
 			</div>
 			<div class="nav_item">
-				<img src="images/icon_3.png" />
-			</div>
-			<div class="nav_item">
-				<img src="images/icon_4.png" />
+				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
 			</div>
 		</div>
 		<div id="donate">
@@ -373,20 +383,44 @@
 			<div class="profile_name"></div>
 			<i class="fa fa-camera change_photo" data-action="band_image" data-id="" aria-hidden="true"></i>
 		</div>
-		<div id="dash_songs">
-
+		<div id="band_dash_nav" style="height: 70px;">
+			<div class="nav_item band_stats active">
+				<i class="fa fa-line-chart" aria-hidden="true"></i>
+			</div>
+			<div class="nav_item band_songs">
+				<i class="fa fa-music" aria-hidden="true"></i>
+			</div>
+			<div class="nav_item band_social">
+				<i class="fa fa-users" aria-hidden="true"></i>
+			</div>
+			<div class="nav_item band_settings">
+				<i class="fa fa-cog" aria-hidden="true"></i>
+			</div>
 		</div>
-		<input type="button" id="song_button" value="Select Song" />
-		<input type="text" id="song_name" placeholder="Name" />
-		<select id="song_genre"><option value="0"> Select Genre </option></select>
-		<input type="button" id="song_submit" value="Upload Song" />
-		<div class="is_admin">
-			<h3>Admin Controls</h3>
-			<select id="band_status" class="admin_band_update">
-				<option value="-1">Disabled</option>
-				<option value="0">Unapproved</option>
-				<option value="1">Active</option>
-			</select>
+		<div id="dash_stats" class="band_dashboard_pages" style="display: block;">
+			Coming soon.
+		</div>
+		<div id="dash_songs" class="band_dashboard_pages">
+			<div id="dash_song_list">
+			</div>
+			<input type="button" id="song_button" value="Select Song" />
+			<input type="text" id="song_name" placeholder="Name" />
+			<select id="song_genre"><option value="0"> Select Genre </option></select>
+			<input type="button" id="song_submit" value="Upload Song" />
+		</div>
+		<div id="dash_social" class="band_dashboard_pages">
+			Coming soon.
+		</div>
+		<div id="dash_settings" class="band_dashboard_pages">
+
+			<div class="is_admin">
+				<h3>Admin Controls</h3>
+				<select id="band_status" class="admin_band_update">
+					<option value="-1">Disabled</option>
+					<option value="0">Unapproved</option>
+					<option value="1">Active</option>
+				</select>
+			</div>
 		</div>
 	</div>
 

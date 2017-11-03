@@ -61,13 +61,18 @@ function Audio_player2(){
 	this.output_handle = false;
 	this.pause_time = 0;
 	this.is_playing = false;
+	this.replaying = false;
 
 	this.new = function (url){
-		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, function (dat){console.log("media_status", dat)});
+		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, this.media_status);
 	};
 
 	this.add = function (audio){
 
+	};
+
+	this.media_status = function (dat){
+		//if dat == 4 and replay restart
 	};
 
 	this.play = function(audio){
@@ -136,7 +141,7 @@ function Audio_player2(){
 		this.is_playing = true;
 	};
 }
-var player = new Audio_player2();
+var player = false;
 
 function open_band_dashboard(band_id){
 	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, action:'dashboard'}, function (data){
@@ -151,7 +156,8 @@ function open_band_dashboard(band_id){
 			song_html += template("song_list", data.songs[i]);
 		}
 		$("#band_dashboard .song_genres_selector").remove();
-		$("#band_dashboard #dash_songs").html(song_html);
+		$("#band_dashboard #dash_song_list").html(song_html);
+		$("#song_genre").show();
 		if ($("#song_genre").children().length <= 1){
 			var genre_html = "";
 			for (var i=0;i<data.genres.length;i++){
@@ -179,14 +185,21 @@ function open_band(band_id){
 	});
 }
 
+var discover_state = false;
 var discover_touch = false;
-var discover_swipe_start = false;
-var discover_swipe_delta = false;
+var discover_swipe_start_x = false;
+var discover_swipe_delta_x = false;
+var discover_swipe_start_y = false;
+var discover_swipe_delta_y = false;
 function load_discover(){
+	if (discover_state){
+		$("#discover_songs").html(discover_state);
+		return;
+	}
 	$("#discover_songs").html("Loading...");
 	$.getJSON(base_url+"/ajax/discover.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		if (data.songs.length == 0){
-			$("#discover_songs").html("<br /><br /><br /><br />No new Discover songs, try Genre or top lists.");
+			discover_state = "<br /><br /><br /><br />No new Discover songs, try Genre or top lists.";
 		} else {
 			var htmls = [];
 			for (var i=0;i<data.songs.length;i++){
@@ -199,8 +212,9 @@ function load_discover(){
 				htmls.push(template("song_disp", song));
 			}
 			player.play_url(base_url+"/data/band_songs/"+data.songs[0].key+".mp3");
-			$("#discover_songs").html(htmls.join(""));
+			discover_state = htmls.join("");
 		}
+		$("#discover_songs").html(discover_state);
 	});
 }
 
@@ -211,11 +225,17 @@ function next_discover(){
 			$(".song.current_song").removeClass("current_song").addClass("prev_song");
 			$(".song.next_song").removeClass("next_song").addClass("current_song");
 			$(".song.next_song").next().addClass("next_song");
+			setTimeout(function (){
+				discover_state = $("#discover_songs").html();
+			}, 1);
 		});
 		player.play_url(base_url+"/data/band_songs/"+$(".song.next_song").data("key")+".mp3");
 	} else {
 		$("#discover_songs").html("<br /><br /><br /><br />No new Discover songs, try Genre or top lists.");
 	}
+	setTimeout(function (){
+		discover_state = $("#discover_songs").html();
+	}, 1);
 }
 
 function play_song(song_id){
@@ -299,6 +319,7 @@ function open_profile_yours(){
 			band_htmls.push(template("band_list", data.your_bands[i]));
 		}
 		$("#settings_bands").html(band_htmls.join(""));
+		$("#settings_name").val(data.name);
 		show_page("your_profile");
 	});
 }
@@ -414,6 +435,13 @@ function startup(){
 		$("body").html("This app requires internet to function.");
 		return;
 	}
+
+	if (thePlatform == "non-gap"){
+		player = new Audio_player();
+	} else {
+		player = new Audio_player2();
+	}
+
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
 			console.log("fb login", obj);
@@ -494,27 +522,43 @@ function startup(){
 	$("#discover_songs").on("touchstart", function(e){
 		console.log("start");
 		discover_touch = e.originalEvent.touches[0];
-		discover_swipe_start = discover_touch.clientX;
+		discover_swipe_start_x = discover_touch.clientX;
+		discover_swipe_start_y = discover_touch.clientY;
 	});
 	$(window).on("touchmove", function(e){
 		e = e.originalEvent.touches[0];
-		if (discover_swipe_start !== false){
-			discover_swipe_delta = discover_swipe_start - e.clientX;
-			if (discover_swipe_delta < 0)
-				discover_swipe_delta = 0;
-			$(".song.next_song").css({left: "calc(100% - "+discover_swipe_delta+"px)"});
+		var x_over = false;
+		if (discover_swipe_start_x !== false){
+			discover_swipe_delta_x = discover_swipe_start_x - e.clientX;
+			if (discover_swipe_delta_x > 50){
+				x_over = true;
+				if (discover_swipe_delta_x < 0)
+					discover_swipe_delta_x = 0;
+				$(".song.next_song").css({left: "calc(100% - "+discover_swipe_delta_x+"px)"});
+			}
+		}
+		if (!x_over && discover_swipe_start_y !== false){
+			discover_swipe_delta_y = discover_swipe_start_y - e.clientY;
+			if (discover_swipe_delta_y > 50){
+				if (discover_swipe_delta_y < 0)
+					discover_swipe_delta_y = 0;
+				$(".song .band_info").css({top: "calc(100% - "+discover_swipe_delta_y+"px)"});
+			}
 		}
 	});
 	$("#discover_songs").on("touchend", function(e){
-		console.log(discover_swipe_delta);
-		if (discover_swipe_delta > 50){
+		console.log(discover_swipe_delta_x);
+		if (discover_swipe_delta_x > 50){
 			next_discover();
+		} else if (discover_swipe_delta_y > 150){
+			open_band($(".song .band_info").data("band_id"));
 		} else {
 			$(".song.next_song").animate({left: "100%"}, 100);
 		}
+		$(".song .band_info").css({top: "100%"}, 100);
 		discover_touch = false;
-		discover_swipe_delta = false;
-		discover_swipe_start = false;
+		discover_swipe_delta_x = false;
+		discover_swipe_start_y = false;
 	});
 
 	click_event(".song_pass", function (e){
@@ -651,6 +695,18 @@ function startup(){
 		if ($(this).val() != 0){
 			$("#song_genre").before(template("genre_adder", {id: $(this).val(), name: $(this).find("option:selected").html()}));
 			$("#song_genre").val(0);
+			if ($(".song_genres_selector").length >= 3){
+				$("#song_genre").hide();
+			}
+		}
+	});
+
+	$(document).on("change", ".song_genres_selector select", function (){
+		if ($(this).val() == 0){
+			$(this).parents(".song_genres_selector").remove();
+			if ($(".song_genres_selector").length < 3){
+				$("#song_genre").show();
+			}
 		}
 	});
 
@@ -696,6 +752,34 @@ function startup(){
 
 	click_event(".open_band_dashboard", function (e){
 		back_log("open_band_dashboard", $(e.currentTarget).data("band_id"));
+	}, true);
+
+	click_event(".band_stats", function (e){
+		$(".band_dashboard_pages").hide();
+		$("#dash_stats").show();
+		$(".nav_item.active").removeClass("active");
+		$(e.currentTarget).addClass("active");
+	}, true);
+
+	click_event(".band_songs", function (e){
+		$(".band_dashboard_pages").hide();
+		$("#dash_songs").show();
+		$(".nav_item.active").removeClass("active");
+		$(e.currentTarget).addClass("active");
+	}, true);
+
+	click_event(".band_social", function (e){
+		$(".band_dashboard_pages").hide();
+		$("#dash_social").show();
+		$(".nav_item.active").removeClass("active");
+		$(e.currentTarget).addClass("active");
+	}, true);
+
+	click_event(".band_settings", function (e){
+		$(".band_dashboard_pages").hide();
+		$("#dash_settings").show();
+		$(".nav_item.active").removeClass("active");
+		$(e.currentTarget).addClass("active");
 	}, true);
 
 	$(".admin_band_update").on("change", function (){

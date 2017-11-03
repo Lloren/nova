@@ -137,6 +137,22 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	position: absolute;
 }
 
+#discover .fa-repeat{
+	position: absolute;
+	bottom: 10px;
+	font-size: 40px;
+	opacity: 0.6;
+	left: 100px;
+}
+
+#discover .fa-trash-o{
+	position: absolute;
+	bottom: 10px;
+	font-size: 40px;
+	opacity: 0.6;
+	right: 100px;
+}
+
 #discover_songs{
 	position: relative;
 	top: -40px;
@@ -224,6 +240,20 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	position: absolute;
 }
 
+.band_info{
+	position: fixed;
+	width: 100%;
+	top: 100%;
+}
+
+
+
+#band_dashboard .nav_item{
+	width: 24%;
+}
+.band_dashboard_pages{
+	display:none;
+}
 
 
 #profile_nav .nav_item{
@@ -411,6 +441,10 @@ input, select {-webkit-appearance:none; border-radius:0;}
 }
 
 #admin_bands img{
+	width: 60px;
+}
+
+#settings_bands img{
 	width: 60px;
 }
 
