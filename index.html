@@ -71,6 +71,14 @@
 			</div>
 		</div>
 	</div>
+	<div data-key="playlist_list">
+		<div class="half_list_song play_playlist" data-playlist_id="##id##">
+			<img src="##image_url##">
+			<div class="half_list_cont">
+				<div class="song_name">##name##</div>
+			</div>
+		</div>
+	</div>
 	<div data-key="search_results">
 		<div class="search_item##added##">
 			<img src="##image_url##">
@@ -100,7 +108,7 @@
 				<div class="song_playback">
 					<div class="song_played"></div>
 				</div>
-				<div class="song_name">##name##</div>
+				<div class="song_name"><span>##name##</span></div>
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
 				<div class="song_controls">
 					<div class="song_pass">
@@ -148,7 +156,7 @@
 				<
 			</div>
 		</div>
-		<img id="header_logo" src="images/header_logo.png" />
+		<img id="header_logo" class="open_page" src="images/header_logo.png" data-page="playlist"/>
 		<div id="header_admin" class="open_page is_admin" data-page="admin">
 			<i class="fa fa-cog" aria-hidden="true"></i>
 		</div>
@@ -216,11 +224,11 @@
 		</div>
 	</div>
 
-	<div class="page" id="discover" data-on_open="load_discover" data-back="hide">
-		<div id="discover_songs">
+	<div class="page" id="playlist" data-back="hide">
+		<div id="playlist_songs">
 			Loading...
 		</div>
-		<div id="discover_nav">
+		<div id="playlist_nav">
 			<div class="nav_item open_profile_yours">
 				<img src="images/icon_1.png" />
 			</div>
@@ -280,12 +288,12 @@
 	<div class="page" id="your_profile">
 		<div class="profile_image_cont">
 			<div class="profile_background"></div>
-			<img class="profile_image" src="">
+			<img class="profile_image profile_image_src" src="">
 			<div class="profile_name"></div>
 			<i class="fa fa-camera change_photo" data-action="profile_image" aria-hidden="true"></i>
 		</div>
 		<div id="profile_nav">
-			<div class="nav_item open_albums active">
+			<div class="nav_item open_music active">
 				<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
 			</div>
 			<div class="nav_item open_notifications">
@@ -295,12 +303,41 @@
 				<i class="fa fa-cog" aria-hidden="true"></i>
 			</div>
 		</div>
-		<div id="profile_your_songs" class="profile_songs">
-			profile_songs
+		<div class="profile_cont">
+			<div id="profile_music">
+				<div style="width: 100%; overflow: auto;">
+					<div id="profile_your_songs" class="profile_songs" style="width: 10000px;">
+					</div>
+				</div>
+				<div style="width: 100%; overflow: auto;">
+					<div style="width: 10000px;">
+						<div class="half_list_song play_playlist" data-playlist_id="0">
+							<img class="profile_image_src" src="">
+							<div class="half_list_cont">
+								<div class="song_name">Your Songs</div>
+							</div>
+						</div>
+						<div id="profile_your_playlists">
+
+						</div>
+						<div class="half_list_song create_playlist">
+							<div style="width: 45vw; height: 45vw; font-size: 50px; text-align: center; padding-top: 35%;">
+								<i class="fa fa-plus"></i>
+							</div>
+							<div class="half_list_cont">
+								<div class="song_name">Create Playlist</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="profile_notifications">
+				profile_notifications
+			</div>
 		</div>
-		<div id="profile_notifications">
-			profile_notifications
-		</div>
+	</div>
+
+	<div class="page" id="manage_album">
 	</div>
 
 	<div class="page" id="settings">
@@ -424,7 +461,7 @@
 		</div>
 	</div>
 
-	<div class="page" id="featured" data-on_open="load_featured" data-back="discover">
+	<div class="page" id="featured" data-on_open="load_featured">
 		<h2>Featured</h2>
 		<div style="width: 100%; height: 200px; overflow: hidden; position: relative;">
 			<img id="featured_band_image" class="open_band" data-band_id="" style="max-width: 100%; max-height: 100%; margin: auto; left: 0; right: 0; position: absolute;" />

@@ -7,6 +7,7 @@ function Audio_player(){
 	this.playing = false;
 	this.output_handle = false;
 	this.pause_time = 0;
+	this.replaying = false;
 
 	this.new = function (url){
 		return new Audio(url);
@@ -30,8 +31,9 @@ function Audio_player(){
 		}, 100);
 	};
 
-	this.play_url = function(url){
-		if (!this.playing || this.playing.src != url){
+	this.play_url = function(url, force){
+		force = force || false;
+		if (!this.playing || this.playing.src != url || force){
 			this.play(this.new(url));
 		}
 	};
@@ -72,7 +74,9 @@ function Audio_player2(){
 	};
 
 	this.media_status = function (dat){
-		//if dat == 4 and replay restart
+		if (this.replaying && dat == 4){
+			this.playing.play();
+		}
 	};
 
 	this.play = function(audio){
@@ -90,6 +94,7 @@ function Audio_player2(){
 		this.playing.setVolume(0.05);
 		this.playing.play();
 		this.is_playing = true;
+		this.replaying = false;
 		var length = this.playing.getDuration();
 		console.log(this.playing, length);
 		var scope = this;
@@ -100,8 +105,9 @@ function Audio_player2(){
 		}, 100);
 	};
 
-	this.play_url = function(url){
-		if (!this.playing || this.playing.src != url){
+	this.play_url = function(url, force){
+		force = force || false;
+		if (!this.playing || this.playing.src != url || force){
 			this.play(this.new(url));
 		}
 	};
@@ -109,6 +115,7 @@ function Audio_player2(){
 	this.stop = function (){
 		console.log("stop", this.playing, this.is_playing);
 		if (this.is_playing){
+			this.replaying = false;
 			clearInterval(this.output_handle);
 			if (thePlatform == "ios"){
 				this.playing.pause();
@@ -185,21 +192,35 @@ function open_band(band_id){
 	});
 }
 
-var discover_state = false;
-var discover_touch = false;
-var discover_swipe_start_x = false;
-var discover_swipe_delta_x = false;
-var discover_swipe_start_y = false;
-var discover_swipe_delta_y = false;
-function load_discover(){
-	if (discover_state){
-		$("#discover_songs").html(discover_state);
+var playlist_state = false;
+var playlist_touch = false;
+var playlist_swipe_start_x = false;
+var playlist_swipe_delta_x = false;
+var playlist_swipe_start_y = false;
+var playlist_swipe_delta_y = false;
+var playlist = {type: "", key: "", empty: "", data: []};
+function load_playlist(type, key, empty){
+	var force = false;
+	if (type !== playlist.type || key !== playlist.key){
+		force = true;
+		playlist_state = false;
+	}
+	playlist.empty = empty || false;
+	playlist.type = type || "discover";
+	if (playlist.type == "discover")
+		playlist.empty = "No new Discover songs, try Genre or top lists.";
+	playlist.key = key || 0;
+	playlist.data = [];
+	console.log("playlist", playlist);
+	show_page("playlist");
+	if (playlist_state){
+		$("#playlist_songs").html(playlist_state);
 		return;
 	}
-	$("#discover_songs").html("Loading...");
-	$.getJSON(base_url+"/ajax/discover.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
-		if (data.songs.length == 0){
-			discover_state = "<br /><br /><br /><br />No new Discover songs, try Genre or top lists.";
+	$("#playlist_songs").html("Loading...");
+	$.getJSON(base_url+"/ajax/get_list.php?callback=?", {type:playlist.type, key: playlist.key, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		if (!data.songs || data.songs.length == 0){
+			playlist_state = playlist.empty;
 		} else {
 			var htmls = [];
 			for (var i=0;i<data.songs.length;i++){
@@ -211,44 +232,61 @@ function load_discover(){
 					song.add_class = "next_song";
 				htmls.push(template("song_disp", song));
 			}
-			player.play_url(base_url+"/data/band_songs/"+data.songs[0].key+".mp3");
-			discover_state = htmls.join("");
+			player.play_url(base_url+"/data/band_songs/"+data.songs[0].key+".mp3", force);
+			playlist_state = htmls.join("");
 		}
-		$("#discover_songs").html(discover_state);
+		$("#playlist_songs").html(playlist_state);
 	});
 }
 
-function next_discover(){
+function next_playlist(){
 	if ($(".song.next_song").length){
 		$(".song.next_song").animate({left: 0}, 200, function (){
 			$(".song.prev_song").removeClass("prev_song");
-			$(".song.current_song").removeClass("current_song").addClass("prev_song");
-			$(".song.next_song").removeClass("next_song").addClass("current_song");
-			$(".song.next_song").next().addClass("next_song");
+			$(".song.current_song").removeClass("current_song").addClass("prev_song").css({left: '-100%'});
+			$(".song.next_song").removeClass("next_song").addClass("current_song").next().addClass("next_song");
 			setTimeout(function (){
-				discover_state = $("#discover_songs").html();
+				playlist_state = $("#playlist_songs").html();
 			}, 1);
 		});
 		player.play_url(base_url+"/data/band_songs/"+$(".song.next_song").data("key")+".mp3");
-	} else {
-		$("#discover_songs").html("<br /><br /><br /><br />No new Discover songs, try Genre or top lists.");
+	} else if (playlist.empty !== false){
+		$("#playlist_songs").html("<br /><br /><br /><br />"+playlist.empty);
 	}
 	setTimeout(function (){
-		discover_state = $("#discover_songs").html();
+		playlist_state = $("#playlist_songs").html();
+	}, 1);
+}
+
+function prev_playlist(){
+	if ($(".song.prev_song").length){
+		$(".song.prev_song").animate({left: 0}, 200, function (){
+			$(".song.next_song").removeClass("next_song");
+			$(".song.current_song").removeClass("current_song").addClass("next_song").css({left: '100%'});
+			$(".song.prev_song").removeClass("prev_song").addClass("current_song").prev().addClass("prev_song");
+			setTimeout(function (){
+				playlist_state = $("#playlist_songs").html();
+			}, 1);
+		});
+		player.play_url(base_url+"/data/band_songs/"+$(".song.prev_song").data("key")+".mp3");
+	}
+	setTimeout(function (){
+		playlist_state = $("#playlist_songs").html();
 	}, 1);
 }
 
 function play_song(song_id){
-	$("#discover_songs").html("Loading...");
-	show_page("discover", false);
+	back_log("load_playlist", ["song", song_id]);
+	/*
+	 $("#playlist_songs").html("Loading...");
 	$.getJSON(base_url+"/ajax/discover.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), song_id: song_id}, function (data){
 		if (data.songs[0]){
 			var song = data.songs[0];
 			song.add_class = "current_song";
 			player.play_url(base_url+"/data/band_songs/"+song.key+".mp3");
-			$("#discover_songs").html(template("song_disp", song));
+			$("#playlist_songs").html(template("song_disp", song));
 		}
-	});
+	});*/
 }
 
 function load_admin(){
@@ -302,23 +340,33 @@ function open_full_list(type, name){
 function open_profile_yours(){
 	$.getJSON(base_url+"/ajax/profile.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), users_id: settings.get("user_id")}, function (data){
 		$("#your_profile .profile_background").css("background-image", "url("+data.image+")");
-		$("#your_profile .profile_image").attr("src", data.image);
+		$("#your_profile .profile_image_src").attr("src", data.image);
 		$("#your_profile .profile_name").html(data.name);
+
 		var song_htmls = [];
 		for (var i=0;i<data.songs.length;i++){
 			song_htmls.push(template("half_list", data.songs[i]));
 		}
 		$("#profile_your_songs").html(song_htmls.join(""));
+
+		var playlists_htmls = [];
+		for (var i=0;i<data.playlists.length;i++){
+			playlists_htmls.push(template("playlist_list", data.playlists[i]));
+		}
+		$("#profile_your_playlists").html(playlists_htmls.join(""));
+
 		var notifications_htmls = [];
 		for (var i=0;i<data.notifications.length;i++){
 			notifications_htmls.push(template("notification_list", data.notifications[i]));
 		}
 		$("#profile_notifications").html(notifications_htmls.join(""));
+
 		var band_htmls = [];
 		for (var i=0;i<data.your_bands.length;i++){
 			band_htmls.push(template("band_list", data.your_bands[i]));
 		}
 		$("#settings_bands").html(band_htmls.join(""));
+
 		$("#settings_name").val(data.name);
 		show_page("your_profile");
 	});
@@ -327,7 +375,7 @@ function open_profile_yours(){
 function open_profile(user_id){
 	$.getJSON(base_url+"/ajax/profile.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), users_id: user_id}, function (data){
 		$("#profile .profile_background").css("background-image", "url("+data.image+")");
-		$("#profile .profile_image").attr("src", data.image);
+		$("#profile .profile_image_src").attr("src", data.image);
 		$("#profile .profile_name").html(data.name);
 		if (data.is_fallowing){
 			$(".add_friend").hide();
@@ -341,22 +389,6 @@ function open_profile(user_id){
 		$("#profile_songs").html(song_htmls.join(""));
 		show_page("profile");
 	});
-}
-
-function open_genre(genre_id){
-	$.getJSON(base_url+"/ajax/genre.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), genre_id: genre_id}, function (data){
-		var htmls = [];
-		for (var i=0;i<data.songs.length;i++){
-			var item = data.songs[i];
-			item.num = i+1;
-			htmls.push(template("full_list", item));
-		}
-		$("#full_list_content").html(htmls.join(""));
-		$("#full_list_title").html("Genre: "+data.name);
-	});
-	$("#full_list_content").html("Loading...");
-	$("#full_list_title").html("Genre: ");
-	show_page("full_list");
 }
 
 function run_search(term){
@@ -461,7 +493,7 @@ function startup(){
 					}
 					$(".logged_in").show();
 					$(".logged_out").hide();
-					open_page("discover");
+					back_log("load_playlist");
 				}
 				//login_responce(data);
 				console.log("fb Result: ", data);
@@ -488,7 +520,7 @@ function startup(){
 					settings.set("is_admin", data.is_admin);
 					$(".is_admin").show();
 				}
-				open_page("discover");
+				back_log("load_playlist");
 			}
 		});
 	});
@@ -506,7 +538,7 @@ function startup(){
 			}
 			if (data.user_id){
 				settings.set("user_id", data.user_id);
-				open_page("discover");
+				back_log("load_playlist");
 			}
 		});
 	});
@@ -519,57 +551,123 @@ function startup(){
 		show_page("login");
 	});
 
-	$("#discover_songs").on("touchstart", function(e){
+	var name_long_press = false;
+	var profile_album_long_press = false;
+	var profile_song_long_press = false;
+	var profile_song_press = false;
+	var profile_song_start_x = false;
+	var profile_song_start_y = false;
+	$("#playlist_songs").on("touchstart", function(e){
 		console.log("start");
-		discover_touch = e.originalEvent.touches[0];
-		discover_swipe_start_x = discover_touch.clientX;
-		discover_swipe_start_y = discover_touch.clientY;
+		playlist_touch = e.originalEvent.touches[0];
+		playlist_swipe_start_x = playlist_touch.clientX;
+		playlist_swipe_start_y = playlist_touch.clientY;
+	});
+	$(document).on("touchstart", "#playlist_songs .song_name", function (){
+		if ($("#playlist .song_name span").height() > $("#playlist .song_name").height()){
+			name_long_press = setTimeout(function (){
+				$("#playlist .song_name").addClass("show_full");
+			}, 500);
+		}
+	});
+	$(document).on("touchstart", "#your_profile .play_playlist", function (e){
+		if ($(e.currentTarget).data("playlist_id")){
+			profile_album_long_press = setTimeout(function (){
+				alert("Edit Playlist");//TODO: implement
+			}, 500);
+		}
+	});
+	$(document).on("touchstart", "#your_profile .play_song", function (e){
+		var e = e;
+		var profile_song_touch = e.originalEvent.touches[0];
+		profile_song_start_x = profile_song_touch.clientX;
+		profile_song_start_y = profile_song_touch.clientY;
+		profile_song_long_press = setTimeout(function (){
+			profile_song_press = $(e.currentTarget);
+			profile_song_press.addClass("moving_song");
+		}, 500);
 	});
 	$(window).on("touchmove", function(e){
 		e = e.originalEvent.touches[0];
 		var x_over = false;
-		if (discover_swipe_start_x !== false){
-			discover_swipe_delta_x = discover_swipe_start_x - e.clientX;
-			if (discover_swipe_delta_x > 50){
+		if (playlist_swipe_start_x !== false){
+			playlist_swipe_delta_x = playlist_swipe_start_x - e.clientX;
+			if (playlist_swipe_delta_x > 50){
 				x_over = true;
-				if (discover_swipe_delta_x < 0)
-					discover_swipe_delta_x = 0;
-				$(".song.next_song").css({left: "calc(100% - "+discover_swipe_delta_x+"px)"});
+				if (playlist_swipe_delta_x < 0)
+					playlist_swipe_delta_x = 0;
+				$(".song.next_song").css({left: "calc(100% - "+playlist_swipe_delta_x+"px)"});
+			}
+			if (playlist_swipe_delta_x < -50){
+				x_over = true;
+				if (playlist_swipe_delta_x < -$(document).width())
+					playlist_swipe_delta_x = -$(document).width();
+				$(".song.prev_song").css({left: "calc(-100% + "+(-playlist_swipe_delta_x)+"px)"});
 			}
 		}
-		if (!x_over && discover_swipe_start_y !== false){
-			discover_swipe_delta_y = discover_swipe_start_y - e.clientY;
-			if (discover_swipe_delta_y > 50){
-				if (discover_swipe_delta_y < 0)
-					discover_swipe_delta_y = 0;
-				$(".song .band_info").css({top: "calc(100% - "+discover_swipe_delta_y+"px)"});
+		if (!x_over && playlist_swipe_start_y !== false){
+			playlist_swipe_delta_y = playlist_swipe_start_y - e.clientY;
+			if (playlist_swipe_delta_y > 50){
+				if (playlist_swipe_delta_y < 0)
+					playlist_swipe_delta_y = 0;
+				$(".song .band_info").css({top: "calc(100% - "+playlist_swipe_delta_y+"px)"});
 			}
+		}
+		if (profile_song_press){
+			var offsets = profile_song_press.offset();
+			console.log(offsets);
+			profile_song_press.find("img").css({left: playlist_swipe_start_x + e.clientX - offsets.left, top: playlist_swipe_start_y + e.clientY - offsets.top});
 		}
 	});
-	$("#discover_songs").on("touchend", function(e){
-		console.log(discover_swipe_delta_x);
-		if (discover_swipe_delta_x > 50){
-			next_discover();
-		} else if (discover_swipe_delta_y > 150){
+	$(document).on("touchend", function(e){
+		if (profile_album_long_press){
+			clearTimeout(profile_album_long_press);
+			profile_album_long_press = false;
+		}
+		if (profile_song_long_press){
+			clearTimeout(profile_song_long_press);
+			profile_song_long_press = false;
+			var offsets = profile_song_press.offset();
+			$(".moving_song").removeClass("moving_song").find("img").css({top:0, left:0});
+			profile_song_press = false;
+		}
+	});
+	$("#playlist_songs").on("touchend", function(e){
+		console.log(playlist_swipe_delta_x);
+		if (name_long_press){
+			$("#playlist .song_name").removeClass("show_full");
+			clearTimeout(name_long_press);
+			name_long_press = false;
+		}
+		if (playlist_swipe_delta_x > 50){
+			next_playlist();
+			$(".song.prev_song").animate({left: "-100%"}, 100);
+		} else if (playlist_swipe_delta_x < -50){
+			prev_playlist();
+			$(".song.next_song").animate({left: "100%"}, 100);
+		} else if (playlist_swipe_delta_y > 150){
 			open_band($(".song .band_info").data("band_id"));
+			$(".song.next_song").animate({left: "100%"}, 100);
+			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else {
 			$(".song.next_song").animate({left: "100%"}, 100);
+			$(".song.prev_song").animate({left: "-100%"}, 100);
 		}
 		$(".song .band_info").css({top: "100%"}, 100);
-		discover_touch = false;
-		discover_swipe_delta_x = false;
-		discover_swipe_start_y = false;
+		playlist_touch = false;
+		playlist_swipe_delta_x = false;
+		playlist_swipe_start_y = false;
 	});
 
 	click_event(".song_pass", function (e){
 		$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "pass", song_id: $(e.currentTarget).parents(".song").data("song_id")}, function(data){
-			next_discover();
+			next_playlist();
 		});
 	}, true);
 
 	click_event(".song_like", function (e){
 		$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "like", song_id: $(e.currentTarget).parents(".song").data("song_id")}, function(data){
-			next_discover();
+			next_playlist();
 		});
 	}, true);
 
@@ -586,9 +684,28 @@ function startup(){
 	click_event(".open_profile_yours", function (e){
 		back_log("open_profile_yours");
 	}, true);
+	
+	click_event(".play_playlist", function (e){
+		back_log("load_playlist", ["playlist", $(e.currentTarget).data("playlist_id")]);
+	}, true);
 
-	click_event(".open_albums", function (e){
-		$("#profile_your_songs").show();
+	click_event(".create_playlist", function (){
+		open_modal({title:"Create Playlist", content: 'Create playlist with the name <input id="playlist_name" type="text" placeholder="Name">', button1:"Create", callback: function (action){
+			if (action == "Create"){
+				open_modala("Creating");
+				$("#playlist_name").val();
+				$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "create_playlist", name:$("#playlist_name").val()}, function (data){
+					close_modala();
+					if (data.playlist){
+						$("#profile_your_playlists").append(template("playlist_list", data.playlist));
+					}
+				});
+			}
+		}});
+	});
+
+	click_event(".open_music", function (e){
+		$("#profile_music").show();
 		$("#profile_notifications").hide();
 		$(".nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
@@ -596,7 +713,7 @@ function startup(){
 	
 	click_event(".open_notifications", function (e){
 		$("#profile_notifications").show();
-		$("#profile_your_songs").hide();
+		$("#profile_music").hide();
 		$(".nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
@@ -827,7 +944,7 @@ function startup(){
 	});
 
 	click_event(".open_genre", function (e){
-		back_log("open_genre", $(e.currentTarget).data("genre_id"));
+		back_log("load_playlist", ["genre", $(e.currentTarget).data("genre_id")]);
 	}, true);
 
 	document.addEventListener("backbutton", function (){
@@ -865,7 +982,8 @@ function startup(){
 		if (settings.get("is_admin") > 0){
 			$(".is_admin").show();
 		}
-		open_page("discover");
+		//open_page("playlist");
+		back_log("load_playlist");
 		$(".logged_in").show();
 		$(".logged_out").hide();
 	} else {

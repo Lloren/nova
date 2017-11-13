@@ -54,7 +54,7 @@ var last_back = false;
 function back_log(func, args){
 	last_back = false;
 	args = args || [];
-	if (typeof args != "array")
+	if (typeof args != "object")
 		args = [args];
 	console.log("logged", [func, args]);
 	back_logs.push([func, args]);
