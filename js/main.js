@@ -122,12 +122,16 @@ function Audio_player2(){
 		console.log(this.playing);
 		var scope = this;
 		this.output_handle = setInterval(function (){
-			if (scope.length === 0 && scope.playing.getDuration()){
-				scope.length = scope.playing.getDuration();
-				$(".current_song .total_time").html(scope.time_out(scope.length));
-			}
-			$(".current_song .current_time").html(scope.time_out(scope.playing.getCurrentPosition()));
-			$(".current_song .song_played").css("width", (scope.playing.getCurrentPosition() / scope.playing.getDuration() * 100) + "%");
+			scope.playing.getCurrentPosition(function (pos){
+				if (scope.length === 0 && scope.playing.getDuration()){
+					scope.length = scope.playing.getDuration();
+					$(".current_song .total_time").html(scope.time_out(scope.length));
+				}
+				$(".current_song .current_time").html(scope.time_out(pos));
+				$(".current_song .song_played").css("width", (pos / scope.playing.getDuration() * 100) + "%");
+			}, function (err){
+
+			});
 		}, 100);
 	};
 
