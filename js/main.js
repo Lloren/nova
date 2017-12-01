@@ -122,12 +122,12 @@ function Audio_player2(){
 		console.log(this.playing);
 		var scope = this;
 		this.output_handle = setInterval(function (){
-			if (scope.length === 0 && scope.playing._duration){
-				scope.length = scope.playing._duration;
+			if (scope.length === 0 && scope.playing.getDuration()){
+				scope.length = scope.playing.getDuration();
 				$(".current_song .total_time").html(scope.time_out(scope.length));
 			}
-			$(".current_song .current_time").html(scope.time_out(scope.playing._position));
-			$(".current_song .song_played").css("width", (scope.playing._position / scope.playing._duration * 100) + "%");
+			$(".current_song .current_time").html(scope.time_out(scope.playing.getCurrentPosition()));
+			$(".current_song .song_played").css("width", (scope.playing.getCurrentPosition() / scope.playing.getDuration() * 100) + "%");
 		}, 100);
 	};
 
