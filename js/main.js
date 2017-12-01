@@ -425,7 +425,7 @@ function view_playlist(playlist_id){
 		for (var i=0;i<data.songs.length;i++){
 			song_htmls.push(template("half_list", data.songs[i]));
 		}
-		$("#view_playlist_songs").html(song_htmls+'<div class="clear"></div>');
+		$("#view_playlist_songs").html(song_htmls.join("")+'<div class="clear"></div>');
 		show_page("view_playlist");
 	});
 }
@@ -1058,7 +1058,7 @@ function startup(){
 
 	click_event(".play_song", function (e){
 		if (!profile_song_long_press)
-			back_log("play_song", $(e.currentTarget).data("song_id"));
+			play_song($(e.currentTarget).data("song_id"));
 	}, true);
 	
 	$("#search_field").on("keyup", function (e){
