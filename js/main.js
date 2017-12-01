@@ -97,6 +97,11 @@ function Audio_player2(){
 		}
 	};
 
+	this.time_out = function (time){
+		var sec = Math.floor(time%60);
+		return Math.floor(time/60)+':'+(sec<10?'0'+sec:sec);
+	};
+
 	this.play = function(audio){
 		if (this.stop() && false){
 			setTimeout(function (){
