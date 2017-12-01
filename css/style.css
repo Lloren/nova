@@ -1,18 +1,30 @@
 @font-face {
-	font-family: 'Source Sans Pro';
+	font-family: "Source Sans Pro";
 	font-style: normal;
 	font-weight: 400;
-	src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(../fonts/SourceSansPro.woff2) format('woff2');
+	src: local("Source Sans Pro"), local("SourceSansPro-Regular"), url(../fonts/SourceSansPro.woff2) format("woff2");
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
 }
 
+@font-face {
+	font-family: "Campton";
+	src: url("../fonts/ReneBieder-Campton-Light.otf") format("opentype");
+}
+@font-face {
+	font-family: "Campton";
+	font-weight: bold;
+	src: url("../fonts/ReneBieder-CamptonBookBold.otf") format("opentype");
+}
+
 * {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none;/* -webkit-user-select:none;*/}
-html {text-size-adjust:100%; -webkit-text-size-adjust:100%;}
+html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton;}
 body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: black; color: white}
 
 .clear {clear:both;}
 
-input, select {-webkit-appearance:none; border-radius:0;}
+input, select {-webkit-appearance:none; background: black; border: solid 1px #555555; color: #ddd; padding: 5px; font-size: 1.2em; margin: 4px 20px; width: calc(100% - 40px); border-radius: 10px;}
+input {background: #333333;}
+.slider {-webkit-appearance: slider-horizontal; border: none; padding: 0; margin: 0; width: inherit; width: 90%;}
 
 
 #modal-overlay {position: fixed; top: 0; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:999;}
@@ -120,7 +132,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 }
 
 #playlist_nav .nav_item{
-	width: 24%;
+	width: 23.9%;
 }
 
 #playlist .profile_image_cont{
@@ -137,7 +149,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	left: 0;
 	font-size: 150px;
 	opacity: 0.2;
-	top: 140px;
+	top: 100px;
 	position: absolute;
 }
 
@@ -190,7 +202,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 }
 
 #playlist .song_name{
-	font-size: 50px;
+	font-size: 40px;
 	transition: 1s;
 	max-height: 2.4em;
 	position: relative;
@@ -213,18 +225,37 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	text-align: center;
 }
 
+.timmer{
+	position: absolute;
+	font-size: 0.8em;
+}
+
+.song_play_info{
+	height:15px;
+}
+
 .song_playback{
-	width: 90%;
+	width: 70%;
 	left: 0;
 	right: 0;
 	margin: 0 auto;
 	background: gray;
+	position: absolute;
+	top: 7px;
 }
 
 .song_played{
 	height: 2px;
 	width: 0;
-	background: white;
+	background: linear-gradient(to right, #ad294e 0%, #e58806 100%);
+}
+
+.position_control .song_playback{
+	top: -50px;
+}
+
+.position_control .song_played{
+	height:20px;
 }
 
 .song_pass{
@@ -268,10 +299,30 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	top: 100%;
 }
 
+.genre_name {
+	width: 80px;
+	text-align: left;
+}
+
+.genre_selector {
+	position: relative;
+	height: 50px;
+}
+
+.genre_value {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+#modal.questionnaire{
+	height: 300px;
+}
+
 
 
 #band_dashboard .nav_item{
-	width: 24%;
+	width: 23.9%;
 }
 .band_dashboard_pages{
 	display:none;
@@ -335,10 +386,18 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	float:right;
 }
 
+.half_list_group{
+	width: 100%;
+	overflow: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+
 .half_list_song {
 	width: 45vw;
 	float: left;
 	padding: 5px;
+	position: relative;
 }
 
 .half_list_song img {
@@ -346,7 +405,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	position: relative;
 }
 
-.half_list_song.moving_song img{
+.half_list_song.moving_song img {
 	position: fixed;
 	width: 45vw;
 }
@@ -355,12 +414,45 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	font-size: 0.8em;
 }
 
+.selected_overlay {
+	display: none;
+	position: absolute;
+	top: 0;
+	background: rgba(0, 0, 0, 0.5);
+	width: calc(100% - 10px);
+	height: 100%;
+	text-align: center;
+}
+
+#view_playlist_songs .half_list_song{
+	width: 50vw;
+}
+
+.playlist_cont{
+	height: calc(100vh - 95px);
+	overflow: scroll;
+}
+
+#profile_music_songs .selected_song .selected_overlay, .song_selected #profile_music_playlists .selected_overlay {
+	display: block;
+}
+
+.selected_overlay .selected_title{
+	position: absolute;
+	top: 70px;
+	width: calc(100% - 10px);
+}
+
+.selected_overlay .fa-close{
+	right: 5px;
+	top: 5px;
+	position: absolute;
+	font-size: 30px;
+}
+
 .profile_cont {
-	height: calc(100% - 46px - 168px);
-	/* height: 100%; */
-	/* height: 300px; */
-	overflow: auto;
-	position: relative;
+	height: calc(100vh - 46px - 168px - 35px);
+	overflow: scroll;
 }
 
 .list_song {
@@ -383,8 +475,9 @@ input, select {-webkit-appearance:none; border-radius:0;}
 
 .full_list_cont {
 	display: inline-block;
-	vertical-align: top;
-	padding: 20px 0;
+	vertical-align: middle;
+	margin-top: -25%;
+	max-width: calc(100% - 90px);
 }
 
 .search_item {
@@ -456,7 +549,7 @@ input, select {-webkit-appearance:none; border-radius:0;}
 }
 
 #band_nav .nav_item{
-	width: 24%;
+	width: 23.9%;
 }
 
 #donate{
@@ -476,8 +569,22 @@ input, select {-webkit-appearance:none; border-radius:0;}
 	width: 60px;
 }
 
+
+
+
+
+
+
 /* iOS only */
 body#ios {padding-top:20px;}
+body#ios #ios_icon_cover{
+	height: 20px;
+	width: 100%;
+	background: black;
+	z-index: 99999;
+	position: fixed;
+	top:0;
+}
 
 /* Android only */
 

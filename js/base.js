@@ -254,6 +254,11 @@ function reopen_modal(){
 	$("#modal-overlay").addClass("enabled");
 }
 
+function close_modal(){
+	$("#modal").hide();
+	$("#modal-overlay").removeClass("enabled");
+}
+
 function close_modala(){
 	clearTimeout(modala_handle);
 	$("#modal").hide().removeClass("loading");

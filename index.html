@@ -65,6 +65,12 @@
 	<div data-key="half_list">
 		<div class="half_list_song play_song" data-song_id="##id##">
 			<img src="##image_url##">
+			<div class="selected_overlay">
+				<i class="fa fa-close"></i>
+				<div class="selected_title">
+					Selected
+				</div>
+			</div>
 			<div class="half_list_cont">
 				<div class="song_name">##name##</div>
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
@@ -74,6 +80,12 @@
 	<div data-key="playlist_list">
 		<div class="half_list_song play_playlist" data-playlist_id="##id##">
 			<img src="##image_url##">
+			<div class="selected_overlay add_to_playlist" data-playlist_id="##id##">
+				<div class="selected_title">
+					<i class="fa fa-plus"></i>
+					Add to list
+				</div>
+			</div>
 			<div class="half_list_cont">
 				<div class="song_name">##name##</div>
 			</div>
@@ -93,6 +105,7 @@
 	</div>
 	<div data-key="song_disp">
 		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
+			<div class="genre_data" style="display: none;">##genre_data##</div>
 			<div class="profile_image_cont">
 				<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
 				<img class="profile_image stop_audio" src="##image_url##">
@@ -105,8 +118,12 @@
 				<i class="fa fa-cog song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" aria-hidden="true"></i>
 			</div>
 			<div class="song_info">
-				<div class="song_playback">
-					<div class="song_played"></div>
+				<div class="song_play_info">
+					<div class="current_time timmer" style="left: 10px"></div>
+					<div class="total_time timmer" style="right: 10px"></div>
+					<div class="song_playback">
+						<div class="song_played"></div>
+					</div>
 				</div>
 				<div class="song_name"><span>##name##</span></div>
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
@@ -147,6 +164,16 @@
 			<input type="hidden" class="song_genres" value="##id##" />
 		</div>
 	</div>
+	<div data-key="free_question">
+		<div class="genre_selector">
+			<div class="genre_name">##name##</div>
+			<div class="genre_slider"><input type="range" min="0" max="100" value="0" class="slider" data-genre_id="##id##"></div>
+			<div class="genre_value"><span id="genre_value_##id##">0</span>%</div>
+		</div>
+	</div>
+</div>
+<div id="ios_icon_cover">
+
 </div>
 
 <div id="cont">
@@ -305,11 +332,11 @@
 		</div>
 		<div class="profile_cont">
 			<div id="profile_music">
-				<div style="width: 100%; overflow: auto;">
+				<div class="half_list_group" id="profile_music_songs">
 					<div id="profile_your_songs" class="profile_songs" style="width: 10000px;">
 					</div>
 				</div>
-				<div style="width: 100%; overflow: auto;">
+				<div class="half_list_group" id="profile_music_playlists">
 					<div style="width: 10000px;">
 						<div class="half_list_song play_playlist" data-playlist_id="0">
 							<img class="profile_image_src" src="">
@@ -341,7 +368,8 @@
 	</div>
 
 	<div class="page" id="settings">
-		<a class="logout">Logout</a><br /><br />
+		<input type="submit" class="logout" value="Logout" /><br /><br />
+
 		<input id="settings_name" type="text" value="" placeholder="name" /><br />
 		<input id="settings_password" type="password" value="" placeholder="New password" /><br />
 		<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
@@ -351,7 +379,7 @@
 			<div id="settings_bands">
 
 			</div>
-			<a class="open_page" data-page="create_band">Create new band</a>
+			<input type="submit" class="open_page" data-page="create_band" value="Create new band" />
 		</div>
 	</div>
 
@@ -450,6 +478,9 @@
 		</div>
 		<div id="dash_settings" class="band_dashboard_pages">
 
+			<input type="text" id="band_name" value="" placeholder="Band Name" />
+			<input type="submit" id="save_band" value="Save Band Changes" />
+
 			<div class="is_admin">
 				<h3>Admin Controls</h3>
 				<select id="band_status" class="admin_band_update">
@@ -491,6 +522,19 @@
 	<div class="page" id="social" data-on_open="load_social">
 		<h2>Social</h2>
 		Soon
+	</div>
+
+	<div class="page" id="view_playlist">
+		<h2>Playlist <span id="view_playlist_name"></span></h2>
+		<div class="playlist_edit" style="display: none;">
+			<input type="text" id="playlist_name" value="" />
+			<input type="submit" id="playlist_submit" value="Save Changes" />
+		</div>
+		<div class="playlist_cont">
+			<div id="view_playlist_songs">
+
+			</div>
+		</div>
 	</div>
 
 	<div id="footer">

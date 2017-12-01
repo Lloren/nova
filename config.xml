@@ -83,6 +83,7 @@
 	<gap:plugin name="cordova-plugin-file-transfer" source="npm" />
 
 	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
+	<gap:plugin name="cordova-plugin-filepicker" source="npm" />
 
 	<gap:plugin name="cordova-plugin-facebook4" source="npm">
 		<param name="APP_ID" value="884526071687505" /><!--170066436859871-->
