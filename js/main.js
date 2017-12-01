@@ -122,12 +122,12 @@ function Audio_player2(){
 		console.log(this.playing);
 		var scope = this;
 		this.output_handle = setInterval(function (){
-			if (scope.length === 0 && scope.playing.duration){
-				scope.length = scope.playing.duration;
+			if (scope.length === 0 && scope.playing._duration){
+				scope.length = scope.playing._duration;
 				$(".current_song .total_time").html(scope.time_out(scope.length));
 			}
-			$(".current_song .current_time").html(scope.time_out(scope.playing.currentTime));
-			$(".current_song .song_played").css("width", (scope.playing.currentTime / scope.playing.duration * 100) + "%");
+			$(".current_song .current_time").html(scope.time_out(scope.playing._position));
+			$(".current_song .song_played").css("width", (scope.playing._position / scope.playing._duration * 100) + "%");
 		}, 100);
 	};
 
@@ -591,6 +591,7 @@ function startup(){
 	});
 
 	var name_long_press = false;
+	var questionnaire = false;
 	var playlist_position = false;
 	var profile_playlist_long_press = false;
 	var profile_song_long_press = false;
@@ -643,6 +644,9 @@ function startup(){
 	$(window).on("touchmove", function(e){
 		e = e.originalEvent.touches[0];
 		var x_over = false;
+		if (questionnaire){
+			return;
+		}
 		if (playlist_position){
 			var per = (e.clientX - $(window).width() * .15) / ($(window).width() * 0.7);
 			if (per > 1)
@@ -719,7 +723,9 @@ function startup(){
 			for (var i=0;i<genres.length;i++){
 				htmls.push(template("free_question", genres[i]));
 			}
+			questionnaire = true;
 			open_modal({title: "Free User Questionnaire", content: htmls.join(""), button1: "Cancel", add_class: "questionnaire", callback: function (button){
+				questionnaire = false;
 				next_playlist();
 			}});
 			$(".genre_selector .slider").on("input", function (){
@@ -733,8 +739,8 @@ function startup(){
 				});
 				if (genres.length >= 3){
 					$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "genre_input", song_id: $(".current_song").data("song_id"), genres: genres}, function(data){
-						next_playlist();
 					});
+					questionnaire = false;
 					close_modal();
 					next_playlist();
 				}

@@ -577,6 +577,7 @@ input {background: #333333;}
 
 /* iOS only */
 body#ios {padding-top:20px;}
+body#ios #header{top:20px;}
 body#ios #ios_icon_cover{
 	height: 20px;
 	width: 100%;
