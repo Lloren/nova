@@ -80,6 +80,7 @@
 	<gap:plugin name="cordova-plugin-network-information" source="npm" />
 	<gap:plugin name="cordova-plugin-appversion" source="npm" />
 	<gap:plugin name="cordova-plugin-camera" source="npm" />
+	<gap:plugin name="cordova-plugin-file" source="npm" />
 	<gap:plugin name="cordova-plugin-file-transfer" source="npm" spec="1.6.3" />
 
 	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
