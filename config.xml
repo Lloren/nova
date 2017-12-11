@@ -85,16 +85,16 @@
 	<gap:plugin name="cordova-allow-background-audio" source="npm" />
 	<gap:plugin name="cordova-plugin-ios-longpress-fix" source="npm" />
 
-	<gap:plugin name="cordova-plugin-file" source="npm" spec="4.3.3"/>
-	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" spec="1.6.3" />
-	<gap:plugin name="cordova-plugin-media" source="npm" spec="3.0.1" />
+	<gap:plugin name="cordova-plugin-file" source="npm" /><!-- spec="4.3.3"/>-->
+	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" /><!-- spec="1.6.3" />-->
+	<gap:plugin name="cordova-plugin-media" source="npm" /><!-- spec="3.0.1" />-->
 
 	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
 	<gap:plugin name="cordova-plugin-filepicker" source="npm" />
 
-	<plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
+	<!--<plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
 		<variable name="ANDROID_SUPPORT_VERSION" value="25.4.0" />
-	</plugin>
+	</plugin>-->
 	<gap:plugin name="cordova-plugin-facebook4" source="npm">
 		<param name="APP_ID" value="884526071687505" /><!--170066436859871-->
 		<param name="APP_NAME" value="Nova" />
