@@ -69,7 +69,7 @@ function Audio_player(){
 	};
 
 	this.set_pos = function (val){
-		this.pause;
+		this.pause();
 		this.pause_time = val * this.length;
 		this.resume();
 	};
@@ -170,18 +170,21 @@ function Audio_player2(){
 
 	this.pause = function (){
 		this.playing.pause();
+		//this.pause_time = this.playing.currentTime;
 		this.is_playing = false;
 	};
 
 	this.resume = function (){
+		//this.playing.currentTime = this.pause_time;
 		this.playing.play();
 		this.is_playing = true;
 	};
 
 	this.set_pos = function (val){
-		this.pause;
-		this.pause_time = val * this.length;
-		this.resume();
+		this.playing.seekTo(val * this.length * 1000);
+		//this.pause();
+		//this.pause_time = val * this.length;
+		//this.resume();
 	};
 }
 var player = false;
