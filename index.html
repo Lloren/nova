@@ -87,7 +87,7 @@
 				</div>
 			</div>
 			<div class="half_list_cont">
-				<div class="song_name">##name##</div>
+				<div class="song_name">##name## (<span>##num_songs##</span>)</div>
 			</div>
 		</div>
 	</div>
@@ -129,12 +129,14 @@
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
 				<div class="song_controls">
 					<div class="song_pass">
-						<i class="fa fa-times" aria-hidden="true"></i>
+						X
 					</div>
 					<div class="song_like">
-						<i class="fa fa-check" aria-hidden="true"></i>
+						<div style="transform: scaleX(-1) rotate(-45deg) translate3d(4px, -4px, 0); font-size: 34px; display: inline-block;">L</div>
 					</div>
 				</div>
+				&#x2713;<i class="fa fa-check" aria-hidden="true"></i>
+				&#x2717;<i class="fa fa-times" aria-hidden="true"></i>
 			</div>
 			<div class="band_info" data-band_id="##band_id##">
 				<div class="profile_image_cont">
@@ -321,13 +323,13 @@
 		</div>
 		<div id="profile_nav">
 			<div class="nav_item open_music active">
-				<i class="fa fa-dot-circle-o" aria-hidden="true"></i>
+				<img src="images/icon_record.png" />
 			</div>
 			<div class="nav_item open_notifications">
-				<i class="fa fa-music" aria-hidden="true"></i>
+				<img src="images/icon_notifications.png" />
 			</div>
 			<div class="nav_item open_page" data-page="settings">
-				<i class="fa fa-cog" aria-hidden="true"></i>
+				<img src="images/icon_gear.png" />
 			</div>
 		</div>
 		<div class="profile_cont">
@@ -424,16 +426,16 @@
 		</div>
 		<div id="band_nav" style="height: 70px;">
 			<div class="nav_item" title="Private social">
-				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+				<img src="images/icon_notifications.png" />
 			</div>
 			<div class="nav_item" title="Public social">
-				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+				<img src="images/icon_magaphone_noise.png" />
 			</div>
 			<div class="nav_item" title="Share">
-				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+				<img src="images/icon_record.png" />
 			</div>
 			<div class="nav_item">
-				<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+				<img src="images/icon_cross.png" />
 			</div>
 		</div>
 		<div id="donate">
@@ -450,16 +452,16 @@
 		</div>
 		<div id="band_dash_nav" style="height: 70px;">
 			<div class="nav_item band_stats active">
-				<i class="fa fa-line-chart" aria-hidden="true"></i>
+				<img src="images/icon_graph.png" />
 			</div>
 			<div class="nav_item band_songs">
-				<i class="fa fa-music" aria-hidden="true"></i>
+				<img src="images/icon_record.png" />
 			</div>
 			<div class="nav_item band_social">
-				<i class="fa fa-users" aria-hidden="true"></i>
+				<img src="images/icon_notifications.png" />
 			</div>
 			<div class="nav_item band_settings">
-				<i class="fa fa-cog" aria-hidden="true"></i>
+				<img src="images/icon_gear.png" />
 			</div>
 		</div>
 		<div id="dash_stats" class="band_dashboard_pages" style="display: block;">
@@ -494,7 +496,7 @@
 
 	<div class="page" id="featured" data-on_open="load_featured">
 		<h2>Featured</h2>
-		<div id="featured_featured" style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+		<div id="featured_featured" style="width: 90%; margin: auto;width: 100%; height: 200px; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />

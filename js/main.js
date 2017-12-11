@@ -515,6 +515,9 @@ function startup(){
 		player = new Audio_player2();
 	}
 
+	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
+	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 312) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80)+"px !important}");
+
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
 			console.log("fb login", obj);
@@ -596,6 +599,7 @@ function startup(){
 	var questionnaire = false;
 	var playlist_position = false;
 	var profile_playlist_long_press = false;
+	var profile_playlist_edit = false;
 	var profile_song_long_press = false;
 	var profile_song_press = false;
 	var profile_song_start_x = false;
@@ -621,10 +625,12 @@ function startup(){
 	});
 
 	$(document).on("touchstart", "#your_profile .play_playlist", function (e){
+		profile_playlist_edit = false;
 		if ($(e.currentTarget).data("playlist_id")){
 			profile_playlist_loc = $("#profile_your_playlists").offset();
 			profile_playlist_long_press = setTimeout(function (){
 				if (Math.abs(profile_playlist_loc.left - $("#profile_your_playlists").offset().left) < 20){
+					profile_playlist_edit = true;
 					back_log("view_playlist", [$(e.currentTarget).data("playlist_id")]);
 				}
 			}, 500);
@@ -635,6 +641,7 @@ function startup(){
 		var profile_song_touch = e.originalEvent.touches[0];
 		profile_song_start_x = profile_song_touch.clientX;
 		profile_song_start_y = profile_song_touch.clientY;
+		profile_song_press = false;
 		profile_song_long_press = setTimeout(function (){
 			$("#profile_music").addClass("song_selected");
 			profile_song_press = $(e.currentTarget);
@@ -846,7 +853,7 @@ function startup(){
 	}, true, true);
 	
 	click_event(".play_playlist", function (e){
-		if (!profile_playlist_long_press)
+		if (!profile_playlist_edit)
 			back_log("load_playlist", ["playlist", $(e.currentTarget).data("playlist_id")]);
 	}, true);
 
@@ -1099,7 +1106,7 @@ function startup(){
 	}, true);
 
 	click_event(".play_song", function (e){
-		if (!profile_song_long_press)
+		if (!profile_song_press)
 			play_song($(e.currentTarget).data("song_id"));
 	}, true);
 	

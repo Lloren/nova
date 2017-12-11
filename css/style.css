@@ -26,6 +26,13 @@ input, select {-webkit-appearance:none; background: black; border: solid 1px #55
 input {background: #333333;}
 .slider {-webkit-appearance: slider-horizontal; border: none; padding: 0; margin: 0; width: inherit; width: 90%;}
 
+h2{
+	margin-left: 5%;
+	margin-bottom: 0;
+	font-size: 40px;
+	text-transform: uppercase;
+}
+
 
 #modal-overlay {position: fixed; top: 0; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:999;}
 #modal-overlay.enabled {pointer-events:auto; opacity:0.7;}
@@ -79,8 +86,20 @@ input {background: #333333;}
 }
 
 #header_logo{
+	display: none;
 	width: 100px;
 	margin: 10px auto;
+	left: 0;
+	right: 0;
+	position: fixed;
+}
+
+#logo {
+	font-weight: bold;
+	letter-spacing: 0.1em;
+	font-size: 35px;
+	width: 115px;
+	margin: -3px auto;
 	left: 0;
 	right: 0;
 	position: fixed;
@@ -203,6 +222,7 @@ input {background: #333333;}
 
 #playlist .song_name{
 	font-size: 40px;
+	font-weight: bold;
 	transition: 1s;
 	max-height: 2.4em;
 	position: relative;
@@ -222,7 +242,14 @@ input {background: #333333;}
 }
 
 .song_controls{
+	position: absolute;
 	text-align: center;
+	font-size: 30px;
+	bottom: 0;
+	left: 0;
+	width: 80%;
+	right: 0;
+	margin: auto;
 }
 
 .timmer{
@@ -247,7 +274,7 @@ input {background: #333333;}
 .song_played{
 	height: 2px;
 	width: 0;
-	background: linear-gradient(to right, #ad294e 0%, #e58806 100%);
+	background: linear-gradient(to right, #e7367c 0%, #de8b2f 100%);
 }
 
 .position_control .song_playback{
@@ -259,23 +286,23 @@ input {background: #333333;}
 }
 
 .song_pass{
-	height: 30px;
-	color: red;
-	border: 1px solid;
-	width: 40%;
-	border-bottom-left-radius: 10px;
-	border-top-left-radius: 10px;
-	display: inline-block;
+	height: 40px;
+	color: #e7367c;
+	border: 1px solid #eeeeee;
+	width: 50%;
+	border-bottom-left-radius: 100px;
+	border-top-left-radius: 100px;
+	float: left;
 }
 
 .song_like{
-	height: 30px;
-	color: orange;
-	border: 1px solid;
-	width: 40%;
-	border-bottom-right-radius: 10px;
-	border-top-right-radius: 10px;
-	display: inline-block;
+	height: 40px;
+	color: #de8b2f;
+	border: 1px solid #eeeeee;
+	width: 50%;
+	border-bottom-right-radius: 100px;
+	border-top-right-radius: 100px;
+	float: left;
 }
 
 .nav_item{
@@ -290,7 +317,15 @@ input {background: #333333;}
 	margin: 0 auto;
 	left: 0;
 	right: 0;
-	position: absolute;
+	position: relative;
+}
+
+.nav_item.active {
+	color: #e7367c;
+}
+
+.nav_item.active img{
+	filter: brightness(42.5%) sepia(100) saturate(85) hue-rotate(-30deg);
 }
 
 .band_info{
@@ -321,6 +356,12 @@ input {background: #333333;}
 
 
 
+
+#band_dash_nav{
+	position: relative;
+	top: 8px;
+}
+
 #band_dashboard .nav_item{
 	width: 23.9%;
 }
@@ -331,10 +372,6 @@ input {background: #333333;}
 
 #profile_nav .nav_item{
 	width: 32%;
-}
-
-.nav_item.active {
-	color: #f74692;
 }
 
 .profile_image_cont{
@@ -373,6 +410,11 @@ input {background: #333333;}
 	font-size: 40px;
 }
 
+#profile_nav{
+	position: relative;
+	top: 8px;
+}
+
 #dash_songs img {
 	width: 80px;
 }
@@ -380,6 +422,8 @@ input {background: #333333;}
 .large_menu_item{
 	margin: 15px 10px;
 	font-size: 35px;
+	font-weight: bold;
+	text-transform: uppercase;
 }
 
 .large_menu_item .fa{
@@ -437,6 +481,13 @@ input {background: #333333;}
 
 .half_list_song .band_name {
 	font-size: 0.8em;
+}
+
+.song_name{
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: bold;
 }
 
 .selected_overlay {
@@ -578,7 +629,7 @@ input {background: #333333;}
 }
 
 #donate{
-	border: 1px solid #ff4282;
+	border: 1px solid #e7367c;
 	height: 3em;
 	text-align: center;
 	padding: 0.8em;
