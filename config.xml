@@ -95,7 +95,7 @@
 	<!--<plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
 		<variable name="ANDROID_SUPPORT_VERSION" value="25.4.0" />
 	</plugin>-->
-	<gap:plugin name="cordova-plugin-facebook4" source="npm">
+	<gap:plugin name="cordova-plugin-facebook4" source="npm" spec="1.7.4">
 		<param name="APP_ID" value="884526071687505" /><!--170066436859871-->
 		<param name="APP_NAME" value="Nova" />
 	</gap:plugin>
