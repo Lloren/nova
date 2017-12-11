@@ -85,9 +85,9 @@
 	<gap:plugin name="cordova-allow-background-audio" source="npm" />
 	<gap:plugin name="cordova-plugin-ios-longpress-fix" source="npm" />
 
-	<gap:plugin name="cordova-plugin-file" source="npm" /><!-- spec="4.3.3"/>-->
-	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" /><!-- spec="1.6.3" />-->
-	<gap:plugin name="cordova-plugin-media" source="npm" /><!-- spec="3.0.1" />-->
+	<gap:plugin name="cordova-plugin-file" source="npm" spec="4.3.3"/>
+	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" spec="1.6.3" />
+	<gap:plugin name="cordova-plugin-media" source="npm" spec="3.0.1" />
 
 	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
 	<gap:plugin name="cordova-plugin-filepicker" source="npm" />
