@@ -622,7 +622,7 @@ function startup(){
 		feature_feature_start_x = e.originalEvent.touches[0].clientX;
 	});
 	$(document).on("touchstart", "#playlist_songs .song_name", function (){
-		if ($("#playlist .song_name span").height() > $("#playlist .song_name").height()){
+		if ($("#playlist .current_song .song_name span").width() > $("#playlist .current_song .song_name").width()){
 			name_long_press = setTimeout(function (){
 				$("#playlist .song_name").addClass("show_full");
 			}, 500);
