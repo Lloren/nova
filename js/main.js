@@ -515,8 +515,9 @@ function startup(){
 		player = new Audio_player2();
 	}
 
+	var height_mod = (thePlatform == "ios"?20:0);
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
-	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 312) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80)+"px !important}");
+	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 312 - height_mod) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}");
 
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
