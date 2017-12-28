@@ -101,7 +101,7 @@
 		<div class="search_result_group">##name##</div>
 	</div>
 	<div data-key="text_list_item">
-		<div class="large_menu_item open_genre" data-genre_id="##id##">##name## <i class="fa fa-chevron-right"></i></div>
+		<div class="large_menu_item open_genre" data-genre_id="##id##">##name## <span>></span></div>
 	</div>
 	<div data-key="song_disp">
 		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
@@ -119,8 +119,8 @@
 			</div>
 			<div class="song_info">
 				<div class="song_play_info">
-					<div class="current_time timmer" style="left: 10px"></div>
-					<div class="total_time timmer" style="right: 10px"></div>
+					<div class="current_time timmer"></div>
+					<div class="total_time timmer" style="right: 0;"></div>
 					<div class="song_playback">
 						<div class="song_played"></div>
 					</div>
@@ -354,7 +354,7 @@
 
 						</div>
 						<div class="half_list_song create_playlist">
-							<div style="width: 45vw; height: 45vw; font-size: 50px; text-align: center; padding-top: 35%;">
+							<div id="create_playlist_button" style="font-size: 50px; text-align: center; padding-top: 25%;">
 								<i class="fa fa-plus"></i>
 							</div>
 							<div class="half_list_cont">
@@ -396,7 +396,6 @@
 
 	<div class="page" id="band">
 		<div class="profile_image_cont">
-			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
 			<img class="profile_image_action open_band_dashboard" data-band_id="" src="images/icon_gear.png" />
@@ -408,13 +407,13 @@
 					<div class="circle_outer"></div>
 					<div class="circle_inner"><div class="center">123</div></div>
 				</div>
-				<div class="circle_sub">Followers</div>
+				<div class="circle_sub">Supporters</div>
 			</div>
 			<div class="circle_value">
 				<div class="circle_cont">
 					<div class="circle_back"></div>
 					<div class="circle_outer"></div>
-					<div class="circle_inner"><div class="center">$1,234</div></div>
+					<div class="circle_inner"><div class="center">1,234</div></div>
 				</div>
 				<div class="circle_sub">Donations</div>
 			</div>
@@ -500,16 +499,16 @@
 
 	<div class="page" id="featured" data-on_open="load_featured">
 		<h2>Featured</h2>
-		<div id="featured_featured" style="width: 95%; margin: auto; height: 200px; overflow: hidden; position: relative;">
+		<div id="featured_featured" style="width: 90%; margin: auto; height: 200px; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />
 		</div>
-		<div class="large_menu_item open_full_list_100" style="color:#f74692">Top 100 <i class="fa fa-chevron-right"></i></div>
-		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On Tht Rise <i class="fa fa-chevron-right"></i></div>
-		<div class="large_menu_item open_full_list_local">Local <i class="fa fa-chevron-right"></i></div>
-		<div class="large_menu_item open_full_list_curated">Curated <i class="fa fa-chevron-right"></i></div>
+		<div class="large_menu_item open_full_list_100" style="color:#f74692">Top 100 <span>></span></div>
+		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On Tht Rise <span>></span></div>
+		<div class="large_menu_item open_full_list_local">Local <span>></span></div>
+		<div class="large_menu_item open_full_list_curated">Curated <span>></span></div>
 	</div>
 
 	<div class="page" id="full_list">
@@ -521,7 +520,7 @@
 
 	<div class="page" id="genre" data-on_open="load_genres">
 		<h2>Genre</h2>
-		<div id="genre_featured" style="width: 95%; margin: auto; height: 200px; overflow: hidden; position: relative;">
+		<div id="genre_featured" style="width: 90%; margin: auto; height: 200px; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />

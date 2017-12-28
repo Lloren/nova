@@ -220,7 +220,6 @@ function open_band_dashboard(band_id){
 
 function open_band(band_id){
 	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id}, function (data){
-		$("#band .profile_background").css("background-image", "url("+data.image+")");
 		$("#band .profile_image").attr("src", data.image);
 		$("#band .profile_name").html(data.name);
 		if (data.show_dash_button){
@@ -536,7 +535,8 @@ function startup(){
 
 	var height_mod = (thePlatform == "ios"?40:(thePlatform == "android"?20:0));
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
-	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 322 - height_mod) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}");
+	var hl_width = (($(window).height() - 322 - height_mod) / 2);
+	$("#dynamic_style_sheet").html(".half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
 	
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
