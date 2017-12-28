@@ -16,9 +16,9 @@
 	src: url("../fonts/ReneBieder-CamptonBookBold.otf") format("opentype");
 }
 
-* {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none;/* -webkit-user-select:none;*/}
-html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton;}
-body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: black; color: white}
+* {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; /* -webkit-user-select:none;*/}
+html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
+body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; height:100%; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); color: white}
 
 .clear {clear:both;}
 
@@ -42,6 +42,7 @@ h2{
 #modal h1 {margin:10px 0 0 0; padding:0; text-align:center; font-size:20px; font-weight:bold; color:#fff;}
 #modal > div {margin:10px;}
 #modal > a {position:absolute; bottom:0; color:#FFF; width:50%; height:50px; line-height:50px; text-align:center; background-color:#de8b2f; left:0; font-weight: bold;}
+#modal .button {color:#FFF; width:100%; height:40px; line-height:40px; margin: 5px 0; text-align:center; background-color:#de8b2f; left:0; font-weight: bold; display: block;}
 #modal > a.fullwidth {width:100%;}
 #modal > a:last-child {background-color:#e7367c; left:initial; right:0;}
 #modal input[type="text"] {border:none; background-color:#EFEFEF; width:100%; padding:10px; font-size:18px; opacity:0.8; border:1px solid #DDD;}
@@ -133,6 +134,14 @@ h2{
 	font-size: 30px;
 }
 
+#head_bar{
+	background: linear-gradient(to right, #e7367c 0%, #de8b2f 100%);
+	height: 5px;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
 .main_form{
 	text-align: center;
 	margin-top: 100px;
@@ -200,7 +209,6 @@ h2{
 	display:none;
 	position: absolute;
 	width: 100%;
-	background: black;
 	height:100%;
 }
 
@@ -270,11 +278,11 @@ h2{
 	margin: 0 auto;
 	background: gray;
 	position: absolute;
-	top: 7px;
+	top: 5px;
 }
 
 .song_played{
-	height: 2px;
+	height: 5px;
 	width: 0;
 	background: linear-gradient(to right, #e7367c 0%, #de8b2f 100%);
 }
@@ -357,6 +365,10 @@ h2{
 	height: 340px;
 }
 
+#modal.report{
+	height: 235px;
+}
+
 
 
 
@@ -395,6 +407,7 @@ h2{
 	height: 110%;
 	position: absolute;
 	z-index: 0;
+	clip-path: polygon(0 0, 0 90%, 100% 60%, 100% 0);
 }
 
 .profile_image{
@@ -411,6 +424,13 @@ h2{
 	bottom: 5px;
 	position: absolute;
 	font-size: 40px;
+}
+
+.profile_image_action{
+	right: 5px;
+	bottom: 5px;
+	position: absolute;
+	height: 30px;
 }
 
 #profile_nav{

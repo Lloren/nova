@@ -240,6 +240,7 @@ var playlist_swipe_start_y = false;
 var playlist_swipe_delta_y = false;
 var playlist = {type: "", key: "", empty: "", data: []};
 function load_playlist(type, key, empty){
+	$("#head_bar").hide();
 	var force = false;
 	if (type !== playlist.type || key !== playlist.key){
 		force = true;
@@ -278,6 +279,7 @@ function load_playlist(type, key, empty){
 			playlist_state = htmls.join("");
 		}
 		$("#playlist_songs").html(playlist_state);
+		$("#head_bar").hide();
 	});
 }
 
@@ -495,6 +497,7 @@ function show_page(key, onload){
 		window[page.data("on_open")]();
 	}
 	$(".page").hide();
+	$("#head_bar").show();
 	page.show();
 }
 function open_page(key){
@@ -531,10 +534,10 @@ function startup(){
 		player = new Audio_player2();
 	}
 
-	var height_mod = (thePlatform == "ios"?20:0);
+	var height_mod = (thePlatform == "ios"?40:(thePlatform == "android"?20:0));
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
-	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 342 - height_mod) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 100 - height_mod)+"px !important}");
-
+	$("#dynamic_style_sheet").html(".half_list_song{width:"+(($(window).height() - 322 - height_mod) / 2)+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}");
+	
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
 			console.log("fb login", obj);
@@ -816,6 +819,18 @@ function startup(){
 		playlist_swipe_delta_x = false;
 		playlist_swipe_start_y = false;
 	});
+
+	click_event(".report_audio", function (e){
+		open_modal({title:"Flag Song", content: '<a id="stolen" class="button">Stolen/infringement</a><a id="inapp" class="button">inappropriate</a><a id="neve" class="button">Never Play</a>', button1:"Cancel", add_class:"report", callback: function (action){
+			if (action != "Cancel"){//TODO: make function
+				/*$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "pass", song_id: $(e.currentTarget).parents(".song").data("song_id")}, function(data){
+					next_playlist();
+				});*/
+			}
+		}});
+
+
+	}, true);
 
 	click_event(".song_pass", function (e){
 		$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "pass", song_id: $(e.currentTarget).parents(".song").data("song_id")}, function(data){

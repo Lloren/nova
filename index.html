@@ -107,7 +107,7 @@
 		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
 			<div class="genre_data" style="display: none;">##genre_data##</div>
 			<div class="profile_image_cont">
-				<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
+				<div class="profile_background" style="background-image:url('##image_url##')"></div>
 				<img class="profile_image stop_audio" src="##image_url##">
 				<div class="song_pause_menu" style="display: none;">
 					<i class="fa fa-pause-circle-o start_audio" aria-hidden="true"></i>
@@ -115,7 +115,7 @@
 					<i class="fa fa-trash-o report_audio" aria-hidden="true"></i>
 					<div class="song_lyrics" style="position: absolute; bottom: 10px; right: 40px;">lyrics</div>
 				</div>
-				<i class="fa fa-cog song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" aria-hidden="true"></i>
+				<img class="profile_image_action song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" src="images/icon_gear.png" />
 			</div>
 			<div class="song_info">
 				<div class="song_play_info">
@@ -135,8 +135,6 @@
 						<div style="transform: scaleX(-1) rotate(-45deg) translate3d(4px, -4px, 0); font-size: 34px; display: inline-block;">L</div>
 					</div>
 				</div>
-				&#x2713;<i class="fa fa-check" aria-hidden="true"></i>
-				&#x2717;<i class="fa fa-times" aria-hidden="true"></i>
 			</div>
 			<div class="band_info" data-band_id="##band_id##">
 				<div class="profile_image_cont">
@@ -186,7 +184,7 @@
 			</div>
 		</div>
 		<!--<img id="header_logo" class="open_page" src="images/header_logo.png" data-page="playlist"/>-->
-		<div id="logo">
+		<div id="logo" class="open_page" data-page="playlist">
 			NOVA
 		</div>
 		<div id="header_admin" class="open_page is_admin" data-page="admin">
@@ -196,6 +194,9 @@
 			<div id="head_search">
 				<i class="fa fa-search open_page" data-page="search"></i>
 			</div>
+		</div>
+		<div id="head_bar">
+
 		</div>
 	</div>
 
@@ -322,7 +323,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image profile_image_src" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-camera change_photo" data-action="profile_image" aria-hidden="true"></i>
+			<img class="profile_image_action change_photo" data-action="profile_image" src="images/icon_camera.png" />
 		</div>
 		<div id="profile_nav">
 			<div class="nav_item open_music active">
@@ -398,7 +399,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-cog open_band_dashboard" data-band_id="" aria-hidden="true"></i>
+			<img class="profile_image_action open_band_dashboard" data-band_id="" src="images/icon_gear.png" />
 		</div>
 		<div style="margin:10px 0;">
 			<div class="circle_value">
@@ -451,7 +452,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-camera change_photo" data-action="band_image" data-id="" aria-hidden="true"></i>
+			<img class="profile_image_action change_photo" data-action="band_image" data-id="" src="images/icon_gear.png" />
 		</div>
 		<div id="band_dash_nav" style="height: 70px;">
 			<div class="nav_item band_stats active">
@@ -499,7 +500,7 @@
 
 	<div class="page" id="featured" data-on_open="load_featured">
 		<h2>Featured</h2>
-		<div id="featured_featured" style="width: 90%; margin: auto;width: 100%; height: 200px; overflow: hidden; position: relative;">
+		<div id="featured_featured" style="width: 95%; margin: auto; height: 200px; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />
@@ -520,13 +521,13 @@
 
 	<div class="page" id="genre" data-on_open="load_genres">
 		<h2>Genre</h2>
-		<div id="genre_featured" style="width: 100%; height: 200px; overflow: hidden; position: relative;">
+		<div id="genre_featured" style="width: 95%; margin: auto; height: 200px; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />
 			<img class="open_band feature" data-band_id="" />
 		</div>
-		<div id="genre_list">
+		<div id="genre_list" style="overflow: auto;">
 		</div>
 	</div>
 
@@ -536,7 +537,10 @@
 	</div>
 
 	<div class="page" id="view_playlist">
-		<h2>Playlist <span id="view_playlist_name"></span></h2>
+		<h2>
+			<span id="view_playlist_name"></span>
+			<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		</h2>
 		<div class="playlist_edit" style="display: none;">
 			<input type="text" id="playlist_name" value="" />
 			<input type="submit" id="playlist_submit" value="Save Changes" />
