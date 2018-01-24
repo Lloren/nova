@@ -30,6 +30,7 @@ function Audio_player(){
 		this.playing.load();
 		this.playing.play();
 		this.replaying = false;
+		$(".repeating").removeClass("repeating");
 		this.length = false;
 		console.log(this.playing);
 		var scope = this;
@@ -118,6 +119,7 @@ function Audio_player2(){
 		this.playing.play();
 		this.is_playing = true;
 		this.replaying = false;
+		$(".repeating").removeClass("repeating");
 		this.length = false;
 		console.log(this.playing);
 		var scope = this;
@@ -146,6 +148,7 @@ function Audio_player2(){
 		console.log("stop", this.playing, this.is_playing);
 		if (this.is_playing){
 			this.replaying = false;
+			$(".repeating").removeClass("repeating");
 			clearInterval(this.output_handle);
 			if (thePlatform == "ios"){
 				this.playing.pause();
@@ -256,6 +259,10 @@ function load_playlist(type, key, empty){
 	if (playlist_state){
 		$("#playlist_songs").html(playlist_state);
 		return;
+	} else {
+		setTimeout(function (){
+			$("#head_bar").hide();
+		}, 10);
 	}
 	$("#playlist_songs").html("Loading...");
 	$.getJSON(base_url+"/ajax/get_list.php?callback=?", {type:playlist.type, key: playlist.key, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
@@ -284,6 +291,7 @@ function load_playlist(type, key, empty){
 
 function next_playlist(){
 	if ($(".song.next_song").length){
+		$("#playlist").removeClass("paused");
 		$(".song.next_song").animate({left: 0}, 200, function (){
 			$(".song.prev_song").removeClass("prev_song");
 			$(".song.current_song").removeClass("current_song").addClass("prev_song").css({left: '-100%'});
@@ -304,6 +312,7 @@ function next_playlist(){
 
 function prev_playlist(){
 	if ($(".song.prev_song").length){
+		$("#playlist").removeClass("paused");
 		$(".song.prev_song").animate({left: 0}, 200, function (){
 			$(".song.next_song").removeClass("next_song");
 			$(".song.current_song").removeClass("current_song").addClass("next_song").css({left: '100%'});
@@ -508,6 +517,8 @@ var search_query_handle = false;
 
 var name_long_press = false;
 var questionnaire = false;
+var next_questionnaire = 0;
+var next_questionnaire_count = 3;
 var playlist_position = false;
 var profile_playlist_long_press = false;
 var profile_playlist_edit = false;
@@ -536,7 +547,7 @@ function startup(){
 	var height_mod = (thePlatform == "ios"?40:(thePlatform == "android"?20:0));
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
 	var hl_width = (($(window).height() - 322 - height_mod) / 2);
-	$("#dynamic_style_sheet").html(".half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
+	$("#dynamic_style_sheet").html("#profile_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
 	
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
@@ -588,6 +599,12 @@ function startup(){
 			}
 		});
 	});
+	click_event("#reset_button", function (){
+		$.getJSON(base_url+"/ajax/login.php?callback=?", {action: "reset", email: $("#reset_email").val()}, function(data){
+			console.log("Result: ", data);
+			back_log("sreset");
+		});
+	});
 	click_event("#signup_button", function (){
 		var obj = {uuid: settings.get("uuid"), 'name': $("#signup_name").val(), 'email': $("#signup_email").val(), 'password': $("#signup_password").val(), 'cpassword': $("#signup_cpassword").val()};
 		console.log("signup", obj);
@@ -626,6 +643,11 @@ function startup(){
 	});
 	$(document).on("touchstart", "#playlist_songs .song_name", function (){
 		if ($("#playlist .current_song .song_name span").width() > $("#playlist .current_song .song_name").width()){
+			name_long_press = setTimeout(function (){
+				$("#playlist .song_name").addClass("show_full");
+			}, 500);
+		}
+		if ($("#playlist .song_name span").height() > $("#playlist .song_name").height()){
 			name_long_press = setTimeout(function (){
 				$("#playlist .song_name").addClass("show_full");
 			}, 500);
@@ -775,33 +797,36 @@ function startup(){
 			name_long_press = false;
 		}
 		if (playlist_swipe_delta_x > 50){
-			var genres = JSON.parse($(".current_song .genre_data").html());
-			var htmls = [];
-			for (var i=0;i<genres.length;i++){
-				htmls.push(template("free_question", genres[i]));
-			}
-			questionnaire = true;
-			open_modal({title: "Free User Questionnaire", content: htmls.join(""), button1: "Cancel", add_class: "questionnaire", callback: function (button){
-				questionnaire = false;
-				next_playlist();
-			}});
-			$(".genre_selector .slider").on("input", function (){
-				$("#genre_value_"+$(this).data("genre_id")).html($(this).val());
-			}).on("change", function (){
-				var genres = [];
-				$(".genre_selector .slider").each(function (){
-					if ($(this).val() > 0){
-						genres.push([$(this).data("genre_id"), $(this).val()]);
+			if (next_questionnaire <= 0){
+				next_questionnaire = next_questionnaire_count;
+				questionnaire = true;
+				var genres = JSON.parse($(".current_song .genre_data").html());
+				var htmls = [];
+				for (var i=0;i<genres.length;i++){
+					htmls.push(template("free_question", genres[i]));
+				}
+				open_modal({title: "Free User Questionnaire", content: htmls.join(""), button1: "Cancel", add_class: "questionnaire", callback: function (button){
+					questionnaire = false;
+					next_playlist();
+				}});
+				$(".genre_selector .slider").on("input", function (){
+					$("#genre_value_"+$(this).data("genre_id")).html($(this).val());
+				}).on("change", function (){
+					var genres = [];
+					$(".genre_selector .slider").each(function (){
+						if ($(this).val() > 0){
+							genres.push([$(this).data("genre_id"), $(this).val()]);
+						}
+					});
+					if (genres.length >= 3){
+						$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "genre_input", song_id: $(".current_song").data("song_id"), genres: genres}, function(data){
+						});
+						questionnaire = false;
+						close_modal();
+						next_playlist();
 					}
 				});
-				if (genres.length >= 3){
-					$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "genre_input", song_id: $(".current_song").data("song_id"), genres: genres}, function(data){
-					});
-					questionnaire = false;
-					close_modal();
-					next_playlist();
-				}
-			});
+			}
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else if (playlist_swipe_delta_x < -50){
 			prev_playlist();
@@ -828,8 +853,18 @@ function startup(){
 				});*/
 			}
 		}});
+	}, true);
 
-
+	click_event(".repeat_audio", function (e){
+		var t = $(e.currentTarget);
+		var repeating = t.hasClass("repeating");
+		if (repeating){
+			t.removeClass("repeating");
+			player.replaying = false;
+		} else {
+			t.addClass("repeating");
+			player.replaying = true;
+		}
 	}, true);
 
 	click_event(".song_pass", function (e){
@@ -846,11 +881,13 @@ function startup(){
 
 	click_event(".stop_audio", function (e){
 		$(e.currentTarget).siblings(".song_pause_menu").show();
+		$("#playlist").addClass("paused");
 		player.pause();
 	}, true);
 
 	click_event(".start_audio", function (e){
 		$(e.currentTarget).parents(".song_pause_menu").hide();
+		$("#playlist").removeClass("paused");
 		player.resume();
 	}, true);
 	
@@ -927,6 +964,7 @@ function startup(){
 			ft.upload(imageURI, base_url+"/ajax/settings.php", function(result){
 				close_modala();
 				console.log(JSON.stringify(result));
+				reload_page();
 			}, function(error){
 				close_modala();
 				console.log(JSON.stringify(error));
@@ -1165,11 +1203,11 @@ function startup(){
 	click_event("#head_back", function (e){
 		back_recent();
 		return;
-		if ($(".page:visible").data("back")){
+		/*if ($(".page:visible").data("back")){
 			open_page($(".page:visible").data("back"));
 		} else if (pages.length > 0){
 			open_page(pages.pop());
-		}
+		}*/
 	});
 
 	click_event(".open_page", function (e){

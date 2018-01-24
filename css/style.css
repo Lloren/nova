@@ -98,9 +98,9 @@ h2{
 #logo {
 	font-weight: bold;
 	letter-spacing: 0.1em;
-	font-size: 35px;
-	width: 115px;
-	margin: -3px auto;
+	font-size: 30px;
+	width: 100px;
+	margin: 0px auto;
 	left: 0;
 	right: 0;
 	position: fixed;
@@ -172,29 +172,46 @@ h2{
 	margin-top: 40px;
 }
 
+#playlist.paused .profile_image{
+	filter: blur(1px);
+}
+
 #playlist .fa-pause-circle-o{
 	right: 0;
 	left: 0;
 	font-size: 150px;
 	opacity: 0.2;
-	top: 100px;
+	top: -180px;
 	position: absolute;
+}
+
+.song_pause_menu{
+	position: absolute;
+	bottom: 10px;
+	width: 90%;
+	margin: 0 auto;
+	margin-left: 5%;/*TODO: WHYYYYY????*/
+}
+
+.song_pause_menu .menu_item{
+	width: 32%;
+	display: inline-block;
+	text-align: center;
+	vertical-align: middle;
 }
 
 #playlist .fa-repeat{
-	position: absolute;
-	bottom: 10px;
 	font-size: 40px;
 	opacity: 0.6;
-	left: 100px;
+}
+
+#playlist .fa-repeat.repeating{
+	color: #e7367c;
 }
 
 #playlist .fa-trash-o{
-	position: absolute;
-	bottom: 10px;
 	font-size: 40px;
 	opacity: 0.6;
-	right: 100px;
 }
 
 #playlist_songs{
@@ -255,7 +272,7 @@ h2{
 }
 
 .song_controls{
-	position: absolute;
+	position: relative;
 	text-align: center;
 	font-size: 30px;
 	bottom: 0;
@@ -411,6 +428,10 @@ h2{
 	z-index: 0;
 }
 
+#playlist_songs .profile_image {
+	box-shadow: #070707 2px 3px 8px;
+}
+
 #playlist_songs .profile_background{
 	-webkit-clip-path: polygon(0 0, 0 90%, 100% 60%, 100% 0);
 	clip-path: polygon(0 0, 0 90%, 100% 60%, 100% 0);
@@ -522,10 +543,15 @@ h2{
 }
 
 .song_name{
-	white-space: nowrap;
+	/*white-space: nowrap;
+	text-overflow: ellipsis;*/
 	overflow: hidden;
-	text-overflow: ellipsis;
 	font-weight: bold;
+}
+
+.song_name.hidden{
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .selected_overlay {

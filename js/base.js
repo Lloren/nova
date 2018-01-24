@@ -61,6 +61,13 @@ function back_log(func, args){
 	window[func](...args);
 }
 
+function reload_page(){
+	var last = back_logs.pop();
+	back_logs.push(last);
+	console.log("reload", last);
+	window[last[0]](...last[1]);
+}
+
 function back_recent(){
 	if (back_logs.length > 1)
 		back_logs.pop();
