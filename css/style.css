@@ -735,7 +735,7 @@ h2{
 
 /* iOS only */
 /*body#ios {padding-top:20px;}
-body#ios #header{top:20px;}*/
+body#ios #header{top:20px;}
 body#ios #ios_icon_cover{
 	height: 20px;
 	width: 100%;
@@ -743,7 +743,7 @@ body#ios #ios_icon_cover{
 	z-index: 99999;
 	position: fixed;
 	top:0;
-}
+}*/
 
 /* Android only */
 
