@@ -636,17 +636,15 @@ function startup(){
 		console.log("start");
 		playlist_touch = e.originalEvent.touches[0];
 		playlist_swipe_start_x = playlist_touch.clientX;
+		playlist_swipe_delta_x = 0;
 		playlist_swipe_start_y = playlist_touch.clientY;
+		playlist_swipe_delta_y = 0;
 	});
 	$("#featured_featured").on("touchstart", function(e){
 		feature_feature_start_x = e.originalEvent.touches[0].clientX;
 	});
 	$(document).on("touchstart", "#playlist_songs .song_name", function (){
-		if ($("#playlist .current_song .song_name span").width() > $("#playlist .current_song .song_name").width()){
-			name_long_press = setTimeout(function (){
-				$("#playlist .song_name").addClass("show_full");
-			}, 500);
-		}
+		console.log("heights", $("#playlist .song_name span").height(), $("#playlist .song_name").height());
 		if ($("#playlist .song_name span").height() > $("#playlist .song_name").height()){
 			name_long_press = setTimeout(function (){
 				$("#playlist .song_name").addClass("show_full");
