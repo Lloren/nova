@@ -18,7 +18,7 @@
 
 * {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; /* -webkit-user-select:none;*/}
 html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
-body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; height:100%; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); color: white; overflow: hidden;}
+body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); color: white; overflow: hidden;}
 
 .clear {clear:both;}
 
@@ -734,8 +734,8 @@ h2{
 
 
 /* iOS only */
-body#ios {padding-top:20px;}
-body#ios #header{top:20px;}
+/*body#ios {padding-top:20px;}
+body#ios #header{top:20px;}*/
 body#ios #ios_icon_cover{
 	height: 20px;
 	width: 100%;
