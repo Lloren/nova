@@ -417,18 +417,26 @@ function open_profile_yours(){
 function open_profile(user_id){
 	$.getJSON(base_url+"/ajax/profile.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), users_id: user_id}, function (data){
 		$("#profile .profile_background").css("background-image", "url("+data.image+")");
-		$("#profile .profile_image_src").attr("src", data.image);
+		$("#profile .profile_image").attr("src", data.image);
 		$("#profile .profile_name").html(data.name);
 		if (data.is_fallowing){
 			$(".add_friend").hide();
 		} else {
 			$(".add_friend").show().data("user_id", data.id);
 		}
+
 		var song_htmls = [];
 		for (var i=0;i<data.songs.length;i++){
 			song_htmls.push(template("half_list", data.songs[i]));
 		}
 		$("#profile_songs").html(song_htmls.join(""));
+
+		var playlists_htmls = [];
+		for (var i=0;i<data.playlists.length;i++){
+			playlists_htmls.push(template("playlist_list", data.playlists[i]));
+		}
+		$("#profile_playlists").html(playlists_htmls.join(""));
+
 		show_page("profile");
 	});
 }
@@ -519,6 +527,7 @@ var name_long_press = false;
 var questionnaire = false;
 var next_questionnaire = 0;
 var next_questionnaire_count = 3;
+var last_touch = false;
 var playlist_position = false;
 var profile_playlist_long_press = false;
 var profile_playlist_edit = false;
@@ -547,7 +556,7 @@ function startup(){
 	var height_mod = (thePlatform == "ios"?40:(thePlatform == "android"?20:0));
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
 	var hl_width = (($(window).height() - 322 - height_mod) / 2);
-	$("#dynamic_style_sheet").html("#profile_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
+	$("#dynamic_style_sheet").html("#profile_your_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
 	
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){
@@ -667,13 +676,17 @@ function startup(){
 	$(document).on("touchstart", "#your_profile .play_song", function (e){
 		var e = e;
 		var profile_song_touch = e.originalEvent.touches[0];
+		last_touch = profile_song_touch;
 		profile_song_start_x = profile_song_touch.clientX;
 		profile_song_start_y = profile_song_touch.clientY;
 		profile_song_press = false;
 		profile_song_long_press = setTimeout(function (){
-			$("#profile_music").addClass("song_selected");
-			profile_song_press = $(e.currentTarget);
-			profile_song_press.addClass("selected_song");
+			console.log(Math.abs(last_touch.clientX - profile_song_start_x));
+			if (Math.abs(last_touch.clientX - profile_song_start_x) < 30){
+				$("#profile_your_music").addClass("song_selected");
+				profile_song_press = $(e.currentTarget);
+				profile_song_press.addClass("selected_song");
+			}
 		}, 500);
 	});
 	$(document).on("touchstart", ".song_play_info", function (e){
@@ -685,6 +698,7 @@ function startup(){
 	});
 	$(window).on("touchmove", function(e){
 		e = e.originalEvent.touches[0];
+		last_touch = e;
 		var x_over = false;
 		if (questionnaire){
 			return;
@@ -784,7 +798,7 @@ function startup(){
 	click_event(".selected_overlay .fa-close", function (e){
 		$(e.currentTarget).parents(".half_list_song").removeClass("selected_song");
 		if ($(".selected_song").length <= 0){
-			$("#profile_music").removeClass("song_selected");
+			$("#profile_your_music").removeClass("song_selected");
 		}
 	}, true, true);
 	$("#playlist_songs").on("touchend", function(e){
@@ -928,7 +942,7 @@ function startup(){
 	});
 
 	click_event(".open_music", function (e){
-		$("#profile_music").show();
+		$("#profile_your_music").show();
 		$("#profile_notifications").hide();
 		$(".nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
@@ -936,7 +950,7 @@ function startup(){
 	
 	click_event(".open_notifications", function (e){
 		$("#profile_notifications").show();
-		$("#profile_music").hide();
+		$("#profile_your_music").hide();
 		$(".nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);

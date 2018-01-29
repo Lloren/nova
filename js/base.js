@@ -77,63 +77,66 @@ function back_recent(){
 	window[last[0]](...last[1]);
 }
 
-var last_touch = {x: 0, y:0, trigger:""};
-function set_touch(e, trigger){
-	var touch = e.originalEvent.changedTouches[0];
-	last_touch.trigger = trigger;
-	last_touch.x = touch.screenX;
-	last_touch.y = touch.screenY;
-}
-function good_touch(e, trigger){
-	var touch = e.originalEvent.changedTouches[0];
-	
-	if (Math.abs(last_touch.x - touch.screenX) < 10 && Math.abs(last_touch.y - touch.screenY) < 10 && trigger == last_touch.trigger){
-		return true;
+function register_touch_manager(){
+	var last_touch = {x: 0, y:0, trigger:""};
+	window.set_touch = function (e, trigger){
+		var touch = e.originalEvent.changedTouches[0];
+		last_touch.trigger = trigger;
+		last_touch.x = touch.screenX;
+		last_touch.y = touch.screenY;
 	}
-	return false;
-}
+	window.good_touch = function (e, trigger){
+		var touch = e.originalEvent.changedTouches[0];
 
-function click_event(limiter, callback, target, no_prop){
-	target = target || false;
-	no_prop = no_prop || false;
-	if (target){
-		if (target === true)
-			target = document;
-		$(target).on("touchstart", limiter, function (e){
-			set_touch(e, limiter);
-			if (no_prop){
-				e.stopPropagation();
-				return false;
-			}
-		});
-		$(target).on("touchend click_event", limiter, function (e){
-			if (e.type != "click_event" && !good_touch(e, limiter))
-				return;
-			callback(e);
-			if (no_prop){
-				e.stopPropagation();
-				return false;
-			}
-		});
-	} else {
-		$(limiter).on("touchstart", function (e){
-			set_touch(e, limiter);
-			if (no_prop){
-				e.stopPropagation();
-				return false;
-			}
-		});
-		$(limiter).on("touchend click_event", function (e){
-			if (e.type != "click_event" && !good_touch(e, limiter))
-				return;
-			callback(e);
-			if (no_prop){
-				e.stopPropagation();
-				return false;
-			}
-		});
+		if (Math.abs(last_touch.x - touch.screenX) < 10 && Math.abs(last_touch.y - touch.screenY) < 10 && trigger == last_touch.trigger){
+			return true;
+		}
+		return false;
+	}
+
+	window.click_event = function(limiter, callback, target, no_prop){
+		target = target || false;
+		no_prop = no_prop || false;
+		if (target){
+			if (target === true)
+				target = document;
+			$(target).on("touchstart", limiter, function (e){
+				set_touch(e, limiter);
+				if (no_prop){
+					e.stopPropagation();
+					return false;
+				}
+			});
+			$(target).on("touchend click_event", limiter, function (e){
+				if (e.type != "click_event" && !good_touch(e, limiter))
+					return;
+				callback(e);
+				if (no_prop){
+					e.stopPropagation();
+					return false;
+				}
+			});
+		} else {
+			$(limiter).on("touchstart", function (e){
+				set_touch(e, limiter);
+				if (no_prop){
+					e.stopPropagation();
+					return false;
+				}
+			});
+			$(limiter).on("touchend click_event", function (e){
+				if (e.type != "click_event" && !good_touch(e, limiter))
+					return;
+				callback(e);
+				if (no_prop){
+					e.stopPropagation();
+					return false;
+				}
+			});
+		}
 	}
 }
+register_touch_manager();
 
 function hide_keyboard() {
 	//this set timeout needed for case when hideKeyborad

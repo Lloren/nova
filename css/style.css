@@ -73,6 +73,11 @@ h2{
 	margin-top: 40px;
 }
 
+.page.scrollable{
+	height: calc(100vh - 40px);
+	overflow: auto;
+}
+
 .is_admin{
 	display: none;
 }
@@ -156,7 +161,7 @@ h2{
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 60px;
+	height: 50px;
 }
 
 #playlist_nav .nav_item{
@@ -573,7 +578,7 @@ h2{
 	overflow: scroll;
 }
 
-#profile_music_songs .selected_song .selected_overlay, .song_selected #profile_music_playlists .selected_overlay {
+#profile_your_music_songs .selected_song .selected_overlay, .song_selected #profile_your_music_playlists .selected_overlay {
 	display: block;
 }
 
@@ -591,8 +596,8 @@ h2{
 }
 
 .profile_cont {
-	height: calc(100vh - 46px - 168px - 35px);
-	overflow: scroll;
+	/*height: calc(100vh - 46px - 168px - 35px);
+	overflow: scroll;*/
 }
 
 .list_song {
