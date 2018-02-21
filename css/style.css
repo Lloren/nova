@@ -16,7 +16,7 @@
 	src: url("../fonts/ReneBieder-CamptonBookBold.otf") format("opentype");
 }
 
-* {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; /* -webkit-user-select:none;*/}
+* {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; -webkit-user-select:none;}
 html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
 body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); color: white; overflow: hidden;}
 
