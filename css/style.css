@@ -366,6 +366,8 @@ h2{
 	position: fixed;
 	width: 100%;
 	top: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, #353535, #060606);
 }
 
 .genre_name {
@@ -376,7 +378,7 @@ h2{
 
 .genre_selector {
 	position: relative;
-	height: 60px;
+	height: 45px;
 }
 
 .genre_value {
@@ -445,10 +447,12 @@ h2{
 .profile_image{
 	width: 40%;
 	position: relative;
+	margin-top: 10px;
 }
 
 .profile_name{
 	position: relative;
+	margin-bottom: 5px;
 }
 
 .profile_image_cont .fa-cog, .profile_image_cont .fa-camera{
@@ -641,6 +645,11 @@ h2{
 	margin-top: 11px;
 }
 
+#search_results{
+	overflow: auto;
+	height: calc(100vh - 100px);
+}
+
 .search_result_group {
 	margin: 30px 0 5px 10px;
 }
@@ -699,22 +708,23 @@ h2{
 	position: absolute;
 }
 
-#band_nav{
+.band_nav{
 	height: 70px;
 	width: 90%;
 	margin: 30px auto 0px;
 }
 
-#band_nav .nav_item{
+.band_nav .nav_item{
 	width: 23.7%;
 }
 
-#band .profile_image{
+#band .profile_image, #playlist .band_info .profile_image{
 	width: 100%;
 	height: 50vw;
+	margin-top: 0;
 }
 
-#donate{
+.donate{
 	border: 1px solid white;
 	color: #e7367c;
 	height: 3em;

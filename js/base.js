@@ -222,7 +222,11 @@ function open_modal(options){
 	} else {
 		$("#modal > div").append("<br />"+options.content);
 	}
-	$("#mbutton1").html(options.button1);
+	if (options.button1){
+		$("#mbutton1").show().html(options.button1);
+	} else {
+		$("#mbutton1").hide();
+	}
 	if (options.button2){
 		$("#mbutton1").removeClass("fullwidth");
 		$("#mbutton2").show().html(options.button2);

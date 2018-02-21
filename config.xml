@@ -33,7 +33,7 @@
 	<gap:platform name="android" />
 	<gap:platform name="winphone" />
 
-	<preference name="phonegap-version" value="cli-7.0.1" />
+	<preference name="phonegap-version" value="cli-7.1.0" />
 	<preference name="android-build-tool" value="gradle" />
 
 	<preference name="android-minSdkVersion" value="16" />
@@ -85,9 +85,9 @@
 	<gap:plugin name="cordova-allow-background-audio" source="npm" />
 	<gap:plugin name="cordova-plugin-ios-longpress-fix" source="npm" />
 
-	<gap:plugin name="cordova-plugin-file" source="npm" spec="4.3.3"/>
-	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" spec="1.6.3" />
-	<gap:plugin name="cordova-plugin-media" source="npm" spec="3.0.1" />
+	<gap:plugin name="cordova-plugin-file" source="npm"/>
+	<gap:plugin name="cordova-plugin-file-transfer"  source="npm" />
+	<gap:plugin name="cordova-plugin-media" source="npm" />
 
 	<gap:plugin name="cordova-plugin-mediapicker" source="npm" />
 	<gap:plugin name="cordova-plugin-filepicker" source="npm" />
@@ -95,7 +95,7 @@
 	<!--<plugin name="cordova-android-support-gradle-release" spec="^1.1.5">
 		<variable name="ANDROID_SUPPORT_VERSION" value="25.4.0" />
 	</plugin>-->
-	<gap:plugin name="cordova-plugin-facebook4" source="npm" spec="1.7.4">
+	<gap:plugin name="cordova-plugin-facebook4" source="npm">
 		<param name="APP_ID" value="884526071687505" /><!--170066436859871-->
 		<param name="APP_NAME" value="Nova" />
 	</gap:plugin>

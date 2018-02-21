@@ -144,9 +144,49 @@
 			</div>
 			<div class="band_info" data-band_id="##band_id##">
 				<div class="profile_image_cont">
-					<div class="profile_background" style="background-image:url('##band_image_url##')"></div>
 					<img class="profile_image" src="##band_image_url##">
 					<div class="profile_name">##band_name##</div>
+				</div>
+				<div style="margin:10px 0;">
+					<div class="circle_value">
+						<div class="circle_cont">
+							<div class="circle_back"></div>
+							<div class="circle_outer"></div>
+							<div class="circle_inner"><div class="center">123</div></div>
+						</div>
+						<div class="circle_sub">Supporters</div>
+					</div>
+					<div class="circle_value">
+						<div class="circle_cont">
+							<div class="circle_back"></div>
+							<div class="circle_outer"></div>
+							<div class="circle_inner"><div class="center">1,234</div></div>
+						</div>
+						<div class="circle_sub">Donations</div>
+					</div>
+					<div class="circle_value">
+						<div class="circle_cont">
+							<div class="circle_back"></div>
+							<div class="circle_outer"></div>
+							<div class="circle_inner"><div class="center">44%</div></div>
+						</div>
+						<div class="circle_sub">Traction</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+				<div class="band_nav">
+					<div class="nav_item" title="Private social">
+						<img src="images/icon_notifications.png" />
+					</div>
+					<div class="nav_item" title="Public social">
+						<img src="images/icon_magaphone_noise.png" />
+					</div>
+					<div class="nav_item" title="Share">
+						<img src="images/icon_record.png" />
+					</div>
+					<div class="nav_item">
+						<img src="images/icon_cross.png" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -171,11 +211,7 @@
 		</div>
 	</div>
 	<div data-key="free_question">
-		<div class="genre_selector">
-			<div class="genre_name">##name##</div>
-			<div class="genre_slider"><input type="range" min="0" max="100" value="0" class="slider" data-genre_id="##id##"></div>
-			<div class="genre_value"><span id="genre_value_##id##">0</span>%</div>
-		</div>
+		<input type="button" class="genre_selector" value="##name##" data-genre_id="##id##" />
 	</div>
 </div>
 <div id="ios_icon_cover">
@@ -471,7 +507,7 @@
 			</div>
 			<div class="clear"></div>
 		</div>
-		<div id="band_nav" style="height: 70px;">
+		<div class="band_nav">
 			<div class="nav_item" title="Private social">
 				<img src="images/icon_notifications.png" />
 			</div>
@@ -485,7 +521,7 @@
 				<img src="images/icon_cross.png" />
 			</div>
 		</div>
-		<div id="donate">
+		<div class="donate">
 			Donate
 		</div>
 	</div>

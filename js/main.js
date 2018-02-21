@@ -231,6 +231,7 @@ function open_band(band_id){
 			$("#band .open_band_dashboard").hide();
 		}
 		show_page("band");
+		$(".song .band_info").css({top: "0px"});
 	});
 }
 
@@ -244,25 +245,28 @@ var playlist = {type: "", key: "", empty: "", data: []};
 function load_playlist(type, key, empty){
 	$("#head_bar").hide();
 	var force = false;
+	type = type || "discover";
+	key = key || 0;
+	empty = empty || false;
+	if (type == "discover")
+		empty = "No new Discover songs, try Genre or top lists.";
+	console.log(playlist, type, key, empty);
 	if (type !== playlist.type || key !== playlist.key){
 		force = true;
 		playlist_state = false;
 	}
-	playlist.empty = empty || false;
-	playlist.type = type || "discover";
-	if (playlist.type == "discover")
-		playlist.empty = "No new Discover songs, try Genre or top lists.";
-	playlist.key = key || 0;
+	playlist.empty = empty;
+	playlist.type = type;
+	playlist.key = key;
 	playlist.data = [];
 	console.log("playlist", playlist);
 	show_page("playlist");
+	setTimeout(function (){
+		$("#head_bar").hide();
+	}, 10);
 	if (playlist_state){
 		$("#playlist_songs").html(playlist_state);
 		return;
-	} else {
-		setTimeout(function (){
-			$("#head_bar").hide();
-		}, 10);
 	}
 	$("#playlist_songs").html("Loading...");
 	$.getJSON(base_url+"/ajax/get_list.php?callback=?", {type:playlist.type, key: playlist.key, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
@@ -347,7 +351,12 @@ function load_admin(){
 
 function load_featured(){
 	$.getJSON(base_url+"/ajax/featured.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
-		$("#featured_featured .feature").attr("src", data.image_url).data("band_id", data.band_id);//TODO: dynamicafy
+		var featured_html = [];
+		for (var i=0;i<data.featured.length;i++){
+			var f = data.featured[i];
+			featured_html.push('<img class="open_band feature'+(i==0?" current_feature":(i==1?" next_feature":""))+'" src="'+f.image_url+'" data-band_id="'+f.band_id+'" />');
+		}
+		$("#featured_featured").html(featured_html.join(""));
 	});
 }
 
@@ -454,33 +463,37 @@ function view_playlist(playlist_id){
 }
 
 function run_search(term){
-	$.getJSON(base_url+"/ajax/search.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), term: term}, function (data){
-		var htmls = [];
-		if (data.results.users.length > 0)
-			htmls.push(template("search_result_group", {name: "Users"}));
-		for (var i=0;i<data.results.users.length;i++){
-			var t = data.results.users[i];
-			t.added = ' open_profile" data-user_id="'+t.id;
-			htmls.push(template("search_results", t));
-		}
-		if (data.results.songs.length > 0)
-			htmls.push(template("search_result_group", {name: "Songs"}));
-		for (var i=0;i<data.results.songs.length;i++){
-			var t = data.results.songs[i];
-			t.added = ' open_song" data-song_id="'+t.id;
-			htmls.push(template("search_results", t));
-		}
-		if (data.results.bands.length > 0)
-			htmls.push(template("search_result_group", {name: "Bands"}));
-		for (var i=0;i<data.results.bands.length;i++){
-			var t = data.results.bands[i];
-			t.added = ' open_band" data-band_id="'+t.id;
-			htmls.push(template("search_results", t));
-		}
-		if (htmls.length == 0)
-			htmls.push("No results");
-		$("#search_results").html(htmls.join(""));
-	});
+	if (term.length > 2){
+		$.getJSON(base_url+"/ajax/search.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), term: term}, function (data){
+			var htmls = [];
+			if (data.results.users.length > 0)
+				htmls.push(template("search_result_group", {name: "Users"}));
+			for (var i=0;i<data.results.users.length;i++){
+				var t = data.results.users[i];
+				t.added = ' open_profile" data-user_id="'+t.id;
+				htmls.push(template("search_results", t));
+			}
+			if (data.results.songs.length > 0)
+				htmls.push(template("search_result_group", {name: "Songs"}));
+			for (var i=0;i<data.results.songs.length;i++){
+				var t = data.results.songs[i];
+				t.added = ' open_song" data-song_id="'+t.id;
+				htmls.push(template("search_results", t));
+			}
+			if (data.results.bands.length > 0)
+				htmls.push(template("search_result_group", {name: "Bands"}));
+			for (var i=0;i<data.results.bands.length;i++){
+				var t = data.results.bands[i];
+				t.added = ' open_band" data-band_id="'+t.id;
+				htmls.push(template("search_results", t));
+			}
+			if (htmls.length == 0)
+				htmls.push("No results");
+			$("#search_results").html(htmls.join(""));
+		});
+	} else {
+		$("#search_results").html("Search 3 characters or more");
+	}
 }
 
 function save_settings(){
@@ -536,6 +549,7 @@ var profile_song_press = false;
 var profile_song_start_x = false;
 var profile_song_start_y = false;
 var profile_playlist_loc = false;
+var feature_scope = "";
 var feature_feature_start_x = false;
 var feature_feature_delta_x = false;
 
@@ -555,7 +569,7 @@ function startup(){
 
 	var height_mod = (thePlatform == "ios"?40:(thePlatform == "android"?20:0));
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
-	var hl_width = (($(window).height() - 322 - height_mod) / 2);
+	var hl_width = (($(window).height() - 322 - 30 - height_mod) / 2);
 	$("#dynamic_style_sheet").html("#profile_your_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}");
 	
 	click_event(".fb_login", function (){
@@ -650,6 +664,7 @@ function startup(){
 		playlist_swipe_delta_y = 0;
 	});
 	$("#featured_featured").on("touchstart", function(e){
+		feature_scope = "#featured_featured";
 		feature_feature_start_x = e.originalEvent.touches[0].clientX;
 	});
 	$(document).on("touchstart", "#playlist_songs .song_name", function (){
@@ -717,12 +732,12 @@ function startup(){
 			if (feature_feature_delta_x > 50){
 				if (feature_feature_delta_x < 0)
 					feature_feature_delta_x = 0;
-				$(".feature.next_feature").css({left: "calc(100% - "+feature_feature_delta_x+"px)"});
+				$(feature_scope+" .feature.next_feature").css({left: "calc(100% - "+feature_feature_delta_x+"px)"});
 			}
 			if (feature_feature_delta_x < -50){
 				if (feature_feature_delta_x < -$(document).width())
 					feature_feature_delta_x = -$(document).width();
-				$(".feature.prev_feature").css({left: "calc(-100% + "+(-feature_feature_delta_x)+"px)"});
+				$(feature_scope+" .feature.prev_feature").css({left: "calc(-100% + "+(-feature_feature_delta_x)+"px)"});
 			}
 		}
 		if (playlist_swipe_start_x !== false){
@@ -762,23 +777,25 @@ function startup(){
 		if (feature_feature_start_x !== false){
 			feature_feature_start_x = false;
 			if (feature_feature_delta_x > 50){
-				if ($(".feature.next_feature").length){
-					$(".feature.next_feature").animate({left: 0}, 200, function (){
-						$(".feature.prev_feature").removeClass("prev_feature");
-						$(".feature.current_feature").removeClass("current_feature").addClass("prev_feature").css({left: '-100%'});
-						$(".feature.next_feature").removeClass("next_feature").addClass("current_feature").next().addClass("next_feature");
+				if ($(feature_scope+" .feature.next_feature").length){
+					console.log('feature_animate');
+					$(feature_scope+" .feature.next_feature").animate({left: 0}, 200, function (){
+						console.log('feature_cleanup');
+						$(feature_scope+" .feature.prev_feature").removeClass("prev_feature");
+						$(feature_scope+" .feature.current_feature").removeClass("current_feature").addClass("prev_feature").css({left: '-100%'});
+						$(feature_scope+" .feature.next_feature").removeClass("next_feature").addClass("current_feature").next().addClass("next_feature");
 					});
 				}
-				$(".feature.prev_feature").animate({left: "-100%"}, 100);
+				$(feature_scope+" .feature.prev_feature").animate({left: "-100%"}, 100);
 			} else if (feature_feature_delta_x < -50){
-				if ($(".feature.prev_feature").length){
-					$(".feature.prev_feature").animate({left: 0}, 200, function (){
-						$(".feature.next_feature").removeClass("next_feature");
-						$(".feature.current_feature").removeClass("current_feature").addClass("next_feature").css({left: '100%'});
-						$(".feature.prev_feature").removeClass("prev_feature").addClass("current_feature").prev().addClass("prev_feature");
+				if ($(feature_scope+" .feature.prev_feature").length){
+					$(feature_scope+" .feature.prev_feature").animate({left: 0}, 200, function (){
+						$(feature_scope+" .feature.next_feature").removeClass("next_feature");
+						$(feature_scope+" .feature.current_feature").removeClass("current_feature").addClass("next_feature").css({left: '100%'});
+						$(feature_scope+" .feature.prev_feature").removeClass("prev_feature").addClass("current_feature").css({left: '0'}).prev().addClass("prev_feature");
 					});
 				}
-				$(".feature.next_feature").animate({left: "100%"}, 100);
+				$(feature_scope+" .feature.next_feature").animate({left: "100%"}, 100);
 			}
 		}
 		if (profile_song_long_press){
@@ -817,34 +834,28 @@ function startup(){
 				for (var i=0;i<genres.length;i++){
 					htmls.push(template("free_question", genres[i]));
 				}
-				open_modal({title: "Free User Questionnaire", content: htmls.join(""), button1: "Cancel", add_class: "questionnaire", callback: function (button){
+				open_modal({title: "Free User Questionnaire", content: "Select the best genre for this song: "+htmls.join(""), button1: false, add_class: "questionnaire", callback: function (button){
 					questionnaire = false;
 					next_playlist();
 				}});
-				$(".genre_selector .slider").on("input", function (){
-					$("#genre_value_"+$(this).data("genre_id")).html($(this).val());
-				}).on("change", function (){
-					var genres = [];
-					$(".genre_selector .slider").each(function (){
-						if ($(this).val() > 0){
-							genres.push([$(this).data("genre_id"), $(this).val()]);
-						}
+				$(".genre_selector").on("click", function (){
+					$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "genre_input", song_id: $(".current_song").data("song_id"), genre: $(this).data("genre_id")}, function(data){
 					});
-					if (genres.length >= 3){
-						$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "genre_input", song_id: $(".current_song").data("song_id"), genres: genres}, function(data){
-						});
-						questionnaire = false;
-						close_modal();
-						next_playlist();
-					}
+					questionnaire = false;
+					close_modal();
+					next_playlist();
 				});
+			} else {
+				--next_questionnaire;
+				next_playlist();
 			}
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else if (playlist_swipe_delta_x < -50){
 			prev_playlist();
 			$(".song.next_song").animate({left: "100%"}, 100);
 		} else if (playlist_swipe_delta_y > 150){
-			open_band($(".song .band_info").data("band_id"));
+			open_band($(".song.current_song .band_info").data("band_id"));
+			$(".song .band_info").animate({top: "0px"}, 100);
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else {
