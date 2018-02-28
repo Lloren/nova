@@ -364,6 +364,16 @@ function load_featured(){
 function load_genres(){
 	$.getJSON(base_url+"/ajax/genre.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		$("#genre_featured .feature").attr("src", data.image_url).data("band_id", data.band_id);//TODO: dynamicafy
+
+		var moods_html = [];
+		for (var i=0;i<data.moods.length;i++){
+			var f = data.moods[i];
+			moods_html.push('<img class="play_playlist feature'+(i==0?" current_feature":(i==1?" next_feature":""))+'" src="'+f.image_url+'" data-playlist_id="'+f.id+'" />');
+		}
+		$("#genre_featured").html(moods_html.join(""));
+
+
+
 		var genre_html = [];
 		for (var i=0;i<data.genres.length;i++){
 			genre_html.push(template("text_list_item", data.genres[i]));
@@ -378,10 +388,17 @@ function load_social(){
 function open_full_list(type, name){
 	$.getJSON(base_url+"/ajax/get_list.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), type: type}, function (data){
 		var htmls = [];
-		for (var i=0;i<data.songs.length;i++){
-			var item = data.songs[i];
-			item.num = i+1;
-			htmls.push(template("full_list", item));
+		if (data.songs){
+			for (var i=0;i<data.songs.length;i++){
+				var item = data.songs[i];
+				item.num = i+1;
+				htmls.push(template("full_list", item));
+			}
+		} else if (data.lists){
+			for (var i=0;i<data.lists.length;i++){
+				var item = data.lists[i];
+				htmls.push('<img class="play_playlist" src="'+item.image_url+'" data-playlist_id="'+item.id+'" />');
+			}
 		}
 		$("#full_list_content").html(htmls.join(""));
 	});

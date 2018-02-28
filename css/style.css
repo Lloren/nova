@@ -49,6 +49,7 @@ h2{
 #modal #mbutton1:active, #modal #mbutton2:active {opacity:0.9;}
 
 #modal.loading {width:175px; height:50px; line-height:50px;}
+#modal.loading > div {display: none;}
 #modal.loading .fa {font-size:initial; position:static; color:#999;}
 #modal.loading h1 {margin:0;}
 #modal.loading p, #modal.loading a {display:none !important;}
