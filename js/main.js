@@ -225,6 +225,7 @@ function open_band(band_id){
 	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id}, function (data){
 		$("#band .profile_image").attr("src", data.image);
 		$("#band .profile_name").html(data.name);
+		$("#band .donate").data("band_id", data.id);
 		if (data.show_dash_button){
 			$("#band .open_band_dashboard").show().data("band_id", data.id);
 		} else {
@@ -453,11 +454,17 @@ function open_profile(user_id){
 function view_playlist(playlist_id){
 	$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"playlist_info", playlist_id: playlist_id}, function (data){
 		$("#view_playlist_name").html(data.playlist.name);
+		$("#playlist_name").val(data.playlist.name);
+		$("#view_playlist .change_photo, #playlist_submit").data("id", data.playlist.id);
 		var song_htmls = [];
 		for (var i=0;i<data.songs.length;i++){
 			song_htmls.push(template("half_list", data.songs[i]));
 		}
 		$("#view_playlist_songs").html(song_htmls.join("")+'<div class="clear"></div>');
+		$("#view_playlist_songs .selected_title").html("Sort");
+		if (typeof data.playlist.type != "undefined"){
+			$("#playlist_type").val(data.playlist.type);
+		}
 		show_page("view_playlist");
 	});
 }
@@ -531,6 +538,8 @@ function show_page(key, onload){
 }
 function open_page(key){
 	back_log("show_page", [key]);
+	if (key == "playlist")
+		$("#head_bar").hide();
 }
 
 var saved_song_data = false;
@@ -1120,6 +1129,22 @@ function startup(){
 		back_log("open_band_dashboard", $(e.currentTarget).data("band_id"));
 	}, true);
 
+	click_event(".donate", function (e){
+		var band_name = $("#band .profile_name").html();
+		var band_id = $(e.currentTarget).data("band_id");
+		var value = 1;
+		if (e.long){
+			value = 5;
+		}
+		open_modal({title:"Donation Confirmation", content: 'Thank you for sending '+value+' donation'+(value>1?'s':'')+' to '+band_name+'.', button1:"Confirm", button2: true, add_class: "donation", callback: function (action){
+			if (action == "Confirm"){
+				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, num: value}, function (data){
+
+				});
+			}
+		}});
+	}, true);
+
 	click_event(".band_stats", function (e){
 		$(".band_dashboard_pages").hide();
 		$("#dash_stats").show();
@@ -1163,6 +1188,34 @@ function startup(){
 	});
 	$(".admin_band_update").on("change", function (){
 		$.getJSON(base_url+"/ajax/admin.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"band_update", band_id: $("#band_dashboard").data("band_id"), status: $("#band_status").val()}, function (data){
+		});
+	});
+	
+	click_event("#edit_playlist", function (e){
+		$("#view_playlist").addClass("editing");
+		$("#view_playlist_songs").sortable("enable");
+	});
+	$("#view_playlist_songs").sortable();
+	$("#view_playlist_songs").sortable("disable");
+	$("#view_playlist_songs").on("sortupdate", function( event, ui ) {
+		var ids = [];
+		$("#view_playlist_songs .half_list_song").each(function (){
+			ids.push($(this).data("song_id"));
+		});
+		$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"save_playlist_sort", playlist_id: $("#playlist_submit").data("id"), ids: ids.join(",")}, function (data){
+
+		});
+	});
+
+	
+	click_event("#stop_edit_playlist", function (e){
+		$("#view_playlist").removeClass("editing");
+		$("#view_playlist_songs").sortable("disable");
+	});
+	
+	click_event("#playlist_submit", function (e){
+		$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"save_playlist", playlist_id: $(e.currentTarget).data("id"), name: $("#playlist_name").val(), type: $("#playlist_type").val()}, function (data){
+			
 		});
 	});
 
@@ -1232,7 +1285,16 @@ function startup(){
 			open_page(pages.pop());
 		}*/
 	});
-
+	
+	click_event(".open_page", function (e){
+		$("#menu-overlay").trigger("click_event");
+		if ($(e.currentTarget).data("func")){
+			back_log($(e.currentTarget).data("func"));
+		} else {
+			open_page($(e.currentTarget).data("page"));
+		}
+	}, true, true);
+	
 	click_event(".open_page", function (e){
 		$("#menu-overlay").trigger("click_event");
 		open_page($(e.currentTarget).data("page"));

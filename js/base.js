@@ -78,12 +78,13 @@ function back_recent(){
 }
 
 function register_touch_manager(){
-	var last_touch = {x: 0, y:0, trigger:""};
+	var last_touch = {x: 0, y:0, trigger:"", time: 0};
 	window.set_touch = function (e, trigger){
 		var touch = e.originalEvent.changedTouches[0];
 		last_touch.trigger = trigger;
 		last_touch.x = touch.screenX;
 		last_touch.y = touch.screenY;
+		last_touch.time = Date.now();
 	}
 	window.good_touch = function (e, trigger){
 		var touch = e.originalEvent.changedTouches[0];
@@ -110,6 +111,8 @@ function register_touch_manager(){
 			$(target).on("touchend click_event", limiter, function (e){
 				if (e.type != "click_event" && !good_touch(e, limiter))
 					return;
+				e.time = Date.now() - last_touch.time;
+				e.long = e.time > 500;
 				callback(e);
 				if (no_prop){
 					e.stopPropagation();
@@ -127,6 +130,8 @@ function register_touch_manager(){
 			$(limiter).on("touchend click_event", function (e){
 				if (e.type != "click_event" && !good_touch(e, limiter))
 					return;
+				e.time = Date.now() - last_touch.time;
+				e.long = e.time > 500;
 				callback(e);
 				if (no_prop){
 					e.stopPropagation();

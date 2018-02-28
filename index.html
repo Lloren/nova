@@ -14,6 +14,7 @@
 
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 	<link rel="stylesheet" type="text/css" href="css/style.css" />
+	<link rel="stylesheet" type="text/css" href="js/jquery-ui-1.12.1/jquery-ui.min.css" />
 
 	<script>
 		var dev = true;
@@ -34,6 +35,8 @@
 	</script>
 	<script src="cordova.js"></script>
 	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="js/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+	<script src="js/jquery-ui-1.12.1/touchpunch.js"></script>
 	<script src="js/fastclick.min.js"></script>
 	<script src="js/base.js"></script>
 	<script src="js/main.js"></script>
@@ -531,7 +534,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
-			<img class="profile_image_action change_photo" data-action="band_image" data-id="" src="images/icon_gear.png" />
+			<img class="profile_image_action change_photo" data-action="band_image" data-id="" src="images/icon_camera.png" />
 		</div>
 		<div id="band_dash_nav" style="height: 70px;">
 			<div class="nav_item band_stats active">
@@ -586,7 +589,7 @@
 			<img class="open_band feature" data-band_id="" />
 		</div>
 		<div class="large_menu_item open_full_list_100" style="color:#f74692">Top 100 <span>></span></div>
-		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On Tht Rise <span>></span></div>
+		<div class="large_menu_item open_full_list_rise" style="color:#dd913a">On The Rise <span>></span></div>
 		<div class="large_menu_item open_full_list_local">Local <span>></span></div>
 		<div class="large_menu_item open_full_list_curated">Curated <span>></span></div>
 	</div>
@@ -618,11 +621,18 @@
 	<div class="page" id="view_playlist">
 		<h2>
 			<span id="view_playlist_name"></span>
-			<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+			<i id="edit_playlist" class="fa fa-pencil-square-o" aria-hidden="true"></i>
+			<i id="stop_edit_playlist" class="fa fa-times-circle" aria-hidden="true"></i>
+			<img class="change_photo" data-action="playlist_image" data-id="" src="images/icon_camera.png" />
 		</h2>
-		<div class="playlist_edit" style="display: none;">
+		<div class="playlist_edit">
 			<input type="text" id="playlist_name" value="" />
-			<input type="submit" id="playlist_submit" value="Save Changes" />
+			<select id="playlist_type" class="is_admin">
+				<option value="0">Regular</option>
+				<option value="1">Mood</option>
+				<option value="2">Curated</option>
+			</select>
+			<input type="submit" id="playlist_submit" value="Save Name" />
 		</div>
 		<div class="playlist_cont">
 			<div id="view_playlist_songs">
