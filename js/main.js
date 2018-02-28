@@ -455,6 +455,7 @@ function view_playlist(playlist_id){
 	$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"playlist_info", playlist_id: playlist_id}, function (data){
 		$("#view_playlist_name").html(data.playlist.name);
 		$("#playlist_name").val(data.playlist.name);
+		$("#playlist_submit").data("id", data.playlist.id);
 		$("#view_playlist .change_photo, #playlist_submit").data("id", data.playlist.id);
 		var song_htmls = [];
 		for (var i=0;i<data.songs.length;i++){
@@ -982,6 +983,7 @@ function startup(){
 	click_event(".change_photo", function (e){
 		open_modala("Selecting");
 		var obj = $(e.currentTarget);
+		console.log(obj.data("id"));
 		navigator.camera.getPicture(function (imageURI){
 			open_modala("Uploading");
 			console.log(imageURI);
