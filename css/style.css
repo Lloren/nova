@@ -266,7 +266,8 @@ h2{
 
 #playlist .song_name.show_full{
 	margin-top: -50%;
-	max-height: initial;
+	margin-bottom: 50%;
+	overflow: visible;
 	/*background: rgba(0, 0, 0, 0.9);*/
 	text-shadow: 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 	white-space: initial;
@@ -623,7 +624,8 @@ h2{
 
 .selected_overlay .selected_title{
 	position: absolute;
-	top: 70px;
+	top: 50%;
+	transform: translate(0, -50%);
 	width: calc(100% - 10px);
 }
 

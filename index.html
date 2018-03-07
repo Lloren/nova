@@ -322,7 +322,7 @@
 		</div>
 	</div>
 
-	<div class="page" id="playlist" data-back="hide">
+	<div class="page" id="playlist" data-back="hide" data-unload="reset_playlist_scrolls">
 		<div id="playlist_songs">
 			Loading...
 		</div>
@@ -596,7 +596,7 @@
 
 	<div class="page" id="full_list">
 		<h2 id="full_list_title"></h2>
-		<div id="full_list_content">
+		<div id="full_list_content" style="overflow: auto;">
 
 		</div>
 	</div>
@@ -618,7 +618,7 @@
 		Soon
 	</div>
 
-	<div class="page" id="view_playlist">
+	<div class="page" id="view_playlist" data-unload="reset_playlist_view">
 		<h2>
 			<span id="view_playlist_name"></span>
 			<i id="edit_playlist" class="fa fa-pencil-square-o" aria-hidden="true"></i>
