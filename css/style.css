@@ -507,8 +507,9 @@ h2{
 	position: absolute;
 	width: 100%;
 	background: black;
-	height:100%;
-	max-width: 100%; max-height: 100%; margin: auto;
+	max-width: 100%;
+	max-height: 100%;
+	margin: auto;
 }
 
 .feature.current_feature{
@@ -525,6 +526,11 @@ h2{
 	display:block;
 	left: -100%;
 	z-index: 1;
+}
+
+#full_list_content > img {
+	width: 96%;
+	margin: 2%;
 }
 
 .half_list_group{
