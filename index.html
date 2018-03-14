@@ -57,7 +57,7 @@
 		</div>
 	</div>
 	<div data-key="full_list">
-		<div class="list_song play_song" data-song_id="##id##">
+		<div class="list_song play_song" data-song_id="##id##"{{playlist_id? data-playlist_id="##playlist_id##"}}>
 			<img src="##image_url##">
 			<div class="full_list_cont">
 				<div class="song_name hidden"><span>##num##</span>. ##name##</div>
@@ -66,7 +66,7 @@
 		</div>
 	</div>
 	<div data-key="half_list">
-		<div class="half_list_song play_song" data-song_id="##id##">
+		<div class="half_list_song play_song" data-song_id="##id##"{{playlist_id? data-playlist_id="##playlist_id##"}}>
 			<img src="##image_url##">
 			<div class="selected_overlay">
 				<i class="fa fa-close"></i>
@@ -121,10 +121,11 @@
 						<i class="fa fa-trash-o report_audio" aria-hidden="true"></i>
 					</div>
 					<div class="menu_item">
-						<div class="song_lyrics" style="position: absolute; bottom: 10px; right: 40px;">lyrics</div>
+						<div class="song_lyrics" style="position: absolute; bottom: 10px; right: 40px; filter: blur(1.2px);">lyrics</div>
 					</div>
 				</div>
 				<img class="profile_image_action song_edit open_band_dashboard" data-song_id="##id##" data-band_id="##band_id##" src="images/icon_gear.png" />
+				<div class="playlist_title">##list_name##</div>
 			</div>
 			<div class="song_info">
 				<div class="song_play_info">
@@ -229,7 +230,7 @@
 			</div>
 		</div>
 		<!--<img id="header_logo" class="open_page" src="images/header_logo.png" data-page="playlist"/>-->
-		<div id="logo" class="open_page" data-page="playlist">
+		<div id="logo">
 			NOVA
 		</div>
 		<div id="header_admin" class="open_page is_admin" data-page="admin">

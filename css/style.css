@@ -230,6 +230,14 @@ h2{
 	height: 90vh;
 }
 
+.playlist_title{
+	position: absolute;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 50px;
+}
+
 .song{
 	display:none;
 	position: absolute;
