@@ -101,9 +101,13 @@ function Audio_player2(){
 	};
 
 	this.media_status = function (dat){
-		console.log("media_status", dat);
-		if (this.replaying && dat == 4){
-			this.playing.play();
+		console.log("media_status", dat, this.replaying);
+		if (dat == 4){
+			if (this.replaying){
+				this.set_pos(0);
+			} else {
+				next_playlist();
+			}
 		}
 	};
 
@@ -138,26 +142,17 @@ function Audio_player2(){
 					scope.length = scope.playing.getDuration();
 					$(".current_song .total_time").html(scope.time_out(scope.length));
 				}
-				console.log("getCurrentPosition", pos);
-				var per = scope.set_bar(pos);
-				if (per >= 1){
-					if (scope.replaying){
-						scope.set_pos(0);
-					} else {
-						next_playlist();
-					}
-				}
+				scope.set_bar(pos);
 			}, function (err){
 
 			});
-		}, 500);
+		}, 250);
 	};
 
 	this.set_bar = function (pos){
 		var per = pos / this.length;
 		$(".current_song .current_time").html(this.time_out(pos));
 		$(".current_song .song_played").css("width", (per * 100) + "%");
-		return per;
 	};
 
 	this.play_url = function(url, force){
@@ -207,8 +202,8 @@ function Audio_player2(){
 	};
 
 	this.set_pos = function (val){
-		var pos = val * this.length * 1000;
-		this.playing.seekTo(pos);
+		var pos = val * this.length;
+		this.playing.seekTo(pos * 1000);
 		this.set_bar(pos);
 		//this.pause();
 		//this.pause_time = val * this.length;
