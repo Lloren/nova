@@ -93,7 +93,7 @@ function Audio_player2(){
 	this.replaying = false;
 
 	this.new = function (url){
-		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, this.media_status);
+		return new Media(url, function (dat){console.log("media_success", dat)}, function (dat){console.log("media_error", dat)}, player.media_status);
 	};
 
 	this.add = function (audio){
@@ -101,10 +101,13 @@ function Audio_player2(){
 	};
 
 	this.media_status = function (dat){
-		console.log("media_status", dat, this.replaying);
+		console.log("media_status", dat, player.replaying);
 		if (dat == 4){
-			if (this.replaying){
-				this.set_pos(0);
+			if (player.replaying){
+				player.set_pos(0);
+				setTimeout(function (){
+					player.resume();
+				}, 100);
 			} else {
 				next_playlist();
 			}
