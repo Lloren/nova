@@ -101,6 +101,7 @@ function Audio_player2(){
 	};
 
 	this.media_status = function (dat){
+		console.log("media_status", dat);
 		if (this.replaying && dat == 4){
 			this.playing.play();
 		}
@@ -137,9 +138,8 @@ function Audio_player2(){
 					scope.length = scope.playing.getDuration();
 					$(".current_song .total_time").html(scope.time_out(scope.length));
 				}
-				var per = pos / scope.playing.getDuration();
-				$(".current_song .current_time").html(scope.time_out(pos));
-				$(".current_song .song_played").css("width", (per * 100) + "%");
+				console.log("getCurrentPosition", pos);
+				var per = scope.set_bar(pos);
 				if (per >= 1){
 					if (scope.replaying){
 						scope.set_pos(0);
@@ -150,7 +150,14 @@ function Audio_player2(){
 			}, function (err){
 
 			});
-		}, 100);
+		}, 500);
+	};
+
+	this.set_bar = function (pos){
+		var per = pos / this.length;
+		$(".current_song .current_time").html(this.time_out(pos));
+		$(".current_song .song_played").css("width", (per * 100) + "%");
+		return per;
 	};
 
 	this.play_url = function(url, force){
@@ -200,7 +207,9 @@ function Audio_player2(){
 	};
 
 	this.set_pos = function (val){
-		this.playing.seekTo(val * this.length * 1000);
+		var pos = val * this.length * 1000;
+		this.playing.seekTo(pos);
+		this.set_bar(pos);
 		//this.pause();
 		//this.pause_time = val * this.length;
 		//this.resume();
@@ -304,6 +313,13 @@ function load_playlist(type, key, empty){
 			var ci = 0;
 			var ni = 1;
 			var pi = data.songs.length-1;
+
+			data.songs.sort(function(a, b) {
+				return a.ord - b.ord;
+			});
+
+			console.log(data.songs);
+
 			if (playlist.sec){
 				for (var i=0;i<data.songs.length;i++){
 					console.log("i", i);
@@ -514,7 +530,7 @@ function open_profile_yours(){
 function open_profile(user_id){
 	$.getJSON(base_url+"/ajax/profile.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), users_id: user_id}, function (data){
 		$("#profile .profile_background").css("background-image", "url("+data.image+")");
-		$("#profile .profile_image").attr("src", data.image);
+		$("#profile .profile_image_src").attr("src", data.image);
 		$("#profile .profile_name").html(data.name);
 		if (data.is_fallowing){
 			$(".add_friend").hide();
@@ -915,7 +931,16 @@ function startup(){
 						console.log('feature_cleanup');
 						$(feature_scope+" .feature.prev_feature").removeClass("prev_feature");
 						$(feature_scope+" .feature.current_feature").removeClass("current_feature").addClass("prev_feature").css({left: '-100%'});
-						$(feature_scope+" .feature.next_feature").removeClass("next_feature").addClass("current_feature").next().addClass("next_feature");
+						var next = $(feature_scope+" .feature.next_feature").removeClass("next_feature").addClass("current_feature").next();
+						if (feature_scope == "#genre_featured"){
+							if (next.length){
+								next.addClass("next_feature");
+							} else {
+								$(feature_scope+" .feature").first().addClass("next_feature");
+							}
+						} else {
+							next.addClass("next_feature");
+						}
 					});
 				}
 				$(feature_scope+" .feature.prev_feature").animate({left: "-100%"}, 100);
@@ -924,7 +949,16 @@ function startup(){
 					$(feature_scope+" .feature.prev_feature").animate({left: 0}, 200, function (){
 						$(feature_scope+" .feature.next_feature").removeClass("next_feature");
 						$(feature_scope+" .feature.current_feature").removeClass("current_feature").addClass("next_feature").css({left: '100%'});
-						$(feature_scope+" .feature.prev_feature").removeClass("prev_feature").addClass("current_feature").css({left: '0'}).prev().addClass("prev_feature");
+						var prev = $(feature_scope+" .feature.prev_feature").removeClass("prev_feature").addClass("current_feature").css({left: '0'}).prev();
+						if (feature_scope == "#genre_featured"){
+							if (prev.length){
+								prev.addClass("prev_feature");
+							} else {
+								$(feature_scope+" .feature").first().addClass("prev_feature");
+							}
+						} else {
+							prev.addClass("prev_feature");
+						}
 					});
 				}
 				$(feature_scope+" .feature.next_feature").animate({left: "100%"}, 100);
@@ -1087,14 +1121,14 @@ function startup(){
 	click_event(".open_music", function (e){
 		$("#profile_your_music").show();
 		$("#profile_notifications").hide();
-		$(".nav_item.active").removeClass("active");
+		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 	
 	click_event(".open_notifications", function (e){
 		$("#profile_notifications").show();
 		$("#profile_your_music").hide();
-		$(".nav_item.active").removeClass("active");
+		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 	
@@ -1119,16 +1153,23 @@ function startup(){
 			var ft = new FileTransfer();
 			ft.upload(imageURI, base_url+"/ajax/settings.php", function(result){
 				close_modala();
+				if (result.recache){
+					for (var i=0;i<result.recache.length;i++){
+						var img = new Image();
+						img.src = url+"/data/"+result.recache[i]+"?v="+Math.random();
+					}
+				}
 				console.log(JSON.stringify(result));
 				reload_page();
 			}, function(error){
 				close_modala();
 				console.log(JSON.stringify(error));
+				open_modal({title: "Error", content: "Uploading picture failed"});
 			}, options);
 		}, function(message) {
 			close_modala();
 			console.log(message);
-			open_modal({title: "Error", content: "get picture failed"});
+			open_modal({title: "Error", content: "Getting picture failed"});
 		}, {
 			quality: 100,
 			destinationType: navigator.camera.DestinationType.FILE_URI,
@@ -1272,28 +1313,28 @@ function startup(){
 	click_event(".band_stats", function (e){
 		$(".band_dashboard_pages").hide();
 		$("#dash_stats").show();
-		$(".nav_item.active").removeClass("active");
+		$("#band_dash_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 
 	click_event(".band_songs", function (e){
 		$(".band_dashboard_pages").hide();
 		$("#dash_songs").show();
-		$(".nav_item.active").removeClass("active");
+		$("#band_dash_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 
 	click_event(".band_social", function (e){
 		$(".band_dashboard_pages").hide();
 		$("#dash_social").show();
-		$(".nav_item.active").removeClass("active");
+		$("#band_dash_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 
 	click_event(".band_settings", function (e){
 		$(".band_dashboard_pages").hide();
 		$("#dash_settings").show();
-		$(".nav_item.active").removeClass("active");
+		$("#band_dash_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 

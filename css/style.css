@@ -269,6 +269,7 @@ h2{
 	transition: 1s;
 	max-height: 102px;
 	position: relative;
+	margin-top: -20px;
 	overflow: hidden;
 }
 
@@ -304,7 +305,11 @@ h2{
 }
 
 .song_play_info{
-	height:15px;
+	height: 35px;
+	padding-top: 10px;
+	top: -10px;
+	position: relative;
+	z-index: 1;
 }
 
 .song_playback{
@@ -314,7 +319,7 @@ h2{
 	margin: 0 auto;
 	background: gray;
 	position: absolute;
-	top: 5px;
+	top: 15px;
 }
 
 .song_played{
@@ -420,6 +425,8 @@ h2{
 }
 .band_dashboard_pages{
 	display:none;
+	overflow: auto;
+	max-height: calc(100vh - 230px);
 }
 
 
