@@ -19,7 +19,7 @@ function Settings(save_key, def_data){
 	this.data = JSON.parse(window.localStorage.getItem(this.save_key) || def_data || "{}");
 	
 	this.set = function (key, val){
-		if (this.data[key] != val){
+		if (this.data[key] !== val){
 			this.data[key] = val;
 			this.save();
 		}
