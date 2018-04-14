@@ -51,9 +51,15 @@
 		</div>
 	</div>
 	<div data-key="song_list">
-		<div>
+		<div class="song_list_item ##classes##">
 			<img class="change_photo" src="##image_url##" data-action="song_image" data-id="##id##" />
-			<span>##name## {{play_now?<i class="fa fa-play play_now" data-song_key="##key##"></i>}}</span>
+			<div {{play_now?class="play_now" data-song_id="##id##"}}>##name## {{play_now?<i class="fa fa-play"></i>}}</div>
+		</div>
+	</div>
+	<div data-key="extra_song_list">
+		<div class="song_list_item main_item">
+			<img src="images/##image##.png" />
+			<div>##message##</div>
 		</div>
 	</div>
 	<div data-key="full_list">
@@ -106,6 +112,13 @@
 	<div data-key="text_list_item">
 		<div class="large_menu_item open_genre" data-genre_id="##id##">##name## <span>></span></div>
 	</div>
+	<div data-key="band_social">
+		<div class="band_social social_type_##type##">
+			<img src="">
+			<div>##text##</div>
+			<div class="social_details" data-post_id="##id##">Details</div>
+		</div>
+	</div>
 	<div data-key="song_disp">
 		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
 			<div class="genre_data" style="display: none;">##genre_data##</div>
@@ -124,11 +137,11 @@
 						<div class="song_lyrics" style="position: absolute; bottom: 10px; right: 40px; filter: blur(1.2px);">lyrics</div>
 					</div>
 				</div>
-				<img class="profile_image_action band_image open_band" data-band_id="##band_id##" src="##band_image_small_url##">
 				<img class="profile_image_action open_band_dashboard" data-band_id="##band_id##" src="images/icon_gear.png" />
 				<div class="playlist_title">##list_name##</div>
 			</div>
 			<div class="song_info">
+				<img class="profile_image_action band_image open_band" data-band_id="##band_id##" src="##band_image_small_url##">
 				<div class="song_play_info">
 					<div class="current_time timmer"></div>
 					<div class="total_time timmer" style="right: 0;"></div>
@@ -278,20 +291,21 @@
 
 	<div class="page" id="login" style="display: block;" data-no_back="true">
 		<div class="main_form">
+			<h3>Have an account?</h3>
 			<input type="text" id="login_email" placeholder="Email" /><br />
 			<input type="password" id="login_password" placeholder="Password" /><br />
-			<input type="button" id="login_button" value="Login" /><br />
-			<a class="fb_login">FB Login</a><br />
-			<a class="open_page" data-page="signup">Signup</a>
+			<input type="button" id="login_button" value="Login" style="background: linear-gradient(124deg, #e83379 40%, #e0892e 60%); border: none;" /><br /><br />
+			<input type="button" class="fb_login" value="Use Facebook Login" style="background: #3b5998; color: white; font-weight: bold; border: none;"/><br />
+			<input type="button" class="open_page" data-page="signup" value="Signup" />
 		</div>
 	</div>
 
 	<div class="page" id="reset" data-no_back="true">
 		<div class="main_form">
 			<input type="text" id="reset_email" placeholder="Email" /><br />
-			<input type="button" id="reset_button" value="Submit" /><br />
-			<a class="open_page" data-page="login">Login</a>
-			<a class="open_page" data-page="signup">Signup</a>
+			<input type="button" id="reset_button" value="Submit" /><br /><br />
+			<input type="button" class="open_page" data-page="login" value="Login" /><br />
+			<input type="button" class="open_page" data-page="signup" value="Signup" />
 		</div>
 	</div>
 
@@ -301,20 +315,21 @@
 			<input type="text" id="sreset_code" placeholder="Email" /><br />
 			<input type="password" id="sreset_password" placeholder="New Password" /><br />
 			<input type="button" id="sreset_button" value="Submit" /><br />
-			<a class="open_page" data-page="login">Login</a>
-			<a class="open_page" data-page="signup">Signup</a>
+			<input type="button" class="open_page" data-page="login" value="Login" /><br />
+			<input type="button" class="open_page" data-page="signup" value="Signup" />
 		</div>
 	</div>
 
 	<div class="page" id="signup" data-no_back="true">
 		<div class="main_form">
+			<h3>Sign Up</h3>
 			<input type="text" id="signup_name" placeholder="Name" /><br />
 			<input type="email" id="signup_email" placeholder="Email" /><br />
 			<input type="password" id="signup_password" placeholder="Password" /><br />
 			<input type="password" id="signup_cpassword" placeholder="Confirm Password" /><br />
-			<input type="button" id="signup_button" value="Signup" /><br />
-			<a class="fb_login">FB Login</a><br />
-			<a class="open_page" data-page="login">Login</a>
+			<input type="button" id="signup_button" value="Signup" style="background: linear-gradient(124deg, #e83379 40%, #e0892e 60%); border: none;"/><br /><br />
+			<input type="button" class="fb_login" value="Sign up with Facebook" style="background: #3b5998; color: white; font-weight: bold; border: none;"/><br />
+			<input type="button" class="open_page" data-page="login" value="Login" />
 		</div>
 	</div>
 
@@ -350,7 +365,7 @@
 			<div class="profile_background"></div>
 			<img class="profile_image profile_image_src" src="">
 			<div class="profile_name"></div>
-			<i class="fa fa-user-plus add_friend" data-user_id="" aria-hidden="true"></i>
+			<i class="fa fa-user-plus add_friend" style="color: white; text-shadow: 0px 0px 3px black; z-index: 10; font-size: 30px; position: absolute; bottom: 5px; right: 5px;" data-user_id="" aria-hidden="true"></i>
 		</div>
 		<div class="profile_stats">
 			<div style="margin:10px 0;">
@@ -481,10 +496,17 @@
 	</div>
 
 	<div class="page" id="band">
-		<div class="profile_image_cont">
-			<img class="profile_image" src="">
-			<div class="profile_name"></div>
-			<img class="profile_image_action open_band_dashboard" data-band_id="" src="images/icon_gear.png" />
+		<div class="profile_image_cont swiper">
+			<div class="swipable current_swipe">
+				<img class="profile_image" src="">
+				<div class="profile_name"></div>
+				<img class="profile_image_action open_band_dashboard" data-band_id="" src="images/icon_gear.png" />
+			</div>
+			<div class="swipable next_swipe" style="text-shadow: 1px 1px 0px black, -1px -1px -0px black, -1px 1px 0px black, 1px -1px 0px black;">
+				<img class="profile_image" src="" style="position: absolute; left:0; z-index:-1; filter: blur(3px)">
+				<h3 style="margin: 7px 0;">Band Bio</h3>
+				<div class="band_bio"></div>
+			</div>
 		</div>
 		<div style="margin:10px 0;">
 			<div class="circle_value">
@@ -530,6 +552,9 @@
 		<div class="donate">
 			Donate
 		</div>
+		<div id="band_social">
+
+		</div>
 	</div>
 
 	<div class="page" id="band_dashboard" data-band_id="">
@@ -559,17 +584,22 @@
 		<div id="dash_songs" class="band_dashboard_pages">
 			<div id="dash_song_list">
 			</div>
+			<h3>New Song</h3>
 			<input type="button" id="song_button" value="Select Song" />
 			<input type="text" id="song_name" placeholder="Name" />
 			<select id="song_genre"><option value="0"> Select Genre </option></select>
 			<input type="button" id="song_submit" value="Upload Song" />
 		</div>
 		<div id="dash_social" class="band_dashboard_pages">
-			Coming soon.
+			<input type="checkbox" id="band_social_private"><label for="band_social_private"> Private post</label>
+			<input type="file" value="upload placeholder" />
+			<textarea id="band_social_text"></textarea>
+			<input type="button" id="band_social_action" value="Submit Post" />
 		</div>
 		<div id="dash_settings" class="band_dashboard_pages">
 
 			<input type="text" id="band_name" value="" placeholder="Band Name" />
+			<textarea id="band_bio" placeholder="Band Bio"></textarea>
 			<input type="submit" id="save_band" value="Save Band Changes" />
 
 			<div class="is_admin">
@@ -584,7 +614,7 @@
 	</div>
 
 	<div class="page" id="featured" data-on_open="load_featured">
-		<h2>Featured</h2>
+		<h2 class="font">Featured</h2>
 		<div id="featured_featured" style="width: 90%; margin: auto; height: 47vw; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
@@ -598,14 +628,14 @@
 	</div>
 
 	<div class="page" id="full_list">
-		<h2 id="full_list_title"></h2>
+		<h2 id="full_list_title" class="font"></h2>
 		<div id="full_list_content" style="overflow: auto;">
 
 		</div>
 	</div>
 
 	<div class="page" id="genre" data-on_open="load_genres">
-		<h2>Genre</h2>
+		<h2 class="font">Genre</h2>
 		<div id="genre_featured" style="width: 90%; margin: auto; height: 47vw; overflow: hidden; position: relative;">
 			<img class="open_band feature current_feature" data-band_id="" />
 			<img class="open_band feature next_feature" data-band_id="" />
@@ -619,6 +649,18 @@
 	<div class="page" id="social" data-on_open="load_social">
 		<h2>Social</h2>
 		Soon
+	</div>
+
+	<div class="page" id="social_item">
+		<h2>##title##</h2>
+		<img src="">
+		<div>##text##</div>
+		<div>
+			controls
+		</div>
+		<div>
+			comment thread.
+		</div>
 	</div>
 
 	<div class="page" id="view_playlist" data-unload="reset_playlist_view">
