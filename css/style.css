@@ -28,15 +28,18 @@
 
 * {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; -webkit-user-select:none;}
 html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
-body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); color: white; overflow: hidden;}
+body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); background: black; color: white; overflow: hidden;}
 
 .clear {clear:both;}
 
-input[type="text"], input[type="submit"], input[type="button"], input[type="password"], select, textarea {-webkit-appearance:none; background: black; border: solid 1px #555555; color: #ddd; padding: 10px 5px; font-size: 1.2em; margin: 8px 20px; width: calc(100% - 40px); border-radius: 100px; user-select: initial; -webkit-user-select: initial;
+input[type="text"], input[type="submit"], input[type="button"], input[type="password"], select, textarea {-webkit-appearance:none; background: black; border: solid 3px #999; color: #999; padding: 10px 5px; font-size: 1.2em; margin: 8px 20px; width: calc(100% - 40px); border-radius: 100px; user-select: initial; -webkit-user-select: initial;
 text-align: center;}
 input, textarea {background: #333333;}
 textarea {border-radius: 1em;}
 .slider {-webkit-appearance: slider-horizontal; border: none; padding: 0; margin: 0; width: inherit; width: 90%;}
+*::placeholder {
+	color: #333;
+}
 
 h2{
 	margin-left: 5%;
@@ -69,7 +72,20 @@ h2.font{
 #modal.loading h1 {margin:0;}
 #modal.loading p, #modal.loading a {display:none !important;}
 
-#modal.donation {height: 200px;}
+#modal.donation {height: 500px;}
+#modal.donation  > div {margin: 0;
+	overflow: auto;
+	height: 423px;}
+.donation_level{text-align: left; position: relative;    margin: 10px;
+	border-bottom: solid 2px lightgrey;}
+.donation_level img{}
+.donation_info{    position: absolute;
+	right: 0;
+	top: 10px;
+	text-align: right;}
+.donation_info div:first-of-type{font-size: 2em;}
+
+#modal.donation_confirm {height: 200px;}
 
 
 #menu-overlay {position: fixed; top: 0; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:99;}
@@ -394,7 +410,7 @@ h2.font{
 	filter: brightness(42.5%) sepia(100) saturate(85) hue-rotate(-30deg);
 }
 
-.band_info{
+.social_overlay{
 	position: fixed;
 	z-index: 2;
 	width: 100%;
@@ -464,7 +480,7 @@ input.genre_selector {
 
 
 #profile_nav .nav_item{
-	width: 32%;
+	width: 24%;
 }
 
 .profile_image_cont{
@@ -502,6 +518,10 @@ input.genre_selector {
 	margin-top: 10px;
 }
 
+#profile .profile_image{
+	border-radius: 100%;
+}
+
 .profile_name{
 	position: relative;
 	margin-bottom: 5px;
@@ -516,7 +536,7 @@ input.genre_selector {
 
 .profile_image_action{
 	right: 5px;
-	bottom: 55px;
+	bottom: 5px;
 	position: absolute;
 	height: 30px;
 }
@@ -820,6 +840,15 @@ input.genre_selector {
 	height: 100%;
 }
 
+.search_item.open_band, .search_item.open_profile{
+	border-bottom-left-radius: 20px;
+	border-top-left-radius: 20px;
+}
+
+.search_item.open_band img, .search_item.open_profile img{
+	border-radius: 100%;
+}
+
 .search_text {
 	display: inline-block;
 	vertical-align: top;
@@ -899,7 +928,7 @@ input.genre_selector {
 	width: 23.7%;
 }
 
-#band .profile_image, #playlist .band_info .profile_image{
+#band .profile_image{
 	width: 100%;
 	height: 50vw;
 	margin-top: 0;
@@ -923,6 +952,37 @@ input.genre_selector {
 	width: 60px;
 }
 
+
+
+.social_nav{
+	position: absolute;
+	bottom: 0px;
+	height: 70px;
+	width: 100%;
+	margin: 30px auto 0px;
+}
+
+.social_nav .nav_item{
+	width: 23.7%;
+}
+
+.social_target img {
+	width: 70px;
+	border-radius: 100%;
+}
+
+.social_target {
+	width: 70px;
+	font-size: 0.7em;
+	overflow: hidden;
+	display: inline-block;
+	margin: 0 10px;
+	white-space: nowrap;
+	text-align: center;
+}
+
+.social_target div {
+}
 
 
 

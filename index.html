@@ -86,6 +86,23 @@
 			</div>
 		</div>
 	</div>
+	<div data-key="half_list_top">
+		<div class="half_list_song open_band" data-band_id="##id##">
+			<img src="##image_url##">
+			<div class="half_list_cont">
+				<div class="band_name">##name##</div>
+				<div class="fan_rank">##rank##</div>
+			</div>
+		</div>
+	</div>
+	<div data-key="half_list_recent">
+		<div class="half_list_song open_band" data-band_id="##id##">
+			<img src="##image_url##">
+			<div class="half_list_cont">
+				<div class="band_name">##name##</div>
+			</div>
+		</div>
+	</div>
 	<div data-key="playlist_list">
 		<div class="half_list_song play_playlist" data-playlist_id="##id##">
 			<img src="##image_url##">
@@ -141,7 +158,7 @@
 				<div class="playlist_title">##list_name##</div>
 			</div>
 			<div class="song_info">
-				<img class="profile_image_action band_image open_band" data-band_id="##band_id##" src="##band_image_small_url##">
+				<img class="profile_image_action band_image open_band" style="display: none;" data-band_id="##band_id##" src="##band_image_small_url##">
 				<div class="song_play_info">
 					<div class="current_time timmer"></div>
 					<div class="total_time timmer" style="right: 0;"></div>
@@ -160,40 +177,35 @@
 					</div>
 				</div>
 			</div>
-			<div class="band_info" data-band_id="##band_id##">
-				<div class="profile_image_cont">
-					<img class="profile_image" src="##band_image_url##">
-					<div class="profile_name">##band_name##</div>
+			<div class="social_overlay" data-band_id="##band_id##">
+				<div class="social_preview">
+					Preview of social item (image, name, snipit)
 				</div>
-				<i class="fa fa-spinner fa-spin fa-3x fa-fw band_loading" style="display: none;"></i>
-				<div style="margin:10px 0;">
-					<div class="circle_value">
-						<div class="circle_cont">
-							<div class="circle_back"></div>
-							<div class="circle_outer"></div>
-							<div class="circle_inner"><div class="center">123</div></div>
+				<div class="social_activity">
+					<div class="social_type">
+						<div class="social_type_comments">
+							Comments (<span class="comment_count">0</span>)
 						</div>
-						<div class="circle_sub">Supporters</div>
 					</div>
-					<div class="circle_value">
-						<div class="circle_cont">
-							<div class="circle_back"></div>
-							<div class="circle_outer"></div>
-							<div class="circle_inner"><div class="center">1,234</div></div>
-						</div>
-						<div class="circle_sub">Donations</div>
+					<div class="social_comments">
+
 					</div>
-					<div class="circle_value">
-						<div class="circle_cont">
-							<div class="circle_back"></div>
-							<div class="circle_outer"></div>
-							<div class="circle_inner"><div class="center">44%</div></div>
-						</div>
-						<div class="circle_sub">Traction</div>
-					</div>
-					<div class="clear"></div>
 				</div>
-				<div class="band_nav">
+				<div class="social_interaction">
+					<div>
+						<input type="text" class="social_search" placeholder="Search">
+					</div>
+					<div>
+						actions_list
+						<div class="social_friends">
+
+						</div>
+					</div>
+					<div>
+						<input type="text" class="social_input" placeholder="Write A Comment...">
+					</div>
+				</div>
+				<div class="social_nav">
 					<div class="nav_item" title="Private social">
 						<img src="images/icon_notifications.png" />
 					</div>
@@ -231,6 +243,36 @@
 	</div>
 	<div data-key="free_question">
 		<input type="button" class="genre_selector" value="##name##" data-genre_id="##id##" />
+	</div>
+	<div data-key="donation_modal">
+		<div class="donation_level" data-value="1" data-band_id="##band_id##">
+			<img src="images/cone_1.png">
+			<div class="donation_info">
+				<div>$.25</div>
+				<div>1 point</div>
+			</div>
+		</div>
+		<div class="donation_level" data-value="4" data-band_id="##band_id##">
+			<img src="images/cone_2.png">
+			<div class="donation_info">
+				<div>$1</div>
+				<div>4 points</div>
+			</div>
+		</div>
+		<div class="donation_level" data-value="12" data-band_id="##band_id##">
+			<img src="images/cone_3.png">
+			<div class="donation_info">
+				<div>$3</div>
+				<div>12 points</div>
+			</div>
+		</div>
+		<div class="donation_level" data-value="40" data-band_id="##band_id##">
+			<img src="images/cone_4.png">
+			<div class="donation_info">
+				<div>$<select><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option></select></div>
+				<div>Enter amount</div>
+			</div>
+		</div>
 	</div>
 </div>
 <div id="ios_icon_cover">
@@ -360,6 +402,60 @@
 		</div>
 	</div>
 
+	<div class="page" id="social_item">
+	</div>
+
+	<div class="page" id="social_interaction">
+		<div class="social_preview" style="height: 80px;">
+			Preview of social item (image, name, snipit)
+		</div>
+		<div class="social_activity" style="height: calc(100vh - 420px);">
+			<div class="social_type">
+				<div class="social_type_comments">
+					Comments (<span class="comment_count">0</span>)
+				</div>
+			</div>
+			<div class="social_comments">
+
+			</div>
+		</div>
+		<div class="social_interaction">
+			<div>
+				<input type="text" class="social_search" placeholder="Search">
+			</div>
+			<div>
+				<div class="social_target">
+					<img src="images/icon_magaphone_noise.png" />
+					<div>Social</div>
+				</div>
+				<div class="social_target" style="display: none;">
+					<img src="" />
+					<div>Social</div>
+				</div>
+				<div id="social_friends" style="display: inline-block">
+
+				</div>
+			</div>
+			<div>
+				<input type="text" id="social_input" data-social_type="" data-social_id="" placeholder="Write A Comment...">
+			</div>
+		</div>
+		<div class="social_nav">
+			<div class="nav_item" title="Band Page">
+				<img class="open_band _band_image" data-band_id="" src="" />
+			</div>
+			<div class="nav_item" title="Public social">
+				<img src="images/icon_magaphone_noise.png" />
+			</div>
+			<div class="nav_item" title="Share">
+				<img src="images/icon_record.png" />
+			</div>
+			<div class="nav_item" title="donate">
+				<img src="images/icon_cone.png" />
+			</div>
+		</div>
+	</div>
+
 	<div class="page scrollable" id="profile">
 		<div class="profile_image_cont">
 			<div class="profile_background"></div>
@@ -367,41 +463,57 @@
 			<div class="profile_name"></div>
 			<i class="fa fa-user-plus add_friend" style="color: white; text-shadow: 0px 0px 3px black; z-index: 10; font-size: 30px; position: absolute; bottom: 5px; right: 5px;" data-user_id="" aria-hidden="true"></i>
 		</div>
-		<div class="profile_stats">
-			<div style="margin:10px 0;">
-				<div class="circle_value">
-					<div class="circle_cont">
-						<div class="circle_back"></div>
-						<div class="circle_outer"></div>
-						<div class="circle_inner"><div class="center">35%</div></div>
-					</div>
-					<div class="circle_sub">Rap</div>
-				</div>
-				<div class="circle_value">
-					<div class="circle_cont">
-						<div class="circle_back"></div>
-						<div class="circle_outer"></div>
-						<div class="circle_inner"><div class="center">22%</div></div>
-					</div>
-					<div class="circle_sub">Rock</div>
-				</div>
-				<div class="circle_value">
-					<div class="circle_cont">
-						<div class="circle_back"></div>
-						<div class="circle_outer"></div>
-						<div class="circle_inner"><div class="center">44%</div></div>
-					</div>
-					<div class="circle_sub">Alt</div>
-				</div>
-				<div class="clear"></div>
+		<div id="profile_nav">
+			<div class="nav_item open_music active">
+				<img src="images/icon_record.png" />
+			</div>
+			<div class="nav_item open_notifications">
+				<img src="images/icon_notifications.png" />
+			</div>
+			<div class="nav_item open_settings">
+				<img src="images/icon_gear.png" />
+			</div>
+			<div class="nav_item change_photo" data-action="profile_image">
+				<img class="profile_image_action"  src="images/icon_camera.png" />
 			</div>
 		</div>
-		<div class="profile_cont">
-			<div class="profile_music">
+		<div id="profile_cont">
+			<div id="profile_music">
+				<div class="profile_stats">
+					<div style="margin:10px 0;">
+						<div class="circle_value">
+							<div class="circle_cont">
+								<div class="circle_back"></div>
+								<div class="circle_outer"></div>
+								<div class="circle_inner"><div class="center">35%</div></div>
+							</div>
+							<div class="circle_sub">Rap</div>
+						</div>
+						<div class="circle_value">
+							<div class="circle_cont">
+								<div class="circle_back"></div>
+								<div class="circle_outer"></div>
+								<div class="circle_inner"><div class="center">22%</div></div>
+							</div>
+							<div class="circle_sub">Rock</div>
+						</div>
+						<div class="circle_value">
+							<div class="circle_cont">
+								<div class="circle_back"></div>
+								<div class="circle_outer"></div>
+								<div class="circle_inner"><div class="center">44%</div></div>
+							</div>
+							<div class="circle_sub">Alt</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<h3>Recently Collected</h3>
 				<div class="half_list_group" id="profile_music_songs">
 					<div id="profile_songs" class="profile_songs" style="width: 10000px;">
 					</div>
 				</div>
+				<h3>Playlists</h3>
 				<div class="half_list_group" id="profile_music_playlists">
 					<div style="width: 10000px;">
 						<!--<div class="half_list_song play_playlist" data-playlist_id="0">
@@ -411,47 +523,6 @@
 							</div>
 						</div>-->
 						<div id="profile_playlists">
-
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="page" id="your_profile">
-		<div class="profile_image_cont">
-			<div class="profile_background"></div>
-			<img class="profile_image profile_image_src" src="">
-			<div class="profile_name"></div>
-			<img class="profile_image_action change_photo" data-action="profile_image" src="images/icon_camera.png" />
-		</div>
-		<div id="profile_nav">
-			<div class="nav_item open_music active">
-				<img src="images/icon_record.png" />
-			</div>
-			<div class="nav_item open_notifications">
-				<img src="images/icon_notifications.png" />
-			</div>
-			<div class="nav_item open_page" data-page="settings">
-				<img src="images/icon_gear.png" />
-			</div>
-		</div>
-		<div class="profile_cont">
-			<div id="profile_your_music" class="profile_music">
-				<div class="half_list_group" id="profile_your_music_songs">
-					<div id="profile_your_songs" class="profile_songs" style="width: 10000px;">
-					</div>
-				</div>
-				<div class="half_list_group" id="profile_your_music_playlists">
-					<div style="width: 10000px;">
-						<!--<div class="half_list_song play_playlist" data-playlist_id="0">
-							<img class="profile_image_src" src="">
-							<div class="half_list_cont">
-								<div class="song_name">Your Songs</div>
-							</div>
-						</div>-->
-						<div id="profile_your_playlists">
 
 						</div>
 						<div class="half_list_song create_playlist">
@@ -464,30 +535,45 @@
 						</div>
 					</div>
 				</div>
+				<div id="profile_supported">
+					<h3>Supported Artists</h3>
+					<div id="profile_top_fan">
+						<h5>Top Fans</h5>
+						<div class="half_list_group">
+							<div id="top_fans" class="profile_songs" style="width: 10000px;">
+							</div>
+						</div>
+					</div>
+					<h5>Recently Supported</h5>
+					<div class="half_list_group">
+						<div id="recently_supported" class="profile_songs" style="width: 10000px;">
+						</div>
+					</div>
+				</div>
 			</div>
-			<div id="profile_notifications">
+			<div id="profile_notifications" style="display: none;">
 				profile_notifications
+			</div>
+			<div id="profile_settings" style="display: none;">
+				<input type="submit" class="logout" value="Logout" /><br /><br />
+
+				<input id="settings_name" type="text" value="" placeholder="name" /><br />
+				<input id="settings_password" type="password" value="" placeholder="New password" /><br />
+				<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
+				<input type="submit" id="settings_save" value="Save Changes" />
+
+				<div>
+					<h3>Bands</h3>
+					<div id="settings_bands">
+
+					</div>
+					<input type="submit" class="open_page" data-page="create_band" value="Create new band" />
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="page" id="manage_album">
-	</div>
-
-	<div class="page" id="settings">
-		<input type="submit" class="logout" value="Logout" /><br /><br />
-
-		<input id="settings_name" type="text" value="" placeholder="name" /><br />
-		<input id="settings_password" type="password" value="" placeholder="New password" /><br />
-		<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
-
-		<div>
-			<h3>Bands</h3>
-			<div id="settings_bands">
-
-			</div>
-			<input type="submit" class="open_page" data-page="create_band" value="Create new band" />
-		</div>
 	</div>
 
 	<div class="page" id="create_band">
@@ -500,7 +586,8 @@
 			<div class="swipable current_swipe">
 				<img class="profile_image" src="">
 				<div class="profile_name"></div>
-				<img class="profile_image_action open_band_dashboard" data-band_id="" src="images/icon_gear.png" />
+				<img class="profile_image_action open_band_dashboard" style="bottom: 45px;" data-band_id="" src="images/icon_gear.png" />
+				<img class="profile_image_action band_fav" data-band_id="" src="images/icon_cross.png" />
 			</div>
 			<div class="swipable next_swipe" style="text-shadow: 1px 1px 0px black, -1px -1px -0px black, -1px 1px 0px black, 1px -1px 0px black;">
 				<img class="profile_image" src="" style="position: absolute; left:0; z-index:-1; filter: blur(3px)">
@@ -563,6 +650,7 @@
 			<img class="profile_image" src="">
 			<div class="profile_name"></div>
 			<img class="profile_image_action change_photo" data-action="band_image" data-id="" src="images/icon_camera.png" />
+			<img class="profile_image_action band_image open_band" style="left: 5px; top: 10px;" data-band_id="" src="">
 		</div>
 		<div id="band_dash_nav" style="height: 70px;">
 			<div class="nav_item band_stats active">
@@ -649,18 +737,6 @@
 	<div class="page" id="social" data-on_open="load_social">
 		<h2>Social</h2>
 		Soon
-	</div>
-
-	<div class="page" id="social_item">
-		<h2>##title##</h2>
-		<img src="">
-		<div>##text##</div>
-		<div>
-			controls
-		</div>
-		<div>
-			comment thread.
-		</div>
 	</div>
 
 	<div class="page" id="view_playlist" data-unload="reset_playlist_view">

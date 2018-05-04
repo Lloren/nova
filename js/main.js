@@ -222,6 +222,7 @@ function open_band_dashboard(band_id){
 		$("#band_dashboard .profile_image").attr("src", data.image);
 		$("#band_dashboard .profile_name").html(data.name);
 		$("#band_dashboard .change_photo").data("id", data.id);
+		$("#band_dashboard .band_image").data("band_id", data.id).attr("src", data.image_small_url);
 		var song_html = "";
 		var i=0;
 		var locked_message = false;
@@ -276,6 +277,12 @@ function open_band(band_id){
 		$("#band .profile_name").html(data.name);
 		$("#band .donate").data("band_id", data.id);
 		$("#band .band_bio").html(data.bio);
+		$("#band .band_fav").data("band_id", data.id);
+		if (data.faved_band){
+			$("#band .band_fav").addClass("faved");
+		} else {
+			$("#band .band_fav").removeClass("faved");
+		}
 		if (data.show_dash_button){
 			$("#band .open_band_dashboard").show().data("band_id", data.id);
 		} else {
@@ -515,6 +522,27 @@ function load_genres(){
 function load_social(){
 }
 
+function open_social_interaction(type, key){
+	console.log("social_interaction", type, key);
+	$("#social_input").data("social_type", type).data("social_id", key);
+
+	$.getJSON(base_url+"/ajax/social.php?callback=?", {type: type, key: key, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		var friends = [];
+		for (var i=0;i<data.friends.length;i++){
+			var f = data.friends[i];
+			friends.push('<div class="social_target" data-user_id="'+f.id+'"><img src="'+f.image_url+'" /><div>'+f.name+'</div></div>');
+		}
+		$("#social_friends").html(friends.join(""));
+	});
+	show_page("social_interaction");
+}
+
+function social_submit_interaction(){
+
+	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), type: $("#social_input").data("type"), key: $("#social_input").data("key"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+	});
+}
+
 function open_full_list(type, name){
 	$.getJSON(base_url+"/ajax/get_list.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), type: type}, function (data){
 		var htmls = [];
@@ -534,42 +562,6 @@ function open_full_list(type, name){
 	});
 	$("#full_list_title").html(name);
 	show_page("full_list");
-}
-
-function open_profile_yours(){
-	$.getJSON(base_url+"/ajax/profile.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), users_id: settings.get("user_id")}, function (data){
-		$("#your_profile .profile_background").css("background-image", "url("+data.image+")");
-		$("#your_profile .profile_image_src").attr("src", data.image);
-		$("#your_profile .profile_name").html(data.name);
-
-		var song_htmls = [];
-		for (var i=0;i<data.songs.length;i++){
-			data.songs[i].playlist_id = 0;
-			song_htmls.push(template("half_list", data.songs[i]));
-		}
-		$("#profile_your_songs").html(song_htmls.join(""));
-
-		var playlists_htmls = [];
-		for (var i=0;i<data.playlists.length;i++){
-			playlists_htmls.push(template("playlist_list", data.playlists[i]));
-		}
-		$("#profile_your_playlists").html(playlists_htmls.join(""));
-
-		var notifications_htmls = [];
-		for (var i=0;i<data.notifications.length;i++){
-			notifications_htmls.push(template("notification_list", data.notifications[i]));
-		}
-		$("#profile_notifications").html(notifications_htmls.join(""));
-
-		var band_htmls = [];
-		for (var i=0;i<data.your_bands.length;i++){
-			band_htmls.push(template("band_list", data.your_bands[i]));
-		}
-		$("#settings_bands").html(band_htmls.join(""));
-
-		$("#settings_name").val(data.name);
-		show_page("your_profile");
-	});
 }
 
 function open_profile(user_id){
@@ -595,6 +587,46 @@ function open_profile(user_id){
 			playlists_htmls.push(template("playlist_list", data.playlists[i]));
 		}
 		$("#profile_playlists").html(playlists_htmls.join(""));
+
+		if (data.recent_supported){
+			$("#profile_supported").show();
+			var recently_supported = [];
+			for (var i=0;i<data.recent_supported.length;i++){
+				recently_supported.push(template("half_list_recent", data.recent_supported[i]));
+			}
+			$("#recently_supported").html(recently_supported.join(""));
+			if (data.top_supported){
+				$("#profile_top_fan").show();
+				var top_fans = [];
+				for (var i=0;i<data.top_supported.length;i++){
+					top_fans.push(template("half_list_top", data.top_supported[i]));
+				}
+				$("#top_fans").html(top_fans.join(""));
+			} else {
+				$("#profile_top_fan").hide();
+			}
+		} else {
+			$("#profile_supported").hide();
+		}
+
+		if (data.is_you){
+			$("#profile_nav").show();
+			var notifications_htmls = [];
+			for (var i=0;i<data.notifications.length;i++){
+				notifications_htmls.push(template("notification_list", data.notifications[i]));
+			}
+			$("#profile_notifications").html(notifications_htmls.join(""));
+
+			var band_htmls = [];
+			for (var i=0;i<data.your_bands.length;i++){
+				band_htmls.push(template("band_list", data.your_bands[i]));
+			}
+			$("#settings_bands").html(band_htmls.join(""));
+
+			$("#settings_name").val(data.name);
+		} else {
+			$("#profile_nav").hide();
+		}
 
 		show_page("profile");
 	});
@@ -848,6 +880,22 @@ function startup(){
 		show_page("login");
 	});
 
+	click_event("#settings_save", function (e){
+		$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "save_profile", name: $("#settings_name").val(), pass: $("#settings_password").val(), cpass: $("#settings_cpassword").val()}, function (data){
+			$("#settings_password").val("");
+			$("#settings_cpassword").val("");
+			if (data.mess.Error){
+				var mess = "";
+				for (var i=0;i<data.mess.Error.length;i++)
+					mess += "<div>"+data.mess.Error[i].message+"</div>";
+
+				open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
+			} else if (data.good) {
+				open_modal({title: "Success", content:"Changes Saved"});
+			}
+		});
+	});
+
 	$("#playlist_songs").on("touchstart", function(e){
 		//console.log("start");
 		x_over = false;
@@ -976,7 +1024,7 @@ function startup(){
 				y_over = true;
 				if (playlist_swipe_delta_y < 0)
 					playlist_swipe_delta_y = 0;
-				$(".song .band_info").css({top: "calc(100% - "+playlist_swipe_delta_y+"px)"});
+				$(".song .social_overlay").css({top: "calc(100% - "+playlist_swipe_delta_y+"px)"});
 			}
 		}
 		if (swiper_scope){
@@ -1111,6 +1159,7 @@ function startup(){
 			name_long_press = false;
 		}
 		if (playlist_swipe_delta_x > 50){
+			$(".song .social_overlay").css({top: "100%"}, 100);
 			if (next_questionnaire <= 0){
 				next_questionnaire = next_questionnaire_count;
 				questionnaire = true;
@@ -1139,16 +1188,14 @@ function startup(){
 			prev_playlist();
 			$(".song.next_song").animate({left: "100%"}, 100);
 		} else if (playlist_swipe_delta_y > 150){
-			$(".song.current_song .band_loading").fadeIn(100);
-			open_band($(".song.current_song .band_info").data("band_id"));
-			$(".song .band_info").animate({top: "0px"}, 100);
+			$(".song .social_overlay").animate({top: "0px"}, 100);
+			back_log("open_social_interaction", ["song", $(".current_song").data("song_id")]);
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else {
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		}
-		$(".song .band_info").css({top: "100%"}, 100);
 		playlist_touch = false;
 		playlist_swipe_delta_x = false;
 		playlist_swipe_start_y = false;
@@ -1207,7 +1254,7 @@ function startup(){
 	}, true);
 	
 	click_event(".open_profile_yours", function (e){
-		back_log("open_profile_yours");
+		back_log("open_profile", [settings.get("user_id")]);
 	}, true);
 
 	click_event(".add_to_playlist", function (e){
@@ -1245,15 +1292,25 @@ function startup(){
 	});
 
 	click_event(".open_music", function (e){
-		$("#profile_your_music").show();
+		$("#profile_music").show();
 		$("#profile_notifications").hide();
+		$("#profile_settings").hide();
 		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 	
 	click_event(".open_notifications", function (e){
 		$("#profile_notifications").show();
-		$("#profile_your_music").hide();
+		$("#profile_music").hide();
+		$("#profile_settings").hide();
+		$("#profile_nav .nav_item.active").removeClass("active");
+		$(e.currentTarget).addClass("active");
+	}, true);
+
+	click_event(".open_settings", function (e){
+		$("#profile_notifications").hide();
+		$("#profile_music").hide();
+		$("#profile_settings").show();
 		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
@@ -1422,16 +1479,24 @@ function startup(){
 	}, true);
 
 	click_event(".donate", function (e){
-		var band_name = $("#band .profile_name").html();
+		open_modal({title:"Show Love", content: template("donation_modal", {band_id: $(e.currentTarget).data("band_id")}), button1:"Cancel", add_class: "donation"});
+	}, true);
+
+	click_event(".donation_level", function (e){
+		var value = $(e.currentTarget).data("value");
 		var band_id = $(e.currentTarget).data("band_id");
-		var value = 1;
-		if (e.long){
-			value = 5;
-		}
-		open_modal({title:"Donation Confirmation", content: 'Thank you for sending '+value+' donation'+(value>1?'s':'')+' to '+band_name+'.', button1:"Confirm", button2: true, add_class: "donation", callback: function (action){
+		var extra = "";
+		var band_name = $("#band .profile_name").html();//TODO: update, this will fail in the future social
+		open_modal({title:"Donation Confirmation", content: 'Thank you for sending a '+value+' point donation to '+band_name+extra+'.', button1:"Confirm", button2: true, add_class: "donation_confirm", callback: function (action){
 			if (action == "Confirm"){
 				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, num: value}, function (data){
+					if (data.mess.Error){
+						var mess = "";
+						for (var i=0;i<data.mess.Error.length;i++)
+							mess += "<div>"+data.mess.Error[i].message+"</div>";
 
+						open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
+					}
 				});
 			}
 		}});
@@ -1592,6 +1657,12 @@ function startup(){
 		search_query_handle = setTimeout(function (){
 			run_search($("#search_field").val());
 		}, 100);
+	});
+
+	$("#social_input").on("keyup", function (e){
+		if (e.keyCode == 13 || e.keyCode == 9){
+			social_submit_interaction();
+		}
 	});
 
 	click_event(".open_genre", function (e){
