@@ -103,6 +103,20 @@
 			</div>
 		</div>
 	</div>
+	<div data-key="comment">
+		<div class="comment">
+			<div class="comment_image">
+				<img src="##image_url##">
+			</div>
+			<div class="comment_cont">
+				<div class="comment_name">##name##</div>
+				<div class="comment_text">##text##</div>
+				<div class="comment_other">
+					<span class="comment_time">##time_out##</span>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div data-key="playlist_list">
 		<div class="half_list_song play_playlist" data-playlist_id="##id##">
 			<img src="##image_url##">
@@ -137,7 +151,7 @@
 		</div>
 	</div>
 	<div data-key="song_disp">
-		<div class="song ##add_class##" data-song_id="##id##" data-key="##key##">
+		<div class="song ##add_class##" data-song_id="##id##" data-post_id="##post_id##" data-key="##key##">
 			<div class="genre_data" style="display: none;">##genre_data##</div>
 			<div class="profile_image_cont">
 				<div class="profile_background" style="background-image:url('##image_url##')"></div>
@@ -406,32 +420,32 @@
 	</div>
 
 	<div class="page" id="social_interaction">
-		<div class="social_preview" style="height: 80px;">
+		<div id="social_preview" style="height: 80px;">
 			Preview of social item (image, name, snipit)
 		</div>
-		<div class="social_activity" style="height: calc(100vh - 420px);">
-			<div class="social_type">
-				<div class="social_type_comments">
-					Comments (<span class="comment_count">0</span>)
+		<div id="social_activity" style="height: calc(100vh - 420px);">
+			<div id="social_type">
+				<div id="social_type_comments">
+					Comments (<span id="comment_count">0</span>)
 				</div>
 			</div>
-			<div class="social_comments">
+			<div id="social_comments">
 
 			</div>
 		</div>
-		<div class="social_interaction">
+		<div id="social_interact">
 			<div>
-				<input type="text" class="social_search" placeholder="Search">
+				<input type="text" id="social_search" placeholder="Search">
 			</div>
 			<div>
 				<div class="social_target">
 					<img src="images/icon_magaphone_noise.png" />
 					<div>Social</div>
 				</div>
-				<div class="social_target" style="display: none;">
+				<!--<div class="social_target" style="display: none;">
 					<img src="" />
-					<div>Social</div>
-				</div>
+					<div>Reaction</div>
+				</div>-->
 				<div id="social_friends" style="display: inline-block">
 
 				</div>
@@ -440,9 +454,9 @@
 				<input type="text" id="social_input" data-social_type="" data-social_id="" placeholder="Write A Comment...">
 			</div>
 		</div>
-		<div class="social_nav">
+		<div id="social_nav">
 			<div class="nav_item" title="Band Page">
-				<img class="open_band _band_image" data-band_id="" src="" />
+				<img id="social_band_image" class="open_band" data-band_id="" src="" />
 			</div>
 			<div class="nav_item" title="Public social">
 				<img src="images/icon_magaphone_noise.png" />

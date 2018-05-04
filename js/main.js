@@ -522,24 +522,34 @@ function load_genres(){
 function load_social(){
 }
 
-function open_social_interaction(type, key){
-	console.log("social_interaction", type, key);
-	$("#social_input").data("social_type", type).data("social_id", key);
+function open_social_interaction(post_id){
+	console.log("social_interaction", post_id);
+	$("#social_input").data("post_id", post_id);
 
-	$.getJSON(base_url+"/ajax/social.php?callback=?", {type: type, key: key, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+	$.getJSON(base_url+"/ajax/social.php?callback=?", {post_id: post_id, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		$("#social_band_image").attr("src", data.band_image_small_url).data("band_id", data.band_id);
+		
 		var friends = [];
 		for (var i=0;i<data.friends.length;i++){
 			var f = data.friends[i];
 			friends.push('<div class="social_target" data-user_id="'+f.id+'"><img src="'+f.image_url+'" /><div>'+f.name+'</div></div>');
 		}
 		$("#social_friends").html(friends.join(""));
+
+		$("#comment_count").html(data.num_comments);
+		
+		var comments = [];
+		for (var i=0;i<data.comments.length;i++){
+			comments.push(template("comment", data.comments[i]));
+		}
+		$("#social_comments").html(comments.join(""));
 	});
 	show_page("social_interaction");
 }
 
 function social_submit_interaction(){
-
-	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), type: $("#social_input").data("type"), key: $("#social_input").data("key"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), post_id: $("#social_input").data("post_id"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		open_social_interaction($("#social_input").val("").data("post_id"));
 	});
 }
 
@@ -1189,7 +1199,7 @@ function startup(){
 			$(".song.next_song").animate({left: "100%"}, 100);
 		} else if (playlist_swipe_delta_y > 150){
 			$(".song .social_overlay").animate({top: "0px"}, 100);
-			back_log("open_social_interaction", ["song", $(".current_song").data("song_id")]);
+			back_log("open_social_interaction", [$(".current_song").data("post_id")]);
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else {
@@ -1657,6 +1667,22 @@ function startup(){
 		search_query_handle = setTimeout(function (){
 			run_search($("#search_field").val());
 		}, 100);
+	});
+
+	$("#social_search").on("keyup", function (e){
+		var term = $("#social_search").val().toLowerCase();
+		if (term){
+			$(".social_target").each(function (){
+				console.log("search", $(this).children("div").html().toLowerCase(), $(this).children("div").html().toLowerCase().indexOf(term))
+				if ($(this).children("div").html().toLowerCase().indexOf(term) >= 0){
+					$(this).show();
+				} else {
+					$(this).hide();
+				}
+			});
+		} else {
+			$(".social_target").show();
+		}
 	});
 
 	$("#social_input").on("keyup", function (e){
