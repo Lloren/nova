@@ -791,7 +791,7 @@ function startup(){
 	$("head").append('<style type="text/css" id="dynamic_style_sheet"></style>');
 	var hl_width = (($(window).height() - 322 - 30 - height_mod) / 2);
 	var one_line = $(window).width() / ($(window).height() - 260 - height_mod) > 1;
-	$("#dynamic_style_sheet").html(":root{--height_mod: "+height_mod+"px}#profile_your_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#create_playlist_button{width: "+(hl_width - 10)+"px; height: "+(hl_width - 5)+"px}#full_list_content{height:"+($(window).height() - 100 - height_mod)+"px !important}"+(one_line?"#playlist .song_name {max-height: 51px;}":""));
+	$("#dynamic_style_sheet").html(":root{--height_mod: "+height_mod+"px}#profile_your_music .half_list_song{width:"+hl_width+"px !important}.song_info{height:"+($(window).height() - $(window).width() - 80 - height_mod)+"px !important}#genre_list{height:"+($(window).height() - 291 - height_mod)+"px !important}#full_list_content{height:"+($(window).height() - 100 - height_mod)+"px !important}"+(one_line?"#playlist .song_name {max-height: 51px;}":""));
 	
 	click_event(".fb_login", function (){
 		facebookConnectPlugin.login(["public_profile","email"], function (obj){

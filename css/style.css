@@ -679,7 +679,7 @@ input.genre_selector {
 }
 
 .half_list_song {
-	width: 45vw;
+	width: 100px;
 	float: left;
 	padding: 5px;
 	position: relative;
