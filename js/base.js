@@ -217,7 +217,7 @@ function template(key, data){
 }
 
 function open_modal(options){
-	options = $.extend({}, {content: "", title: "", callback: false, button1: "Ok", button2: false, overwrite: true, add_class: ""}, options || {});
+	options = $.extend({}, {content: "", title: "", callback: false, button1: "Ok", button2: false, overwrite: true, add_class: "", dismissible: false}, options || {});
 	if (options.button2 === true)
 		options.button2 = "Cancel";
 	
@@ -249,6 +249,11 @@ function open_modal(options){
 	});
 	$("#modal").attr("class", options.add_class).show();
 	$("#modal-overlay").addClass("enabled");
+	if (options.dismissible){
+		$("#modal-overlay").off().on("touchend", function(e){
+			close_modal()
+		});
+	}
 }
 
 function open_modala(text, dismiss, time){
@@ -262,8 +267,7 @@ function open_modala(text, dismiss, time){
 	}, time);
 	if (dismiss){
 		$("#disable-overlay").on("touchend", function(e){
-			$("#modal").hide();
-			$("#modal-overlay").removeClass("enabled");
+			close_modala()
 		});
 	}
 }

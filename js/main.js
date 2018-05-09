@@ -275,7 +275,7 @@ function open_band(band_id){
 	$.getJSON(base_url+"/ajax/band.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id}, function (data){
 		$("#band .profile_image").attr("src", data.image);
 		$("#band .profile_name").html(data.name);
-		$("#band .donate").data("band_id", data.id);
+		$("#band .donate").data("band_id", data.id).data("band_name", data.name);
 		$("#band .band_bio").html(data.bio);
 		$("#band .band_fav").data("band_id", data.id);
 		if (data.faved_band){
@@ -528,11 +528,24 @@ function open_social_interaction(post_id){
 
 	$.getJSON(base_url+"/ajax/social.php?callback=?", {post_id: post_id, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		$("#social_band_image").attr("src", data.band_image_small_url).data("band_id", data.band_id);
+
+
+		$("#social_preview").attr("class", "").addClass("social_preview_"+data.preview.type);
+		$("#social_preview .preview_image").attr("src", data.preview.img_url);
+		$("#social_preview .social_title").html(data.preview.title);
+		$("#social_preview .social_text").html(data.preview.text);
+
+		var item_name = "";
+		if (data.preview.type == "song"){
+			item_name = data.preview.title;
+			$("#social_interaction .collect").show().data("song_id", data.song_id);
+		}
+		$("#social_nav .donate").data("band_id", data.id).data("post_id", post_id).data("band_name", data.band_name).data("extra_name", item_name);
 		
 		var friends = [];
 		for (var i=0;i<data.friends.length;i++){
 			var f = data.friends[i];
-			friends.push('<div class="social_target" data-user_id="'+f.id+'"><img src="'+f.image_url+'" /><div>'+f.name+'</div></div>');
+			friends.push('<div class="social_target _social_target" data-user_id="'+f.id+'"><img src="'+f.image_url+'" /><div>'+f.name+'</div></div>');
 		}
 		$("#social_friends").html(friends.join(""));
 
@@ -550,6 +563,29 @@ function open_social_interaction(post_id){
 function social_submit_interaction(){
 	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), post_id: $("#social_input").data("post_id"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		open_social_interaction($("#social_input").val("").data("post_id"));
+	});
+}
+
+function save_add_playlist(song_id, next_song){
+	var song_id = song_id;
+	var next_song = next_song || false;
+
+	$.getJSON(base_url+"/ajax/song.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "like", song_id: song_id, return: "playlists"}, function(data){
+
+		var playlists_htmls = [];
+		for (var i=0;i<data.playlists.length;i++){
+			var t = data.playlists[i];
+			t.song_id = song_id;
+			playlists_htmls.push(template("playlist_list_clean_add", t));
+		}
+
+		open_modal({title: "Add This Song", content: '<div><div style="text-align: left;">Current Playlists</div><div style="width: 100%; overflow: auto;"><div class="supper_wide">'+playlists_htmls.join("")+'</div></div><input type="button" id="collect_create_new" class="create_playlist" data-song_id="'+song_id+'" value="New Playlist" /></div>', button1: false, dismissible: true, add_class: "collect_add_modal"});
+
+		if (next_song){
+			next_playlist();
+		}
+
+
 	});
 }
 
@@ -1268,13 +1304,19 @@ function startup(){
 	}, true);
 
 	click_event(".add_to_playlist", function (e){
+		var song_id = $(e.currentTarget).data("song_id");
 		var song_ids = [];
-		$(".selected_song").each(function (){
-			song_ids.push($(this).data("song_id"));
-		});
+		if (!song_id){
+			$(".selected_song").each(function (){
+				song_ids.push($(this).data("song_id"));
+			});
+		} else {
+			song_ids.push(song_id);
+		}
 		$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "add_to_playlist", playlist_id: $(e.currentTarget).data("playlist_id"), song_ids: song_ids}, function(data){
 			if (data.good){
-				open_modal({title: "Plalist", content: "Songs added"});
+				if (!song_id)
+					open_modal({title: "Playlist", content: "Songs added"});
 			} else {
 				open_modal({title: "Error", content: "error adding to playlist"});
 			}
@@ -1286,12 +1328,17 @@ function startup(){
 			back_log("load_playlist", ["playlist", $(e.currentTarget).data("playlist_id")]);
 	}, true);
 
-	click_event(".create_playlist", function (){
+	click_event(".create_playlist", function (e){
+		var song_id = $(e.currentTarget).data("song_id");
+		var song_ids = [];
+		if (song_id){
+			song_ids = [song_id];
+		}
 		open_modal({title:"Create Playlist", content: 'Create playlist with the name <input id="playlist_name" type="text" placeholder="Name">', button1:"Create", button2: true, callback: function (action){
 			if (action == "Create"){
 				open_modala("Creating");
 				$("#playlist_name").val();
-				$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "create_playlist", name:$("#playlist_name").val()}, function (data){
+				$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action: "create_playlist", name:$("#playlist_name").val(), song_ids: song_ids}, function (data){
 					close_modala();
 					if (data.playlist){
 						$("#profile_your_playlists").append(template("playlist_list", data.playlist));
@@ -1299,7 +1346,7 @@ function startup(){
 				});
 			}
 		}});
-	});
+	}, true);
 
 	click_event(".open_music", function (e){
 		$("#profile_music").show();
@@ -1489,17 +1536,21 @@ function startup(){
 	}, true);
 
 	click_event(".donate", function (e){
-		open_modal({title:"Show Love", content: template("donation_modal", {band_id: $(e.currentTarget).data("band_id")}), button1:"Cancel", add_class: "donation"});
+		open_modal({title:"Show Love", content: template("donation_modal", {band_id: $(e.currentTarget).data("band_id"), band_name: $(e.currentTarget).data("band_name"), extra_name: $(e.currentTarget).data("extra_name")}), button1:"Cancel", add_class: "donation"});
 	}, true);
 
 	click_event(".donation_level", function (e){
 		var value = $(e.currentTarget).data("value");
-		var band_id = $(e.currentTarget).data("band_id");
-		var extra = "";
-		var band_name = $("#band .profile_name").html();//TODO: update, this will fail in the future social
+		var parent = $(e.currentTarget).parent();
+		var band_id = parent.data("band_id");
+		var post_id = parent.data("post_id") || 0;
+		var extra = parent.data("extra_name") || "";
+		if (extra)
+			extra = " for "+extra;
+		var band_name = parent.data("band_name");
 		open_modal({title:"Donation Confirmation", content: 'Thank you for sending a '+value+' point donation to '+band_name+extra+'.', button1:"Confirm", button2: true, add_class: "donation_confirm", callback: function (action){
 			if (action == "Confirm"){
-				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, num: value}, function (data){
+				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, post_id: post_id, num: value}, function (data){
 					if (data.mess.Error){
 						var mess = "";
 						for (var i=0;i<data.mess.Error.length;i++)
@@ -1642,6 +1693,16 @@ function startup(){
 			t.hide();
 		});
 	}, true);
+	
+	click_event(".open_interact", function (){
+		if ($(".open_interact").hasClass("active")){
+			$(".open_interact").removeClass("active");
+			$("#social_activity").removeClass("interacting");
+		} else {
+			$(".open_interact").addClass("active");
+			$("#social_activity").addClass("interacting");
+		}
+	});
 
 	click_event(".social_details", function (e){
 		var t = $(e.currentTarget);
@@ -1671,17 +1732,24 @@ function startup(){
 
 	$("#social_search").on("keyup", function (e){
 		var term = $("#social_search").val().toLowerCase();
+		var found = 0;
 		if (term){
-			$(".social_target").each(function (){
+			$("._social_target").each(function (){
 				console.log("search", $(this).children("div").html().toLowerCase(), $(this).children("div").html().toLowerCase().indexOf(term))
 				if ($(this).children("div").html().toLowerCase().indexOf(term) >= 0){
 					$(this).show();
+					found += 1;
 				} else {
 					$(this).hide();
 				}
 			});
 		} else {
-			$(".social_target").show();
+			found = $("._social_target").show().length;
+		}
+		if (found == 0){
+			$("#no_social_target").show();
+		} else {
+			$("#no_social_target").hide();
 		}
 	});
 
@@ -1690,6 +1758,10 @@ function startup(){
 			social_submit_interaction();
 		}
 	});
+
+	click_event(".collect", function (e){
+		save_add_playlist($(e.currentTarget).data("song_id"));
+	}, true);
 
 	click_event(".open_genre", function (e){
 		back_log("load_playlist", ["genre", $(e.currentTarget).data("genre_id")]);

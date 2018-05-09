@@ -105,11 +105,11 @@
 	</div>
 	<div data-key="comment">
 		<div class="comment">
-			<div class="comment_image">
+			<div class="comment_image open_profile" data-user_id="##user_id##">
 				<img src="##image_url##">
 			</div>
 			<div class="comment_cont">
-				<div class="comment_name">##name##</div>
+				<div class="comment_name open_profile" data-user_id="##user_id##">##name##</div>
 				<div class="comment_text">##text##</div>
 				<div class="comment_other">
 					<span class="comment_time">##time_out##</span>
@@ -126,6 +126,14 @@
 					Add to list
 				</div>
 			</div>
+			<div class="half_list_cont">
+				<div class="song_name hidden">##name## (<span>##num_songs##</span>)</div>
+			</div>
+		</div>
+	</div>
+	<div data-key="playlist_list_clean_add">
+		<div class="half_list_song add_to_playlist" data-playlist_id="##id##" data-song_id="##song_id##">
+			<img src="##image_url##">
 			<div class="half_list_cont">
 				<div class="song_name hidden">##name## (<span>##num_songs##</span>)</div>
 			</div>
@@ -259,32 +267,34 @@
 		<input type="button" class="genre_selector" value="##name##" data-genre_id="##id##" />
 	</div>
 	<div data-key="donation_modal">
-		<div class="donation_level" data-value="1" data-band_id="##band_id##">
-			<img src="images/cone_1.png">
-			<div class="donation_info">
-				<div>$.25</div>
-				<div>1 point</div>
+		<div data-band_id="##band_id##" data-post_id="##post_id##" data-band_name="##band_name##" data-extra_name="##extra_name##">
+			<div class="donation_level" data-value="1">
+				<img src="images/cone_1.png">
+				<div class="donation_info">
+					<div>$.25</div>
+					<div>1 point</div>
+				</div>
 			</div>
-		</div>
-		<div class="donation_level" data-value="4" data-band_id="##band_id##">
-			<img src="images/cone_2.png">
-			<div class="donation_info">
-				<div>$1</div>
-				<div>4 points</div>
+			<div class="donation_level" data-value="4">
+				<img src="images/cone_2.png">
+				<div class="donation_info">
+					<div>$1</div>
+					<div>4 points</div>
+				</div>
 			</div>
-		</div>
-		<div class="donation_level" data-value="12" data-band_id="##band_id##">
-			<img src="images/cone_3.png">
-			<div class="donation_info">
-				<div>$3</div>
-				<div>12 points</div>
+			<div class="donation_level" data-value="12">
+				<img src="images/cone_3.png">
+				<div class="donation_info">
+					<div>$3</div>
+					<div>12 points</div>
+				</div>
 			</div>
-		</div>
-		<div class="donation_level" data-value="40" data-band_id="##band_id##">
-			<img src="images/cone_4.png">
-			<div class="donation_info">
-				<div>$<select><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option></select></div>
-				<div>Enter amount</div>
+			<div class="donation_level" data-value="40">
+				<img src="images/cone_4.png">
+				<div class="donation_info">
+					<div>$<select><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option></select></div>
+					<div>Enter amount</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -420,10 +430,12 @@
 	</div>
 
 	<div class="page" id="social_interaction">
-		<div id="social_preview" style="height: 80px;">
-			Preview of social item (image, name, snipit)
+		<div id="social_preview" class="">
+			<img class="preview_image" src="">
+			<div class="social_title"></div>
+			<div class="social_text"></div>
 		</div>
-		<div id="social_activity" style="height: calc(100vh - 420px);">
+		<div id="social_activity">
 			<div id="social_type">
 				<div id="social_type_comments">
 					Comments (<span id="comment_count">0</span>)
@@ -434,20 +446,24 @@
 			</div>
 		</div>
 		<div id="social_interact">
-			<div>
+			<div style="position: relative">
+				<img id="social_search_image" src="images/icon_magnify.png" />
 				<input type="text" id="social_search" placeholder="Search">
 			</div>
 			<div>
-				<div class="social_target">
-					<img src="images/icon_magaphone_noise.png" />
+				<div class="social_target _social_target">
+					<img src="images/icon_magaphone_circle.png" />
 					<div>Social</div>
 				</div>
 				<!--<div class="social_target" style="display: none;">
-					<img src="" />
+					<img src="images/icon_star_circle.png" />
 					<div>Reaction</div>
 				</div>-->
 				<div id="social_friends" style="display: inline-block">
 
+				</div>
+				<div id="no_social_target" class="social_target" style="display: none;">
+					<div>No Results</div>
 				</div>
 			</div>
 			<div>
@@ -458,13 +474,13 @@
 			<div class="nav_item" title="Band Page">
 				<img id="social_band_image" class="open_band" data-band_id="" src="" />
 			</div>
-			<div class="nav_item" title="Public social">
-				<img src="images/icon_magaphone_noise.png" />
+			<div class="nav_item open_interact" title="Public social">
+				<img src="images/icon_plane.png" />
 			</div>
-			<div class="nav_item" title="Share">
+			<div class="nav_item collect" data-song_id="" title="Collect">
 				<img src="images/icon_record.png" />
 			</div>
-			<div class="nav_item" title="donate">
+			<div class="nav_item donate" data-band_id="" data-band_name="" data-extra_name="" title="donate">
 				<img src="images/icon_cone.png" />
 			</div>
 		</div>
@@ -650,7 +666,7 @@
 				<img src="images/icon_cross.png" />
 			</div>
 		</div>
-		<div class="donate">
+		<div class="donate donate_button" data-band_id="" data-band_name="">
 			Donate
 		</div>
 		<div id="band_social">
