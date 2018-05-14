@@ -29,6 +29,7 @@
 * {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; -webkit-user-select:none;}
 html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
 body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); background: black; color: white; overflow: hidden;}
+body.keyboard{background: #1a2309;}
 
 .clear {clear:both;}
 .supper_wide {width: 10000px;}

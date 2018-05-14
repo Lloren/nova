@@ -808,6 +808,7 @@ var feature_feature_delta_x = false;
 var swiper_scope = false;
 var swiper_start_x = false;
 var swiper_delta_x = false;
+var window_base_height = 0;
 
 function startup(){
 	console.log("startup");
@@ -1810,8 +1811,13 @@ function startup(){
 	}, true, true);
 
 	$(window).resize(function() {
-		alert("resize test");
+		if ($(window).height() > window_base_height){
+			$("body").addClass("keyboard");
+		} else {
+			$("body").removeClass("keyboard");
+		}
 	});
+	window_base_height = $(window).height();
 	
 	
 	if (settings.get("user_id") > 0){
