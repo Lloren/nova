@@ -1808,6 +1808,10 @@ function startup(){
 			open_page($(e.currentTarget).data("page"));
 		}
 	}, true, true);
+
+	$(window).resize(function() {
+		alert("resize test");
+	});
 	
 	
 	if (settings.get("user_id") > 0){

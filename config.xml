@@ -70,7 +70,7 @@
 	<preference name="AutoHideSplashScreen" value="false" />
 
 	<gap:plugin name="cordova-plugin-whitelist" source="npm" />
-	<gap:plugin name="ionic-plugin-keyboard" source="npm" />
+	<gap:plugin name="cordova-plugin-keyboard" source="npm" />
 	<gap:plugin name="cordova-plugin-splashscreen" source="npm" />
 	<gap:plugin name="cordova-plugin-ga" source="npm" />
 	<gap:plugin name="cordova-plugin-statusbar" source="npm" />
