@@ -562,7 +562,7 @@ function on_ready(){
 			
 			uuid = device.uuid;
 			
-			cordova.plugins.Keyboard.disableScroll(true);
+			Keyboard.disableScrollingInShrinkView(true);
 			
 			//if (fb_app_id)
 			//	FB.init({appId: fb_app_id, nativeInterface: CDV.FB, useCachedDialogs: false});
