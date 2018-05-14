@@ -1811,7 +1811,7 @@ function startup(){
 	}, true, true);
 
 	$(window).resize(function() {
-		if ($(window).height() > window_base_height){
+		if ($(window).height() < window_base_height){
 			$("body").addClass("keyboard");
 		} else {
 			$("body").removeClass("keyboard");

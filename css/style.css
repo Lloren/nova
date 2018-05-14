@@ -976,6 +976,12 @@ input.genre_selector {
 	color: #bbb;
 }
 
+.keyboard #social_interact{
+	bottom: 0px;
+	position: fixed;
+	width: 100%;
+}
+
 #social_nav{
 	position: absolute;
 	bottom: 0px;
@@ -983,6 +989,10 @@ input.genre_selector {
 	width: 100%;
 	margin: 30px auto 0px;
 	background: black;
+}
+
+.keyboard #social_nav{
+	display: none;
 }
 
 #social_nav .nav_item{
