@@ -278,6 +278,7 @@ function open_band(band_id){
 		$("#band .donate").data("band_id", data.id).data("band_name", data.name);
 		$("#band .band_bio").html(data.bio);
 		$("#band .band_fav").data("band_id", data.id);
+		$("#band_social_action").data("band_id", data.id);
 		if (data.faved_band){
 			$("#band .band_fav").addClass("faved");
 		} else {
@@ -285,8 +286,10 @@ function open_band(band_id){
 		}
 		if (data.show_dash_button){
 			$("#band .open_band_dashboard").show().data("band_id", data.id);
+			$("#band_post_form").show();
 		} else {
 			$("#band .open_band_dashboard").hide();
+			$("#band_post_form").hide();
 		}
 		
 		if (data.top_supported){
@@ -1620,10 +1623,8 @@ function startup(){
 		$(e.currentTarget).addClass("active");
 	}, true);
 	
-	$("#band_social_action").on("click", function (){
-		//TODO: add file upload.
-
-		var params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"band_post", band_id: $("#band_dashboard").data("band_id"), text: $("#band_social_text").val(), priv: $("#band_social_private").prop("checked")};
+	$("#band_social_action").on("click", function (e){
+		var params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"band_post", band_id: $(e.currentTarget).data("band_id"), text: $("#band_social_text").val(), private: $("#band_social_private").prop("checked")};
 		if (upload_selector.band_social){
 			var imageURI = upload_selector.band_social;
 			open_modala("Uploading");
