@@ -153,8 +153,13 @@
 	</div>
 	<div data-key="social">
 		<div class="social social_type_##type##">
-			<img src="">
+			<img src="##image_url##">
 			<div class="social_text">##text##</div>
+			<div class="social_info">
+				<img src="##poster_image_url##" class="##poster_type##" data-user_id="##poster_id##" data-band_id="##poster_id##" />
+				<span class="##poster_type##" data-user_id="##poster_id##" data-band_id="##poster_id##">##poster_name##</span>
+				<div class="social_time">##time_out##</div>
+			</div>
 			<div class="social_details" data-post_id="##id##">Details</div>
 		</div>
 	</div>
@@ -431,9 +436,9 @@
 
 	<div class="page" id="social_interaction">
 		<div id="social_preview" class="">
-			<img class="preview_image" src="">
-			<div class="social_title"></div>
-			<div class="social_text"></div>
+			<img id="social_preview_image" src="">
+			<div id="social_title"></div>
+			<div id="social_text"></div>
 		</div>
 		<div id="social_activity">
 			<div id="social_type">
@@ -675,14 +680,15 @@
 			Donate
 		</div>
 		<div class="band_bar">
-			<h3>Channel</h3>
 			<div id="band_post_form">
+				<h3>Make Channel Post</h3>
 				<input type="checkbox" id="band_social_private"><label for="band_social_private"> Private post</label>
 				<!--<input type="file" value="upload placeholder" />-->
-				<input type="button" class="upload_selector" data-type="photo" data-key="band_social" />
-				<textarea id="band_social_text"></textarea>
+				<input type="button" class="upload_selector" value="Select Image" data-type="photo" data-key="band_social" />
+				<textarea id="band_social_text" placeholder="Post Text"></textarea>
 				<input type="button" id="band_social_action" data-band_id="" value="Submit Post" />
 			</div>
+			<h3>Channel</h3>
 			<div id="band_social">
 			</div>
 		</div>

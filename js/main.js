@@ -309,10 +309,15 @@ function open_band(band_id){
 		} else {
 			$("#band_top_supported").hide();
 		}
-		
+
+
+		data.socials.sort(function(a, b) {
+			return b.time - a.time;
+		});
+
 		var socials = [];
 		for (var i=0;i<data.socials.length;i++){
-			if (data.socials[i].image){
+			if (data.socials[i].img_orig_type){
 				data.socials[i].type = "image";
 			} else if (data.socials[i].vid){
 				data.socials[i].type = "vid";
@@ -553,9 +558,15 @@ function open_social_interaction(post_id){
 
 
 		$("#social_preview").attr("class", "").addClass("social_preview_"+data.preview.type);
-		$("#social_preview .preview_image").attr("src", data.preview.img_url);
-		$("#social_preview .social_title").html(data.preview.title);
-		$("#social_preview .social_text").html(data.preview.text);
+		if (!data.preview.img_url)
+			data.preview.img_url = "";
+		$("#social_preview_image").attr("src", data.preview.img_url);
+		if (!data.preview.title)
+			data.preview.title = "";
+		$("#social_title").html(data.preview.title);
+		if (!data.preview.text)
+			data.preview.text = "";
+		$("#social_text").html(data.preview.text);
 
 		var item_name = "";
 		if (data.preview.type == "song"){
@@ -1777,16 +1788,7 @@ function startup(){
 	});
 
 	click_event(".social_details", function (e){
-		var t = $(e.currentTarget);
-		var dat = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"details"};
-		if (t.data('post_id')){
-			dat.post_id = t.data('post_id');
-		}
-		$.getJSON(base_url+"/ajax/social.php?callback=?", dat, function (data){
-
-		});
-
-		back_log("social_details", ["genre", $(e.currentTarget).data("post_id")]);
+		back_log("open_social_interaction", [$(e.currentTarget).data("post_id")]);
 	}, true);
 	
 	$("#search_field").on("keyup", function (e){

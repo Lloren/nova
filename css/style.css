@@ -34,7 +34,7 @@ body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0;
 .supper_wide {width: 10000px;}
 
 input[type="text"], input[type="submit"], input[type="button"], input[type="password"], select, textarea {-webkit-appearance:none; background: black; border: solid 3px #999; color: #999; padding: 10px 5px; font-size: 1.2em; margin: 8px 20px; width: calc(100% - 40px); border-radius: 100px; user-select: initial; -webkit-user-select: initial; outline: none; text-align: center;}
-input, textarea {background: #333333;}
+input, textarea {background: black;}
 textarea {border-radius: 1em;}
 .slider {-webkit-appearance: slider-horizontal; border: none; padding: 0; margin: 0; width: inherit; width: 90%;}
 *::placeholder {
@@ -985,23 +985,29 @@ input.genre_selector {
 
 #social_preview{
 	height: 80px;
+	margin: 10px;
 }
 
-.preview_image {
+#social_preview_image {
 	width: 70px;
-	margin: 5px 10px;
+	margin: 5px 10px 5px 0;
 	float: left;
 }
 
-.social_title {
+#social_title {
 	font-weight: bold;
 	font-size: 1.4em;
 	padding-top: 20px;
 }
 
-.social_text {
+#social_text {
 	font-size: 0.8em;
 	color: #bbb;
+	max-height: 70px;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 4;
+	-webkit-box-orient: vertical;
 }
 
 #social_interact{
@@ -1014,7 +1020,7 @@ input.genre_selector {
 	width: 100%;
 }
 
-#ios .keyboard #social_interact{
+#ios.keyboard #social_interact{
 	position: absolute;
 }
 
@@ -1104,7 +1110,7 @@ input.genre_selector {
 
 .comment_other {
 	color: darkgray;
-	font-size: 1.1em;
+	font-size: 0.6em;
 }
 
 .comment {
@@ -1148,7 +1154,11 @@ input.genre_selector {
 }
 
 .social img{
+	width: 100%;
+}
 
+.social_type_text img{
+	display: none;
 }
 
 .social .social_text{
