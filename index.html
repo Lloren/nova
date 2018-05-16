@@ -87,7 +87,7 @@
 		</div>
 	</div>
 	<div data-key="half_list_top">
-		<div class="half_list_song open_band" data-band_id="##id##">
+		<div class="half_list_song##add_class##" data-band_id="##id##" data-user_id="##id##">
 			<img src="##image_url##">
 			<div class="half_list_cont">
 				<div class="band_name">##name##</div>
@@ -151,10 +151,10 @@
 	<div data-key="text_list_item">
 		<div class="large_menu_item open_genre" data-genre_id="##id##">##name## <span>></span></div>
 	</div>
-	<div data-key="band_social">
-		<div class="band_social social_type_##type##">
+	<div data-key="social">
+		<div class="social social_type_##type##">
 			<img src="">
-			<div>##text##</div>
+			<div class="social_text">##text##</div>
 			<div class="social_details" data-post_id="##id##">Details</div>
 		</div>
 	</div>
@@ -611,21 +611,16 @@
 		<input type="button" id="band_create" value="Create Band" />
 	</div>
 
-	<div class="page" id="band">
+	<div class="page scrollable" id="band">
 		<div class="profile_image_cont swiper">
 			<div class="swipable current_swipe">
 				<img class="profile_image" src="">
-				<div class="profile_name"></div>
 				<img class="profile_image_action open_band_dashboard" style="bottom: 45px;" data-band_id="" src="images/icon_gear.png" />
 				<img class="profile_image_action band_fav" data-band_id="" src="images/icon_cross.png" />
 			</div>
-			<div class="swipable next_swipe" style="text-shadow: 1px 1px 0px black, -1px -1px -0px black, -1px 1px 0px black, 1px -1px 0px black;">
-				<img class="profile_image" src="" style="position: absolute; left:0; z-index:-1; filter: blur(3px)">
-				<h3 style="margin: 7px 0;">Band Bio</h3>
-				<div class="band_bio"></div>
-			</div>
 		</div>
-		<div style="margin:10px 0;">
+		<div class="profile_name"></div>
+		<div class="band_bar">
 			<div class="circle_value">
 				<div class="circle_cont">
 					<div class="circle_back"></div>
@@ -652,6 +647,16 @@
 			</div>
 			<div class="clear"></div>
 		</div>
+		<div class="band_bar">
+			<h3>About the Artist</h3>
+			<div class="band_bio" style="text-transform: none;"></div>
+		</div>
+		<div id="band_top_supported" class="band_bar">
+			<h3>Top Fans</h3>
+			<div class="band_top_fans half_list_group">
+				<div id="band_top_fans"></div>
+			</div>
+		</div>
 		<div class="band_nav">
 			<div class="nav_item" title="Private social">
 				<img src="images/icon_notifications.png" />
@@ -669,8 +674,16 @@
 		<div class="donate donate_button" data-band_id="" data-band_name="">
 			Donate
 		</div>
-		<div id="band_social">
-
+		<div class="band_bar">
+			<h3>Channel</h3>
+			<div id="band_post_form">
+				<input type="checkbox" id="band_social_private"><label for="band_social_private"> Private post</label>
+				<input type="file" value="upload placeholder" />
+				<textarea id="band_social_text"></textarea>
+				<input type="button" id="band_social_action" value="Submit Post" />
+			</div>
+			<div id="band_social">
+			</div>
 		</div>
 	</div>
 
@@ -709,10 +722,7 @@
 			<input type="button" id="song_submit" value="Upload Song" />
 		</div>
 		<div id="dash_social" class="band_dashboard_pages">
-			<input type="checkbox" id="band_social_private"><label for="band_social_private"> Private post</label>
-			<input type="file" value="upload placeholder" />
-			<textarea id="band_social_text"></textarea>
-			<input type="button" id="band_social_action" value="Submit Post" />
+			Coming soon. (social notifications)
 		</div>
 		<div id="dash_settings" class="band_dashboard_pages">
 

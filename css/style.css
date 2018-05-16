@@ -29,7 +29,6 @@
 * {box-sizing:border-box; -webkit-box-sizing:border-box; user-select:none; text-transform: uppercase; -webkit-user-select:none;}
 html {text-size-adjust:100%; -webkit-text-size-adjust:100%; font-family: Campton; height:100%;}
 body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0; margin:0; background: linear-gradient(to bottom, #353535, #060606); background: black; color: white; overflow: hidden;}
-body.keyboard{background: #1a2309;}
 
 .clear {clear:both;}
 .supper_wide {width: 10000px;}
@@ -479,6 +478,17 @@ input.genre_selector {
 	max-height: calc(100vh - 230px);
 }
 
+.band_bar {
+	margin: 10px;
+	border-bottom: 1px solid #1f1f1f;
+	padding-bottom: 10px;
+}
+
+.band_bar h3 {
+	margin: 5px 0;
+	font-weight: 100;
+}
+
 
 #profile_nav .nav_item{
 	width: 24%;
@@ -526,6 +536,7 @@ input.genre_selector {
 .profile_name{
 	position: relative;
 	margin-bottom: 5px;
+	text-align: center;
 }
 
 .profile_image_cont .fa-cog, .profile_image_cont .fa-camera{
@@ -696,8 +707,25 @@ input.genre_selector {
 	width: 45vw;
 }
 
+.half_list_song.open_profile img, .half_list_song.open_band img {
+	border-radius: 100%;
+}
+
 .half_list_song .band_name {
 	font-size: 0.8em;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	text-align: center;
+	overflow: hidden;
+}
+
+.half_list_song .fan_rank {
+	font-size: 0.6em;
+	background: #e7337a;
+	border-radius: 10px;
+	width: 50px;
+	text-align: center;
+	margin: auto;
 }
 
 .song_name{
@@ -976,10 +1004,18 @@ input.genre_selector {
 	color: #bbb;
 }
 
+#social_interact{
+	background: black;
+}
+
 .keyboard #social_interact{
 	bottom: 0px;
 	position: fixed;
 	width: 100%;
+}
+
+#ios .keyboard #social_interact{
+	position: absolute;
 }
 
 #social_nav{
@@ -1105,6 +1141,23 @@ input.genre_selector {
 	padding: 5px 25px;
 }
 
+
+
+.social{
+
+}
+
+.social img{
+
+}
+
+.social .social_text{
+	text-transform: none;
+}
+
+.social .social_details{
+
+}
 
 
 

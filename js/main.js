@@ -288,6 +288,25 @@ function open_band(band_id){
 		} else {
 			$("#band .open_band_dashboard").hide();
 		}
+		
+		if (data.top_supported){
+			$("#band_top_supported").show();
+			var top_fans = [];
+			for (var i=0;i<data.top_supported.length;i++){
+				var t = data.top_supported[i];
+				if (t.rank == 1){
+					t.rank = "Top Fan";
+				} else {
+					t.rank = "#"+t.rank;
+				}
+				t.add_class = " open_profile";
+				top_fans.push(template("half_list_top", t));
+			}
+			$("#band_top_fans").html(top_fans.join(""));
+		} else {
+			$("#band_top_supported").hide();
+		}
+		
 		var socials = [];
 		for (var i=0;i<data.socials.length;i++){
 			if (data.socials[i].image){
@@ -297,9 +316,9 @@ function open_band(band_id){
 			} else {
 				data.socials[i].type = "text";
 			}
-			socials.push(template("band_social", data.socials[i]));
+			socials.push(template("social", data.socials[i]));
 		}
-		$("#band #band_social").html(socials.join(""));
+		$("#band_social").html(socials.join(""));
 		show_page("band");
 		$(".song .band_info").css({top: "0px"});
 	});
@@ -645,7 +664,14 @@ function open_profile(user_id){
 				$("#profile_top_fan").show();
 				var top_fans = [];
 				for (var i=0;i<data.top_supported.length;i++){
-					top_fans.push(template("half_list_top", data.top_supported[i]));
+					var t = data.top_supported[i];
+					t.add_class = " open_band";
+					if (t.rank == 1){
+						t.rank = "Top Fan";
+					} else {
+						t.rank = "#"+t.rank;
+					}
+					top_fans.push(template("half_list_top", t));
 				}
 				$("#top_fans").html(top_fans.join(""));
 			} else {
@@ -809,6 +835,8 @@ var swiper_scope = false;
 var swiper_start_x = false;
 var swiper_delta_x = false;
 var window_base_height = 0;
+
+var upload_selector = {};
 
 function startup(){
 	console.log("startup");
@@ -1594,18 +1622,60 @@ function startup(){
 	
 	$("#band_social_action").on("click", function (){
 		//TODO: add file upload.
-		$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"band_post", band_id: $("#band_dashboard").data("band_id"), text: $("#band_social_text").val(), priv: $("#band_social_private").prop("checked")}, function (data){
-			if (data.mess.Error){
-				var mess = "";
-				for (var i=0;i<data.mess.Error.length;i++)
-					mess += "<div>"+data.mess.Error[i].message+"</div>";
-				
-				open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
-			} else if (data.success){
-				$("#band_social_text").val("");
-				
-			}
-		});
+
+		var params = {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"band_post", band_id: $("#band_dashboard").data("band_id"), text: $("#band_social_text").val(), priv: $("#band_social_private").prop("checked")};
+		if (upload_selector.band_social){
+			var imageURI = upload_selector.band_social;
+			open_modala("Uploading");
+			console.log(imageURI);
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+			options.params = params;
+			options.chunkedMode = false;
+			console.log(options);
+
+			var ft = new FileTransfer();
+			ft.upload(imageURI, base_url+"/ajax/settings.php?callback=?", function(result){
+				close_modala();
+				console.log(JSON.stringify(result));
+				reload_page();
+			}, function(error){
+				close_modala();
+				console.log(JSON.stringify(error));
+				open_modal({title: "Error", content: "Uploading picture failed"});
+			}, options);
+		} else {
+			$.getJSON(base_url+"/ajax/settings.php?callback=?", params, function (data){
+				if (data.mess.Error){
+					var mess = "";
+					for (var i=0;i<data.mess.Error.length;i++)
+						mess += "<div>"+data.mess.Error[i].message+"</div>";
+
+					open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
+				} else if (data.success){
+					$("#band_social_text").val("");
+
+				}
+			});
+		}
+	});
+
+	$(".upload_selector").on("click", function (e){
+		var t = $(e.currentTarget);
+		if (t.data("type") == "photo"){
+			navigator.camera.getPicture(function (imageURI){
+				upload_selector[t.data("key")] = imageURI;
+			}, function(message) {
+				close_modala();
+				console.log(message);
+				open_modal({title: "Error", content: "Getting picture failed"});
+			}, {
+				quality: 100,
+				destinationType: navigator.camera.DestinationType.FILE_URI,
+				sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY
+			});
+		}
 	});
 
 	$("#save_band").on("click", function (){
