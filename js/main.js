@@ -324,6 +324,7 @@ function open_band(band_id){
 			} else {
 				data.socials[i].type = "text";
 			}
+			data.socials[i].poster_type = "open_"+data.socials[i].poster_type;
 			socials.push(template("social", data.socials[i]));
 		}
 		$("#band_social").html(socials.join(""));

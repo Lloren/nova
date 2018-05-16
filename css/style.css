@@ -1153,20 +1153,37 @@ input.genre_selector {
 
 }
 
-.social img{
+.social > img{
 	width: 100%;
 }
 
-.social_type_text img{
+.social_type_text > img{
 	display: none;
 }
 
 .social .social_text{
 	text-transform: none;
+	margin-bottom: 10px;
 }
 
 .social .social_details{
+	float: right;
+}
 
+.social_time {
+	font-size: 0.6em;
+	color: #aaa;
+}
+
+.social_info {
+	height: 80px;
+}
+
+.social_info img {
+	width: 50px;
+	border-radius: 100%;
+	float: left;
+	margin-right: 10px;
 }
 
 
