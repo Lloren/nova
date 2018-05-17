@@ -555,6 +555,9 @@ function open_social_interaction(post_id){
 	$("#social_input").data("post_id", post_id);
 
 	$.getJSON(base_url+"/ajax/social.php?callback=?", {post_id: post_id, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		$(".open_interact").removeClass("active");
+		$("#social_activity").removeClass("interacting");
+
 		$("#social_band_image").attr("src", data.band_image_small_url).data("band_id", data.band_id);
 
 
@@ -670,14 +673,8 @@ function open_profile(user_id){
 
 		if (data.recent_supported){
 			$("#profile_supported").show();
-			var recently_supported = [];
-			for (var i=0;i<data.recent_supported.length;i++){
-				recently_supported.push(template("half_list_recent", data.recent_supported[i]));
-			}
-			$("#recently_supported").html(recently_supported.join(""));
+			var artists_supported = [];
 			if (data.top_supported){
-				$("#profile_top_fan").show();
-				var top_fans = [];
 				for (var i=0;i<data.top_supported.length;i++){
 					var t = data.top_supported[i];
 					t.add_class = " open_band";
@@ -686,12 +683,13 @@ function open_profile(user_id){
 					} else {
 						t.rank = "#"+t.rank;
 					}
-					top_fans.push(template("half_list_top", t));
+					artists_supported.push(template("half_list_top", t));
 				}
-				$("#top_fans").html(top_fans.join(""));
-			} else {
-				$("#profile_top_fan").hide();
 			}
+			for (var i=0;i<data.recent_supported.length;i++){
+				artists_supported.push(template("half_list_recent", data.recent_supported[i]));
+			}
+			$("#artists_supported").html(artists_supported.join(""));
 		} else {
 			$("#profile_supported").hide();
 		}
@@ -1275,6 +1273,7 @@ function startup(){
 			}
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else if (playlist_swipe_delta_x < -50){
+			$(".song .social_overlay").css({top: "100%"}, 100);
 			prev_playlist();
 			$(".song.next_song").animate({left: "100%"}, 100);
 		} else if (playlist_swipe_delta_y > 150){
@@ -1283,6 +1282,7 @@ function startup(){
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		} else {
+			$(".song .social_overlay").css({top: "100%"}, 100);
 			$(".song.next_song").animate({left: "100%"}, 100);
 			$(".song.prev_song").animate({left: "-100%"}, 100);
 		}

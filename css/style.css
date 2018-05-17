@@ -110,7 +110,8 @@ h2.font{
 }
 
 .page.scrollable{
-	overflow: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 }
 
 .is_admin{
@@ -194,7 +195,7 @@ h2.font{
 
 #playlist_nav{
 	position: absolute;
-	bottom: 0;
+	bottom: 2px;
 	width: 100%;
 	height: 50px;
 }
@@ -698,6 +699,10 @@ input.genre_selector {
 	position: relative;
 }
 
+.half_list_song.small {
+	width: 70px;
+}
+
 .half_list_song img {
 	width: 100%;
 	position: relative;
@@ -718,6 +723,12 @@ input.genre_selector {
 	text-overflow: ellipsis;
 	text-align: center;
 	overflow: hidden;
+}
+
+.half_list_song .time {
+	font-size: 0.6em;
+	color: #aaa;
+	text-align: center;
 }
 
 .half_list_song .fan_rank {
@@ -1032,6 +1043,7 @@ input.genre_selector {
 	width: 100%;
 	margin: 30px auto 0px;
 	background: black;
+	padding-top: 10px;
 }
 
 .keyboard #social_nav{
@@ -1043,7 +1055,8 @@ input.genre_selector {
 }
 
 #social_comments{
-	overflow: auto;
+	overflow-y: scroll;
+	-webkit-overflow-scrolling: touch;
 	height: calc(100% - 20px);
 }
 
@@ -1061,16 +1074,16 @@ input.genre_selector {
 }
 
 .social_target img {
-	width: 70px;
+	width: 100%;
 	border-radius: 100%;
 }
 
 .social_target {
-	width: 70px;
+	width: 60px;
 	font-size: 0.7em;
 	overflow: hidden;
 	display: inline-block;
-	margin: 0 10px;
+	margin: 0 5px;
 	white-space: nowrap;
 	text-align: center;
 }
