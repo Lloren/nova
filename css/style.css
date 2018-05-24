@@ -32,6 +32,7 @@ body {font-smoothing:antialiased;-webkit-font-smoothing:antialiased; z-index: 0;
 
 .clear {clear:both;}
 .supper_wide {width: 10000px;}
+.no_transform {text-transform: none;}
 
 input[type="text"], input[type="submit"], input[type="button"], input[type="password"], select, textarea {-webkit-appearance:none; background: black; border: solid 3px #999; color: #999; padding: 10px 5px; font-size: 1.2em; margin: 8px 20px; width: calc(100% - 40px); border-radius: 100px; user-select: initial; -webkit-user-select: initial; outline: none; text-align: center;}
 input, textarea {background: black;}
@@ -85,7 +86,7 @@ h2.font{
 	text-align: right;}
 .donation_info div:first-of-type{font-size: 2em;}
 
-#modal.donation_confirm {height: 200px;}
+#modal.donation_confirm {height: 500px;}
 
 
 #menu-overlay {position: fixed; top: 0; pointer-events:none; opacity:0; background-color:#222; width:100%; height:100%; -webkit-transition: opacity 200ms ease-out, background-color 200ms ease-out; -webkit-transform: translate3d(0, 0, 0); -webkit-backface-visibility: hidden; -webkit-perspective: 1000; z-index:99;}
@@ -474,6 +475,7 @@ input.genre_selector {
 #band_dashboard .nav_item{
 	width: 23.9%;
 }
+
 .band_dashboard_pages{
 	display:none;
 	overflow: auto;
@@ -493,7 +495,7 @@ input.genre_selector {
 
 
 #profile_nav .nav_item{
-	width: 24%;
+	width: 23.8%;
 }
 
 .profile_image_cont{
@@ -847,6 +849,10 @@ input.genre_selector {
 	background: #101010;
 }
 
+#band_song_list .list_song{
+	background: none;
+}
+
 .list_song img {
 	height: 80px;
 }
@@ -985,6 +991,34 @@ input.genre_selector {
 	border-radius: 999px;
 }
 
+#band_songs{
+	position: fixed;
+	top: calc(100% - 110px);
+	background: black;
+	box-shadow: 0px -10px 15px black;
+	width: 100%;
+	height: calc(100% - 260px);
+}
+
+#band_songs.hidden{
+	top: calc(100% - 65px);
+	transition: 1s;
+}
+
+#band_songs.full{
+	top: 260px;
+}
+
+#band_song_list{
+	/*overflow-y: scroll;
+	height: calc(100% - 65px);
+	touch-action: none;*/
+}
+
+.full #band_song_list{
+	touch-action: initial;
+}
+
 #admin_bands img{
 	width: 60px;
 }
@@ -1073,11 +1107,6 @@ input.genre_selector {
 	padding-left: 40px;
 }
 
-.social_target img {
-	width: 100%;
-	border-radius: 100%;
-}
-
 .social_target {
 	width: 60px;
 	font-size: 0.7em;
@@ -1088,8 +1117,17 @@ input.genre_selector {
 	text-align: center;
 }
 
+.social_target img {
+	width: 100%;
+	border-radius: 100%;
+}
+
+.social_target.active img {
+	border: 2px solid rgba(137, 137, 137, 0.5);
+}
+
 #no_social_target {
-	height: 87px;
+	height: 77px;
 	font-size: 1.5em;
 	width: 92%;
 	padding-top: 30px;
@@ -1145,6 +1183,7 @@ input.genre_selector {
 
 .comment_image {
 	display: inline-block;
+	vertical-align: top;
 }
 
 

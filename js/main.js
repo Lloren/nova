@@ -310,6 +310,16 @@ function open_band(band_id){
 			$("#band_top_supported").hide();
 		}
 
+		var songs = [];
+		for (var i=0;i<data.songs.length;i++){
+			var s = data.songs[i];
+			s.band_name = data.name;
+			s.num = i+1;
+			songs.push(template("full_list", s));
+		}
+		$("#band_song_list").html(songs.join(""));
+		$("#band_songs").attr("class", "");
+
 
 		data.socials.sort(function(a, b) {
 			return b.time - a.time;
@@ -598,7 +608,7 @@ function open_social_interaction(post_id){
 }
 
 function social_submit_interaction(){
-	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), post_id: $("#social_input").data("post_id"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), post_id: $("#social_input").data("post_id"), social_target: $("._social_target.active").data("user_id"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		open_social_interaction($("#social_input").val("").data("post_id"));
 	});
 }
@@ -671,7 +681,7 @@ function open_profile(user_id){
 		}
 		$("#profile_playlists").html(playlists_htmls.join(""));
 
-		if (data.recent_supported){
+		if (data.recent_supported.length){
 			$("#profile_supported").show();
 			var artists_supported = [];
 			if (data.top_supported){
@@ -847,6 +857,8 @@ var feature_feature_delta_x = false;
 var swiper_scope = false;
 var swiper_start_x = false;
 var swiper_delta_x = false;
+var band_song_start_y = false;
+var band_song_delta_y = false;
 var window_base_height = 0;
 
 var upload_selector = {};
@@ -1063,6 +1075,13 @@ function startup(){
 			$(".current_song .song_play_info").addClass("position_control");
 		}, 500);
 	});
+	$(document).on("touchstart", "#band_songs", function (e){
+		if ($("#band_songs.hidden").length == 0 && $("#band_songs.full").length == 0){
+			var e = e;
+			var touch = e.originalEvent.touches[0];
+			band_song_start_y = touch.clientY;
+		}
+	});
 	$(window).on("touchmove", function(e){
 		e = e.originalEvent.touches[0];
 		last_touch = e;
@@ -1127,6 +1146,12 @@ function startup(){
 					swiper_delta_x = -$(document).width();
 				$(swiper_scope).find(".prev_swipe").css({left: "calc(-100% + "+(-swiper_delta_x)+"px)"});
 			}
+		}
+		if (band_song_start_y){
+			band_song_delta_y = band_song_start_y - e.clientY;
+			if (band_song_delta_y > 200)
+				band_song_delta_y = 200;
+			$("#band_songs").css({top: "calc(100% - "+(band_song_delta_y + 110)+"px)"});
 		}
 		if (false && profile_song_press){//bad drag code
 			var offsets = profile_song_press.offset();
@@ -1231,6 +1256,14 @@ function startup(){
 		if (playlist_position){
 			playlist_position = false;
 			$(".song_play_info").removeClass("position_control");
+		}
+		if (band_song_start_y){
+			band_song_start_y = false;
+			if (band_song_delta_y > 50){
+				$("#band_songs").addClass("full");
+				$("#band").scrollTop(0);
+			}
+			$("#band_songs").css({top: ""});
 		}
 	});
 	click_event(".selected_overlay .fa-close", function (e){
@@ -1585,6 +1618,7 @@ function startup(){
 
 	click_event(".donation_level", function (e){
 		var value = $(e.currentTarget).data("value");
+		var curr = (value*0.25).toFixed(2);
 		var parent = $(e.currentTarget).parent();
 		var band_id = parent.data("band_id");
 		var post_id = parent.data("post_id") || 0;
@@ -1592,7 +1626,7 @@ function startup(){
 		if (extra)
 			extra = " for "+extra;
 		var band_name = parent.data("band_name");
-		open_modal({title:"Donation Confirmation", content: 'Thank you for sending a '+value+' point donation to '+band_name+extra+'.', button1:"Confirm", button2: true, add_class: "donation_confirm", callback: function (action){
+		open_modal({title:"Thank You!", content: '<img src="images/cone_3.png" style="margin: auto; position: absolute; left: 0; right: 0; width: 150px;"><div style="padding-top: 220px;">Thank you for sending a $'+curr+' donation to '+band_name+extra+', you earned '+value+' points.<div style="font-size: 0.73em; margin-top:10px;">Your support directly impacts the artists in an unprecedented way, allowing them to create the music that feeds your soul, all while earning points towards rewards!<div></div>', button1:"Confirm", button2: true, add_class: "donation_confirm", callback: function (action){
 			if (action == "Confirm"){
 				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, post_id: post_id, num: value}, function (data){
 					if (data.mess.Error){
@@ -1672,6 +1706,18 @@ function startup(){
 				}
 			});
 		}
+	});
+
+	$("#band").on("scroll", function (){
+		if ($("#band").scrollTop() < 100){
+			$("#band_songs").removeClass("hidden");
+		} else {
+			$("#band_songs").addClass("hidden");
+		}
+	});
+
+	click_event("#band .profile_image", function (e){
+		$("#band_songs").removeClass("full");
 	});
 
 	$(".upload_selector").on("click", function (e){
@@ -1810,7 +1856,6 @@ function startup(){
 		var found = 0;
 		if (term){
 			$("._social_target").each(function (){
-				console.log("search", $(this).children("div").html().toLowerCase(), $(this).children("div").html().toLowerCase().indexOf(term))
 				if ($(this).children("div").html().toLowerCase().indexOf(term) >= 0){
 					$(this).show();
 					found += 1;
@@ -1827,6 +1872,15 @@ function startup(){
 			$("#no_social_target").hide();
 		}
 	});
+
+	click_event("._social_target", function (e){
+		if ($(e.currentTarget).hasClass("active")){
+			$(e.currentTarget).removeClass("active");
+		} else {
+			$("._social_target").removeClass("active");
+			$(e.currentTarget).addClass("active");
+		}
+	}, true);
 
 	$("#social_input").on("keyup", function (e){
 		if (e.keyCode == 13 || e.keyCode == 9){

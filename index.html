@@ -457,7 +457,7 @@
 				<input type="text" id="social_search" placeholder="Search">
 			</div>
 			<div>
-				<div class="social_target _social_target">
+				<div id="default_social_target" class="social_target _social_target" data-user_id="-1">
 					<img src="images/icon_magaphone_circle.png" />
 					<div>Social</div>
 				</div>
@@ -473,7 +473,7 @@
 				</div>
 			</div>
 			<div>
-				<input type="text" id="social_input" data-social_type="" data-social_id="" placeholder="Write A Comment...">
+				<input type="text" id="social_input" class="no_transform" data-social_type="" data-social_id="" placeholder="Write A Comment...">
 			</div>
 		</div>
 		<div id="social_nav">
@@ -658,19 +658,30 @@
 		<div class="donate donate_button" data-band_id="" data-band_name="">
 			Donate
 		</div>
+		<div id="band_song_list">
+
+		</div>
+		<!--
 		<div class="band_bar">
 			<div id="band_post_form">
 				<h3>Make Channel Post</h3>
 				<input type="checkbox" id="band_social_private"><label for="band_social_private"> Private post</label>
-				<!--<input type="file" value="upload placeholder" />-->
 				<input type="button" class="upload_selector" value="Select Image" data-type="photo" data-key="band_social" />
-				<textarea id="band_social_text" placeholder="Post Text"></textarea>
+				<textarea id="band_social_text" class="no_transform" placeholder="Post Text"></textarea>
 				<input type="button" id="band_social_action" data-band_id="" value="Submit Post" />
 			</div>
 			<h3>Channel</h3>
-			<div id="band_social">
+			<div id="band_social" style="margin-bottom: 25px;">
 			</div>
 		</div>
+		<div id="band_songs">
+			<div class="donate donate_button" data-band_id="" data-band_name="">
+				Donate
+			</div>
+			<div id="band_song_list">
+
+			</div>
+		</div>-->
 	</div>
 
 	<div class="page" id="band_dashboard" data-band_id="">
