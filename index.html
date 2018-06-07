@@ -56,6 +56,16 @@
 			<div {{play_now?class="play_now" data-song_id="##id##"}}>##name## {{play_now?<i class="fa fa-play"></i>}}</div>
 		</div>
 	</div>
+	<div data-key="notification_list">
+		<div class="notification_item ##classes##">
+			<img src="##image_url##" class="open_profile" data-user_id="##item_id##" />
+			<div class="notification_cont">
+				<span class="open_profile" data-user_id="##item_id##">##name##</span>
+				##text##
+				<span class="time">##time_out##</span>
+			</div>
+		</div>
+	</div>
 	<div data-key="extra_song_list">
 		<div class="song_list_item main_item">
 			<img src="images/##image##.png" />
@@ -154,11 +164,12 @@
 	</div>
 	<div data-key="social">
 		<div class="social social_type_##type##">
-			<img src="##image_url##">
+			<img src="##image_url##" data-playlist_id="" data-song_id="##song_id##">
 			<div class="social_text">##text##</div>
 			<div class="social_info">
 				<img src="##poster_image_url##" class="##poster_type##" data-user_id="##poster_id##" data-band_id="##poster_id##" />
 				<span class="##poster_type##" data-user_id="##poster_id##" data-band_id="##poster_id##">##poster_name##</span>
+				<span class="original_details"> shared <span class="##owner_type##" data-user_id="##owner_id##" data-band_id="##owner_id##">##owner##</span>'s ##thing## <span>##thing_name##</span></span>
 				<div class="social_time">##time_out##</div>
 				<div class="social_details" data-post_id="##id##">Details</div>
 			</div>
@@ -354,6 +365,11 @@
 		</ul>
 	</div>
 
+	<div id="message_interface" style="display: none;">
+		<i id="message_close" class="fa fa-times" aria-hidden="true"></i>
+		<textarea id="message_field" placeholder="Message" data-user_id=""></textarea>
+	</div>
+
 	<div class="page" id="admin" data-on_open="load_admin">
 		<h3>Admin</h3>
 		<h4>New Bands</h4>
@@ -473,7 +489,7 @@
 				</div>
 			</div>
 			<div>
-				<input type="text" id="social_input" class="no_transform" data-social_type="" data-social_id="" placeholder="Write A Comment...">
+				<input type="text" id="social_input" class="no_transform" style="margin: 0 20px;" data-social_type="" data-social_id="" placeholder="Write A Comment...">
 			</div>
 		</div>
 		<div id="social_nav">
@@ -771,9 +787,11 @@
 		</div>
 	</div>
 
-	<div class="page" id="social" data-on_open="load_social">
+	<div class="page scrollable" id="social" data-on_open="load_social">
 		<h2>Social</h2>
-		Soon
+		<div id="social_cont">
+
+		</div>
 	</div>
 
 	<div class="page" id="view_playlist" data-unload="reset_playlist_view">

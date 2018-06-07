@@ -449,8 +449,11 @@ function load_playlist(type, key, empty){
 	});
 }
 
-function next_playlist(){
+function next_playlist(check){
+	check = check || false;
 	if ($(".song").length > 1){
+		if (check)
+			return true;
 		$("#playlist").removeClass("paused");
 		$(".song.next_song").animate({left: 0}, 200, function (){
 			$(".song.prev_song").removeClass("prev_song");
@@ -470,6 +473,7 @@ function next_playlist(){
 	} else if (playlist.empty !== false){
 		$("#playlist_songs").html("<br /><br /><br /><br />"+playlist.empty);
 	}
+	return false;
 	setTimeout(function (){
 		playlist_state = $("#playlist_songs").html();
 	}, 1);
@@ -558,6 +562,35 @@ function load_genres(){
 }
 
 function load_social(){
+	$.getJSON(base_url+"/ajax/settings.php?callback=?", {action: "social", user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		data.socials.sort(function(a, b) {
+			return b.posted_time - a.posted_time;
+		});
+
+		var socials = [];
+		for (var i=0;i<data.socials.length;i++){
+			if (data.socials[i].img_orig_type){
+				data.socials[i].type = "image";
+			} else if (data.socials[i].vid){
+				data.socials[i].type = "vid";
+			} else if (data.socials[i].preview.type == "song"){
+				data.socials[i].type = "song";
+				data.socials[i].image_url = data.socials[i].preview.img_url;
+				//data.socials[i].text = "<span>"+data.socials[i].preview.title+"</span> "+data.socials[i].preview.text;
+				data.socials[i].owner = data.socials[i].preview.text;
+				data.socials[i].owner_id = data.socials[i].band_id;
+				data.socials[i].owner_type = "open_band";
+				data.socials[i].thing = "song";
+				data.socials[i].thing_name = data.socials[i].preview.title;
+			} else {
+				data.socials[i].type = "text";
+			}
+			data.socials[i].time_out = data.socials[i].posted_time_out;
+			data.socials[i].poster_type = "open_"+data.socials[i].poster_type;
+			socials.push(template("social", data.socials[i]));
+		}
+		$("#social_cont").html(socials.join(""));
+	});
 }
 
 function open_social_interaction(post_id){
@@ -609,6 +642,7 @@ function open_social_interaction(post_id){
 
 function social_submit_interaction(){
 	$.getJSON(base_url+"/ajax/social.php?callback=?", {comment: $("#social_input").val(), post_id: $("#social_input").data("post_id"), social_target: $("._social_target.active").data("user_id"), user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		$("._social_target").removeClass("active");
 		open_social_interaction($("#social_input").val("").data("post_id"));
 	});
 }
@@ -708,7 +742,26 @@ function open_profile(user_id){
 			$("#profile_nav").show();
 			var notifications_htmls = [];
 			for (var i=0;i<data.notifications.length;i++){
-				notifications_htmls.push(template("notification_list", data.notifications[i]));
+				var note = data.notifications[i];
+				var classes = [];
+
+				if (note.seen == 0)
+					classes.push("new");
+
+				if (note.type == 0){//system
+
+				} else if (note.type == 1){//fallow
+
+				} else if (note.type == 2){//message
+					note.text = "Sent you a message: "+note.data;
+				} else if (note.type == 3){//share
+					if (note.song_id){
+						note.text = 'shared the song <span class="play_song" data-song_id="'+note.song_id+'"><img src="'+note.song_image_url+'" />'+note.song_name+"</span> with you. "+note.data;
+					}
+				}
+
+				note.classes = classes.join(" ");
+				notifications_htmls.unshift(template("notification_list", note));
 			}
 			$("#profile_notifications").html(notifications_htmls.join(""));
 
@@ -1281,7 +1334,7 @@ function startup(){
 		}
 		if (playlist_swipe_delta_x > 50){
 			$(".song .social_overlay").css({top: "100%"}, 100);
-			if (next_questionnaire <= 0){
+			if (next_questionnaire <= 0 && next_playlist(true)){
 				next_questionnaire = next_questionnaire_count;
 				questionnaire = true;
 				var genres = JSON.parse($(".current_song .genre_data").html());
@@ -1794,6 +1847,10 @@ function startup(){
 	click_event(".play_now", function (e){
 		play_song($(e.currentTarget).data("song_id"));
 	}, true);
+
+	click_event(".social_type_song img", function (e){
+		play_song($(e.currentTarget).data("song_id"));
+	}, true);
 	
 	click_event(".open_full_list_100", function (e){
 		back_log("open_full_list", ["100", "Top 100"]);
@@ -1879,6 +1936,15 @@ function startup(){
 		} else {
 			$("._social_target").removeClass("active");
 			$(e.currentTarget).addClass("active");
+			if ($(e.currentTarget).data("user_id") == -1){
+				open_modal({title: "Social Post", content: "Posting to your social page.", button1: "Confirm", button2: true, callback: function (button){
+					if (button == "Confirm"){
+						social_submit_interaction();
+					} else {
+						$("._social_target").removeClass("active");
+					}
+				}});
+			}
 		}
 	}, true);
 
@@ -1891,6 +1957,28 @@ function startup(){
 	click_event(".collect", function (e){
 		save_add_playlist($(e.currentTarget).data("song_id"));
 	}, true);
+
+	click_event(".send_message", function (e){
+		$("#message_interface").addClass("active");
+		$("#message_field").focus().data("user_id", $(e.currentTarget).data("user_id"));
+	}, true);
+	
+	$("#message_field").on("keyup", function (e){
+		if (e.keyCode == 13 || e.keyCode == 9){
+			$.getJSON(base_url+"/ajax/settings.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), action:"send_message", users_id: $(e.currentTarget).data("user_id"), message: $(e.currentTarget).val()}, function (data){
+				if (data.mess.Error){
+					var mess = "";
+					for (var i=0;i<data.mess.Error.length;i++)
+						mess += "<div>"+data.mess.Error[i].message+"</div>";
+					
+					open_modal({title: "Error"+(data.mess.Error.length > 1?"s":""), content:mess});
+				} else if (data.success){
+					$("#message_interface").removeClass("active");
+					open_modal({title: "Message Sent", content:""});
+				}
+			});
+		}
+	});
 
 	click_event(".open_genre", function (e){
 		back_log("load_playlist", ["genre", $(e.currentTarget).data("genre_id")]);

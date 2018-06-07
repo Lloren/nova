@@ -107,7 +107,7 @@ h2.font{
 	display: none;
 	margin-top: 40px;
 	height: calc(100vh - 40px);
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 
 .page.scrollable{
@@ -582,6 +582,66 @@ input.genre_selector {
 	position: relative;
 	top: 8px;
 }
+
+.notification_item {
+	background: #222;
+	margin: 10px;
+}
+
+.notification_item.new {
+	border-left: 2px solid #e7367c;
+	margin-left: 8px;
+}
+
+.notification_item > img {
+	width: 50px;
+	float: left;
+	margin: 5px;
+}
+
+.notification_item span img {
+	width: 1em;
+	margin-right: 5px;
+}
+
+.notification_item .fa-reply{
+	border: 1px solid;
+	border-radius: 4px;
+	padding: 2px;
+	font-size: 0.9em;
+}
+
+.notification_cont {
+	text-transform: none;
+	padding-left: 5px;
+}
+
+.notification_item .time {
+	color: #555;
+}
+
+#message_interface{
+	background: black;
+	width: 100%;
+	bottom: -30%;
+	position: fixed;
+	transition: 1s;
+}
+
+#message_interface.active{
+	bottom: 0px;
+}
+
+#ios.keyboard #message_interface{
+	position: absolute;
+}
+
+
+
+
+
+
+
 
 .song_list_item {
 	margin: 5px;
@@ -1096,8 +1156,8 @@ input.genre_selector {
 
 #social_search_image {
 	position: absolute;
-	top: 15px;
-	left: 15px;
+	top: 8px;
+	left: 10px;
 	width: 25px;
 }
 
@@ -1105,6 +1165,7 @@ input.genre_selector {
 	border: none;
 	text-align: left;
 	padding-left: 40px;
+	margin: 0;
 }
 
 .social_target {
@@ -1178,7 +1239,8 @@ input.genre_selector {
 }
 
 #social_activity.interacting {
-	height: calc(100vh - 420px);
+	height: calc(100vh - 380px);
+	padding-bottom: 0px;
 }
 
 .comment_image {
@@ -1200,6 +1262,10 @@ input.genre_selector {
 	padding: 5px 25px;
 }
 
+
+#social_cont{
+	margin: 10px;
+}
 
 
 .social{
@@ -1237,6 +1303,16 @@ input.genre_selector {
 	border-radius: 100%;
 	float: left;
 	margin-right: 10px;
+}
+
+.original_details{
+	color: #555;
+	text-transform: none;
+}
+
+.original_details span{
+	color: #999;
+	text-transform: none;
 }
 
 
