@@ -126,7 +126,7 @@ h2.font{
 	display: none;
 	margin-top: 40px;
 	height: calc(100vh - 40px);
-	/*overflow: hidden;*/
+	overflow: hidden;
 }
 
 .page.scrollable{
@@ -462,7 +462,7 @@ input.genre_selector {
 	height: 45px;
 	background: linear-gradient(124deg, #e83379 40%, #e0892e 60%);
 	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+	color: transparent;
 	font-weight: 900;
 	padding-top: 7px;
 }
@@ -1293,7 +1293,7 @@ input.genre_selector {
 #collect_create_new{
 	background: linear-gradient(124deg, #e83379 40%, #e0892e 60%);
 	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
+	color: transparent;
 	font-weight: 900;
 	width: auto;
 	padding: 5px 25px;
