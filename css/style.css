@@ -43,6 +43,7 @@ textarea {border-radius: 1em;}
 }
 
 h2{
+	margin-top: 0;
 	margin-left: 5%;
 	margin-bottom: 0;
 	font-size: 40px;
@@ -73,14 +74,32 @@ h2.font{
 #modal.loading h1 {margin:0;}
 #modal.loading p, #modal.loading a {display:none !important;}
 
-#modal.donation {height: 500px;}
-#modal.donation  > div {margin: 0;
+#modal.donation_modal {height: 500px;}
+#modal.donation_modal  > div {margin: 0;
 	overflow: auto;
 	height: 423px;}
-.donation_level{text-align: left; position: relative;    margin: 10px;
-	border-bottom: solid 2px lightgrey;}
+.donation_level{text-align: left; position: relative; margin: 10px; border-bottom: solid 2px lightgrey;}
+.donation_level.last{
+	margin-bottom: 0px;
+	border-bottom: none;
+}
 .donation_level img{}
-.donation_info{    position: absolute;
+#extra_donations{
+	background: linear-gradient(124deg, #e83379 40%, #e0892e 60%);
+	color:white;
+	padding-bottom: 30px;
+}
+.donate_level {
+	display: inline-block;
+	width: 18%;
+	margin: 15px 0px;
+	border-right: 1px solid;
+}
+.donate_level:last-of-type{
+	border-right: none;
+}
+.donation_info{
+	position: absolute;
 	right: 0;
 	top: 10px;
 	text-align: right;}
@@ -443,7 +462,7 @@ input.genre_selector {
 	height: 45px;
 	background: linear-gradient(124deg, #e83379 40%, #e0892e 60%);
 	-webkit-background-clip: text;
-	color: transparent;
+	color: rgba(255,255,255,0);
 	font-weight: 900;
 	padding-top: 7px;
 }
@@ -455,7 +474,7 @@ input.genre_selector {
 }
 
 #modal.questionnaire{
-	height: 360px;
+	height: 400px;
 }
 
 #modal.report{
@@ -583,6 +602,16 @@ input.genre_selector {
 	top: 8px;
 }
 
+.shown{
+	height: 0px;
+	overflow-y: hidden;
+	transition: 1s;
+}
+
+.shown.active{
+	height: 200px;
+}
+
 .notification_item {
 	background: #222;
 	margin: 10px;
@@ -614,6 +643,7 @@ input.genre_selector {
 .notification_cont {
 	text-transform: none;
 	padding-left: 5px;
+	min-height: 60px;
 }
 
 .notification_item .time {
@@ -1118,6 +1148,7 @@ input.genre_selector {
 
 #social_interact{
 	background: black;
+	position: relative;
 }
 
 .keyboard #social_interact{
@@ -1256,7 +1287,7 @@ input.genre_selector {
 #collect_create_new{
 	background: linear-gradient(124deg, #e83379 40%, #e0892e 60%);
 	-webkit-background-clip: text;
-	color: transparent;
+	color: rgba(255,255,255,0);
 	font-weight: 900;
 	width: auto;
 	padding: 5px 25px;

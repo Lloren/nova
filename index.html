@@ -285,32 +285,49 @@
 	</div>
 	<div data-key="donation_modal">
 		<div data-band_id="##band_id##" data-post_id="##post_id##" data-band_name="##band_name##" data-extra_name="##extra_name##">
-			<div class="donation_level" data-value="1">
+			<div class="donation_level donate" data-value="1">
 				<img src="images/cone_1.png">
 				<div class="donation_info">
 					<div>$.25</div>
 					<div>1 point</div>
 				</div>
 			</div>
-			<div class="donation_level" data-value="4">
+			<div class="donation_level donate" data-value="4">
 				<img src="images/cone_2.png">
 				<div class="donation_info">
 					<div>$1</div>
 					<div>4 points</div>
 				</div>
 			</div>
-			<div class="donation_level" data-value="12">
+			<div class="donation_level donate" data-value="12">
 				<img src="images/cone_3.png">
 				<div class="donation_info">
 					<div>$3</div>
 					<div>12 points</div>
 				</div>
 			</div>
-			<div class="donation_level" data-value="40">
+			<div class="donation_level last">
 				<img src="images/cone_4.png">
 				<div class="donation_info">
-					<div>$<select><option>5</option><option>10</option><option>25</option><option>50</option><option>100</option></select></div>
+					<div>$_</div>
 					<div>Enter amount</div>
+				</div>
+			</div>
+			<div id="extra_donations">
+				<div class="donate_level donate" data-value="20">
+					$5
+				</div>
+				<div class="donate_level donate" data-value="40">
+					$10
+				</div>
+				<div class="donate_level donate" data-value="80">
+					$20
+				</div>
+				<div class="donate_level donate" data-value="200">
+					$50
+				</div>
+				<div class="donate_level donate" data-value="400">
+					$100
 				</div>
 			</div>
 		</div>
@@ -370,7 +387,7 @@
 		<textarea id="message_field" placeholder="Message" data-user_id=""></textarea>
 	</div>
 
-	<div class="page" id="admin" data-on_open="load_admin">
+	<div class="page scrollable" id="admin" data-on_open="load_admin">
 		<h3>Admin</h3>
 		<h4>New Bands</h4>
 		<div id="admin_bands">
@@ -489,7 +506,7 @@
 				</div>
 			</div>
 			<div>
-				<input type="text" id="social_input" class="no_transform" style="margin: 0 20px;" data-social_type="" data-social_id="" placeholder="Write A Comment...">
+				<textarea type="text" id="social_input" class="no_transform" style="margin: 0 20px; height: 50px;" data-social_type="" data-social_id="" placeholder="Write A Comment..."></textarea>
 			</div>
 		</div>
 		<div id="social_nav">
@@ -502,7 +519,7 @@
 			<div class="nav_item collect" data-song_id="" title="Collect">
 				<img src="images/icon_record.png" />
 			</div>
-			<div class="nav_item donate" data-band_id="" data-band_name="" data-extra_name="" title="donate">
+			<div class="nav_item donation" data-band_id="" data-band_name="" data-extra_name="" title="donate">
 				<img src="images/icon_cone.png" />
 			</div>
 		</div>
@@ -560,37 +577,71 @@
 						<div class="clear"></div>
 					</div>
 				</div>
-				<h3>Recently Collected</h3>
-				<div class="half_list_group" id="profile_music_songs">
-					<div id="profile_songs" class="profile_songs" style="width: 10000px;">
-					</div>
-				</div>
-				<h3>Playlists</h3>
-				<div class="half_list_group" id="profile_music_playlists">
-					<div style="width: 10000px;">
-						<!--<div class="half_list_song play_playlist" data-playlist_id="0">
-							<img class="profile_image_src" src="">
-							<div class="half_list_cont">
-								<div class="song_name">Their Songs</div>
-							</div>
-						</div>-->
-						<div id="profile_playlists">
 
-						</div>
-						<div class="half_list_song create_playlist">
-							<div id="create_playlist_button" style="width: 100px; height: 74px; font-size: 50px; text-align: center; padding-top: 25%;">
-								<i class="fa fa-plus"></i>
-							</div>
+				<div class="half_list_group">
+					<div class="supper_wide">
+						<div class="half_list_song profile_show" data-show="supported">
+							<img src="http://nova.notomono.onnix.net/data/song_images/1_300x300.jpg">
 							<div class="half_list_cont">
-								<div class="song_name">Create Playlist</div>
+								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Supported</div>
+							</div>
+						</div>
+						<div class="half_list_song profile_show" data-show="playlists">
+							<img src="http://nova.notomono.onnix.net/data/song_images/1_300x300.jpg">
+							<div class="half_list_cont">
+								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Playlists</div>
+							</div>
+						</div>
+						<div class="half_list_song profile_show" data-show="songs">
+							<img src="http://nova.notomono.onnix.net/data/song_images/1_300x300.jpg">
+							<div class="half_list_cont">
+								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Songs</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div id="profile_supported">
+
+
+
+
+
+
+				<div class="shown" id="show_songs">
+					<h3>Recently Collected</h3>
+					<div class="half_list_group" id="profile_music_songs">
+						<div id="profile_songs" class="profile_songs" style="width: 10000px;">
+						</div>
+					</div>
+				</div>
+				<div class="shown" id="show_playlists">
+					<h3>Playlists</h3>
+					<div class="half_list_group" id="profile_music_playlists">
+						<div class="supper_wide">
+							<!--<div class="half_list_song play_playlist" data-playlist_id="0">
+								<img class="profile_image_src" src="">
+								<div class="half_list_cont">
+									<div class="song_name">Their Songs</div>
+								</div>
+							</div>-->
+							<div id="profile_playlists">
+
+							</div>
+							<div class="half_list_song create_playlist">
+								<div id="create_playlist_button" style="width: 100px; height: 74px; font-size: 50px; text-align: center; padding-top: 25%;">
+									<i class="fa fa-plus"></i>
+								</div>
+								<div class="half_list_cont">
+									<div class="song_name">Create Playlist</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="shown" id="show_supported">
 					<h3>Supported Artists</h3>
 					<div class="half_list_group">
-						<div id="artists_supported" class="profile_songs" style="width: 10000px;">
+						<div id="artists_supported" class="profile_songs supper_wide">
+							<h2>Donate to receive supported artists</h2>
 						</div>
 					</div>
 				</div>
@@ -671,7 +722,7 @@
 				<div id="band_top_fans"></div>
 			</div>
 		</div>
-		<div class="donate donate_button" data-band_id="" data-band_name="">
+		<div class="donation donate_button" data-band_id="" data-band_name="">
 			Donate
 		</div>
 		<div id="band_song_list">

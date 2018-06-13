@@ -620,7 +620,7 @@ function open_social_interaction(post_id){
 			item_name = data.preview.title;
 			$("#social_interaction .collect").show().data("song_id", data.song_id);
 		}
-		$("#social_nav .donate").data("band_id", data.id).data("post_id", post_id).data("band_name", data.band_name).data("extra_name", item_name);
+		$("#social_nav .donation").data("band_id", data.id).data("post_id", post_id).data("band_name", data.band_name).data("extra_name", item_name);
 		
 		var friends = [];
 		for (var i=0;i<data.friends.length;i++){
@@ -716,7 +716,7 @@ function open_profile(user_id){
 		$("#profile_playlists").html(playlists_htmls.join(""));
 
 		if (data.recent_supported.length){
-			$("#profile_supported").show();
+			//$("#profile_supported").show();
 			var artists_supported = [];
 			if (data.top_supported){
 				for (var i=0;i<data.top_supported.length;i++){
@@ -735,7 +735,7 @@ function open_profile(user_id){
 			}
 			$("#artists_supported").html(artists_supported.join(""));
 		} else {
-			$("#profile_supported").hide();
+			//$("#profile_supported").hide();
 		}
 
 		if (data.is_you){
@@ -1501,6 +1501,11 @@ function startup(){
 		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
+
+	click_event(".profile_show", function (e){
+		$(".shown").removeClass("active");
+		$("#show_"+$(e.currentTarget).data("show")).addClass("active");
+	}, true);
 	
 	click_event(".open_profile", function (e){
 		back_log("open_profile", [$(e.currentTarget).data("user_id")]);
@@ -1665,20 +1670,24 @@ function startup(){
 		back_log("open_band_dashboard", $(e.currentTarget).data("band_id"));
 	}, true);
 
-	click_event(".donate", function (e){
-		open_modal({title:"Show Love", content: template("donation_modal", {band_id: $(e.currentTarget).data("band_id"), band_name: $(e.currentTarget).data("band_name"), extra_name: $(e.currentTarget).data("extra_name")}), button1:"Cancel", add_class: "donation"});
+	click_event(".donation", function (e){
+		console.log(".donation");
+		open_modal({title:"Show Love", content: template("donation_modal", {band_id: $(e.currentTarget).data("band_id"), band_name: $(e.currentTarget).data("band_name"), extra_name: $(e.currentTarget).data("extra_name")}), button1:"Cancel", add_class: "donation_modal"});
 	}, true);
 
-	click_event(".donation_level", function (e){
+	click_event(".donate", function (e){
 		var value = $(e.currentTarget).data("value");
 		var curr = (value*0.25).toFixed(2);
-		var parent = $(e.currentTarget).parent();
-		var band_id = parent.data("band_id");
-		var post_id = parent.data("post_id") || 0;
-		var extra = parent.data("extra_name") || "";
+		var info_target = $(e.currentTarget);
+		while (typeof info_target.data("band_name") == "undefined"){
+			info_target = info_target.parent();
+		}
+		var band_id = info_target.data("band_id");
+		var post_id = info_target.data("post_id") || 0;
+		var extra = info_target.data("extra_name") || "";
 		if (extra)
 			extra = " for "+extra;
-		var band_name = parent.data("band_name");
+		var band_name = info_target.data("band_name");
 		open_modal({title:"Thank You!", content: '<img src="images/cone_3.png" style="margin: auto; position: absolute; left: 0; right: 0; width: 150px;"><div style="padding-top: 220px;">Thank you for sending a $'+curr+' donation to '+band_name+extra+', you earned '+value+' points.<div style="font-size: 0.73em; margin-top:10px;">Your support directly impacts the artists in an unprecedented way, allowing them to create the music that feeds your soul, all while earning points towards rewards!<div></div>', button1:"Confirm", button2: true, add_class: "donation_confirm", callback: function (action){
 			if (action == "Confirm"){
 				$.getJSON(base_url+"/ajax/donation.php?callback=?", {user_id: settings.get("user_id"), uuid: settings.get("uuid"), band_id: band_id, post_id: post_id, num: value}, function (data){
@@ -1950,7 +1959,14 @@ function startup(){
 
 	$("#social_input").on("keyup", function (e){
 		if (e.keyCode == 13 || e.keyCode == 9){
+			$("#social_input").css("height", 50);
+			$("#social_interact").css("top", 0);
 			social_submit_interaction();
+		}
+		var scrollTop = $(e.currentTarget).scrollTop();
+		if (scrollTop){
+			$("#social_interact").css("top", $("#social_interact").css("top").substr(0, $("#social_interact").css("top").length-2) - scrollTop);
+			$("#social_input").css("height", $("#social_input").css("height").substr(0, $("#social_input").css("height").length-2)*1 + scrollTop);
 		}
 	});
 
