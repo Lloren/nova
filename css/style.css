@@ -164,6 +164,8 @@ h2.font{
 	margin: 0px auto;
 	left: 0;
 	right: 0;
+	width: 32px;
+	top: 3px;
 	position: fixed;
 }
 
@@ -609,13 +611,11 @@ input.genre_selector {
 }
 
 .shown{
-	height: 0px;
-	overflow-y: hidden;
-	transition: 1s;
+	display: none;
 }
 
 .shown.active{
-	height: 200px;
+	display: block;
 }
 
 .notification_item {
@@ -950,7 +950,7 @@ input.genre_selector {
 }
 
 .list_song img {
-	height: 80px;
+	height: 100%;
 }
 
 .list_song .song_name {
@@ -959,6 +959,55 @@ input.genre_selector {
 
 .list_song .band_name {
 	display: block;
+}
+
+#profile_cont .list_song{
+	height: 40px;
+}
+
+#profile_cont .song_name{
+	font-size: 15px;
+}
+
+#profile_cont .song_name span{
+	display: none;
+}
+
+#profile_cont .full_list_cont{
+	vertical-align: inherit;
+	position: relative;
+	top: -5px;
+	max-width: calc(100% - 50px);
+}
+
+#profile_cont .band_name{
+	font-size: 0.8em;
+}
+
+#profile_cont .fan_rank{
+	display:none;
+}
+
+#profile_cont .top_fan .time{
+	display:none;
+}
+
+#profile_cont .top_fan .fan_rank{
+	display:block;
+	font-size: 0.6em;
+	background: #e7337a;
+	border-radius: 10px;
+	width: 50px;
+	text-align: center;
+}
+
+.list_song.open_band{
+	border-bottom-left-radius: 20px;
+	border-top-left-radius: 20px;
+}
+
+.list_song.open_band img{
+	border-radius: 100%;
 }
 
 #full_list_cont {
@@ -1256,6 +1305,7 @@ input.genre_selector {
 
 .comment_text {
 	text-transform: none;
+	overflow-x: hidden;
 }
 
 .comment_other {
@@ -1304,10 +1354,62 @@ input.genre_selector {
 }
 
 
+
+
+
+#social_last_preview{
+	background-blend-mode: color;
+	background-color: #00000080;
+	background-size: cover;
+	background-position-y: 50%;
+	position: relative;
+}
+
+#social_last_preview img{
+	width: 80px;
+	margin: 20px;
+	border: solid 2px #eee;
+}
+
+#social_last_cont{
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: calc(100vw - 145px);
+	font-size: 20px;
+}
+
+#social_last_time {
+	font-size: 0.7em;
+	color: #bbb;
+}
+
+#social_last_name {
+	font-weight: bold;
+}
+
+#social_last_show_details{
+	font-size: 100px;
+	position: absolute;
+	transform: rotate(90deg);
+	right: -40px;
+	top: 0px;
+}
+
+#social_last_details{
+	height: 0px;
+	display: none;
+}
+
+#social_last_details.active{
+	height: auto;
+	display: block;
+}
+
 #social_cont{
 	margin: 10px;
 }
-
 
 .social{
 

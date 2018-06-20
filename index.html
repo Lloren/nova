@@ -76,7 +76,7 @@
 		<div class="list_song play_song" data-song_id="##id##"{{playlist_id? data-playlist_id="##playlist_id##"}}>
 			<img src="##image_url##">
 			<div class="full_list_cont">
-				<div class="song_name hidden"><span>##num##</span>. ##name##</div>
+				<div class="song_name hidden"><span>##num##. </span>##name##</div>
 				<div class="band_name open_band" data-band_id="##band_id##">##band_name##</div>
 			</div>
 		</div>
@@ -106,11 +106,12 @@
 		</div>
 	</div>
 	<div data-key="half_list_recent">
-		<div class="half_list_song open_band small" data-band_id="##id##">
+		<div class="list_song open_band small##add_class##" data-band_id="##id##">
 			<img src="##image_url##">
-			<div class="half_list_cont">
-				<div class="band_name">##name##</div>
-				<div class="time">##time_out##</div>
+			<div class="full_list_cont">
+				<div class="song_name">##name##</div>
+				<div class="time band_name">##time_out##</div>
+				<div class="fan_rank band_name">##rank##</div>
 			</div>
 		</div>
 	</div>
@@ -346,7 +347,7 @@
 		</div>
 		<!--<img id="header_logo" class="open_page" src="images/header_logo.png" data-page="playlist"/>-->
 		<div id="logo">
-			NOVA
+			<img src="images/astra-logo-white.png" style="width: 32px;"/>
 		</div>
 		<div id="header_admin" class="open_page is_admin" data-page="admin">
 			<i class="fa fa-cog" aria-hidden="true"></i>
@@ -528,23 +529,9 @@
 	<div class="page scrollable" id="profile">
 		<div class="profile_image_cont">
 			<div class="profile_background"></div>
-			<img class="profile_image profile_image_src" src="">
+			<img class="profile_image profile_image_src change_photo" src="" data-action="profile_image">
 			<div class="profile_name"></div>
 			<i class="fa fa-user-plus add_friend" style="color: white; text-shadow: 0px 0px 3px black; z-index: 10; font-size: 30px; position: absolute; bottom: 5px; right: 5px;" data-user_id="" aria-hidden="true"></i>
-		</div>
-		<div id="profile_nav">
-			<div class="nav_item open_music active">
-				<img src="images/icon_record.png" />
-			</div>
-			<div class="nav_item open_notifications">
-				<img src="images/icon_notifications.png" />
-			</div>
-			<div class="nav_item open_settings">
-				<img src="images/icon_gear.png" />
-			</div>
-			<div class="nav_item change_photo" data-action="profile_image">
-				<img class="profile_image_action"  src="images/icon_camera.png" />
-			</div>
 		</div>
 		<div id="profile_cont">
 			<div id="profile_music">
@@ -598,71 +585,74 @@
 								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Songs</div>
 							</div>
 						</div>
+						<div class="half_list_song profile_show your_profile" data-show="notifications">
+							<img src="http://nova.notomono.onnix.net/data/song_images/1_300x300.jpg">
+							<div class="half_list_cont">
+								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Notifications</div>
+							</div>
+						</div>
+						<div class="half_list_song profile_show your_profile" data-show="settings">
+							<img src="http://nova.notomono.onnix.net/data/song_images/1_300x300.jpg">
+							<div class="half_list_cont">
+								<div class="song_name hidden" style="font-size: 0.8em; text-align: center;">Settings</div>
+							</div>
+						</div>
 					</div>
 				</div>
 
-
-
-
-
-
 				<div class="shown" id="show_songs">
 					<h3>Recently Collected</h3>
-					<div class="half_list_group" id="profile_music_songs">
-						<div id="profile_songs" class="profile_songs" style="width: 10000px;">
+					<div id="profile_music_songs">
+						<div id="profile_songs" class="profile_songs">
 						</div>
 					</div>
 				</div>
 				<div class="shown" id="show_playlists">
 					<h3>Playlists</h3>
-					<div class="half_list_group" id="profile_music_playlists">
-						<div class="supper_wide">
-							<!--<div class="half_list_song play_playlist" data-playlist_id="0">
-								<img class="profile_image_src" src="">
-								<div class="half_list_cont">
-									<div class="song_name">Their Songs</div>
-								</div>
-							</div>-->
-							<div id="profile_playlists">
+					<div id="profile_music_playlists">
+						<div id="profile_playlists">
 
+						</div>
+						<div class="half_list_song create_playlist">
+							<div id="create_playlist_button" style="width: 100px; height: 74px; font-size: 50px; text-align: center; padding-top: 25%;">
+								<i class="fa fa-plus"></i>
 							</div>
-							<div class="half_list_song create_playlist">
-								<div id="create_playlist_button" style="width: 100px; height: 74px; font-size: 50px; text-align: center; padding-top: 25%;">
-									<i class="fa fa-plus"></i>
-								</div>
-								<div class="half_list_cont">
-									<div class="song_name">Create Playlist</div>
-								</div>
+							<div class="half_list_cont">
+								<div class="song_name">Create Playlist</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="shown" id="show_supported">
 					<h3>Supported Artists</h3>
-					<div class="half_list_group">
-						<div id="artists_supported" class="profile_songs supper_wide">
-							<h2>Donate to receive supported artists</h2>
+					<div>
+						<h3 class="no_artists">Donate to receive supported artists</h3>
+						<div id="artists_supported" class="profile_songs">
 						</div>
 					</div>
 				</div>
-			</div>
-			<div id="profile_notifications" style="display: none;">
-				profile_notifications
-			</div>
-			<div id="profile_settings" style="display: none;">
-				<input type="submit" class="logout" value="Logout" /><br /><br />
-
-				<input id="settings_name" type="text" value="" placeholder="name" /><br />
-				<input id="settings_password" type="password" value="" placeholder="New password" /><br />
-				<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
-				<input type="submit" id="settings_save" value="Save Changes" />
-
-				<div>
-					<h3>Bands</h3>
-					<div id="settings_bands">
-
+				<div class="shown" id="show_notifications">
+					<h3>Notifications</h3>
+					<div id="profile_notifications">
+						profile_notifications
 					</div>
-					<input type="submit" class="open_page" data-page="create_band" value="Create new band" />
+				</div>
+				<div class="shown" id="show_settings">
+					<h3>Settings</h3>
+					<input type="submit" class="logout" value="Logout" /><br /><br />
+
+					<input id="settings_name" type="text" value="" placeholder="name" /><br />
+					<input id="settings_password" type="password" value="" placeholder="New password" /><br />
+					<input id="settings_cpassword" type="password" value="" placeholder="Confirm password" /><br />
+					<input type="submit" id="settings_save" value="Save Changes" />
+
+					<div>
+						<h3>Bands</h3>
+						<div id="settings_bands">
+
+						</div>
+						<input type="submit" class="open_page" data-page="create_band" value="Create new band" />
+					</div>
 				</div>
 			</div>
 		</div>
@@ -840,6 +830,25 @@
 
 	<div class="page scrollable" id="social" data-on_open="load_social">
 		<h2>Social</h2>
+		<div id="social_last">
+			<div id="social_last_preview">
+				<img src="">
+				<div id="social_last_cont" class="toggle_last_details">
+					<div id="social_last_name"></div>
+					<div id="social_last_sec"></div>
+					<div id="social_last_time"></div>
+				</div>
+				<div id="social_last_show_details" class="toggle_last_details">...</div>
+			</div>
+			<div id="social_last_details">
+				<input type="button" id="" value="Delete" />
+				<h3 style="text-align: center; color: #e83379">Viewed</h3>
+				<div id="social_last_views">
+
+				</div>
+			</div>
+			<hr style="width: 90%; border-color: #444;" />
+		</div>
 		<div id="social_cont">
 
 		</div>

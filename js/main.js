@@ -563,30 +563,28 @@ function load_genres(){
 
 function load_social(){
 	$.getJSON(base_url+"/ajax/settings.php?callback=?", {action: "social", user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
+		if (data.social){
+			preview_format(data.social);
+			$("#social_last").show();
+
+			$("#social_last_preview").css("background-image", "url('"+data.social.preview.img_url+"')");
+			$("#social_last_preview img").attr("src", data.social.preview.img_url);
+			$("#social_last_time").html(data.social.posted_time_out);
+			$("#social_last_name").html(data.social.thing_name);
+			$("#social_last_sec").html(data.social.owner);
+			$("#social_last_details").removeClass("active");
+		} else {
+			$("#social_last").hide();
+		}
+
 		data.socials.sort(function(a, b) {
 			return b.posted_time - a.posted_time;
 		});
 
 		var socials = [];
 		for (var i=0;i<data.socials.length;i++){
-			if (data.socials[i].img_orig_type){
-				data.socials[i].type = "image";
-			} else if (data.socials[i].vid){
-				data.socials[i].type = "vid";
-			} else if (data.socials[i].preview.type == "song"){
-				data.socials[i].type = "song";
-				data.socials[i].image_url = data.socials[i].preview.img_url;
-				//data.socials[i].text = "<span>"+data.socials[i].preview.title+"</span> "+data.socials[i].preview.text;
-				data.socials[i].owner = data.socials[i].preview.text;
-				data.socials[i].owner_id = data.socials[i].band_id;
-				data.socials[i].owner_type = "open_band";
-				data.socials[i].thing = "song";
-				data.socials[i].thing_name = data.socials[i].preview.title;
-			} else {
-				data.socials[i].type = "text";
-			}
-			data.socials[i].time_out = data.socials[i].posted_time_out;
-			data.socials[i].poster_type = "open_"+data.socials[i].poster_type;
+			preview_format(data.socials[i]);
+
 			socials.push(template("social", data.socials[i]));
 		}
 		$("#social_cont").html(socials.join(""));
@@ -600,6 +598,9 @@ function open_social_interaction(post_id){
 	$.getJSON(base_url+"/ajax/social.php?callback=?", {post_id: post_id, user_id: settings.get("user_id"), uuid: settings.get("uuid")}, function (data){
 		$(".open_interact").removeClass("active");
 		$("#social_activity").removeClass("interacting");
+
+		$("#social_input").css("height", 50).val("");
+		$("#social_interact").css("top", 0);
 
 		$("#social_band_image").attr("src", data.band_image_small_url).data("band_id", data.band_id);
 
@@ -638,6 +639,27 @@ function open_social_interaction(post_id){
 		$("#social_comments").html(comments.join(""));
 	});
 	show_page("social_interaction");
+}
+
+function preview_format(data){
+	if (data.img_orig_type){
+		data.type = "image";
+	} else if (data.vid){
+		data.type = "vid";
+	} else if (data.preview.type == "song"){
+		data.type = "song";
+		data.image_url = data.preview.img_url;
+		//data.text = "<span>"+data.preview.title+"</span> "+data.preview.text;
+		data.owner = data.preview.text;
+		data.owner_id = data.band_id;
+		data.owner_type = "open_band";
+		data.thing = "song";
+		data.thing_name = data.preview.title;
+	} else {
+		data.type = "text";
+	}
+	data.time_out = data.posted_time_out;
+	data.poster_type = "open_"+data.poster_type;
 }
 
 function social_submit_interaction(){
@@ -701,11 +723,14 @@ function open_profile(user_id){
 		} else {
 			$(".add_friend").show().data("user_id", data.id);
 		}
+		
+		$(".shown").removeClass("active");
+		$("#show_songs").addClass("active");
 
 		var song_htmls = [];
 		for (var i=0;i<data.songs.length;i++){
 			data.songs[i].playlist_id = -data.id;
-			song_htmls.push(template("half_list", data.songs[i]));
+			song_htmls.push(template("full_list", data.songs[i]));
 		}
 		$("#profile_songs").html(song_htmls.join(""));
 
@@ -715,31 +740,32 @@ function open_profile(user_id){
 		}
 		$("#profile_playlists").html(playlists_htmls.join(""));
 
+		var artists_supported = [];
 		if (data.recent_supported.length){
-			//$("#profile_supported").show();
-			var artists_supported = [];
+			$(".no_artists").hide();
 			if (data.top_supported){
 				for (var i=0;i<data.top_supported.length;i++){
 					var t = data.top_supported[i];
-					t.add_class = " open_band";
+					t.add_class = " top_fan";
 					if (t.rank == 1){
 						t.rank = "Top Fan";
 					} else {
 						t.rank = "#"+t.rank;
 					}
-					artists_supported.push(template("half_list_top", t));
+					artists_supported.push(template("half_list_recent", t));
 				}
 			}
 			for (var i=0;i<data.recent_supported.length;i++){
 				artists_supported.push(template("half_list_recent", data.recent_supported[i]));
 			}
-			$("#artists_supported").html(artists_supported.join(""));
 		} else {
-			//$("#profile_supported").hide();
+			$(".no_artists").show();
 		}
+		$("#artists_supported").html(artists_supported.join(""));
 
 		if (data.is_you){
 			$("#profile_nav").show();
+			$(".your_profile").show();
 			var notifications_htmls = [];
 			for (var i=0;i<data.notifications.length;i++){
 				var note = data.notifications[i];
@@ -774,6 +800,7 @@ function open_profile(user_id){
 			$("#settings_name").val(data.name);
 		} else {
 			$("#profile_nav").hide();
+			$(".your_profile").hide();
 		}
 
 		show_page("profile");
@@ -1480,22 +1507,12 @@ function startup(){
 
 	click_event(".open_music", function (e){
 		$("#profile_music").show();
-		$("#profile_notifications").hide();
-		$("#profile_settings").hide();
-		$("#profile_nav .nav_item.active").removeClass("active");
-		$(e.currentTarget).addClass("active");
-	}, true);
-	
-	click_event(".open_notifications", function (e){
-		$("#profile_notifications").show();
-		$("#profile_music").hide();
 		$("#profile_settings").hide();
 		$("#profile_nav .nav_item.active").removeClass("active");
 		$(e.currentTarget).addClass("active");
 	}, true);
 
 	click_event(".open_settings", function (e){
-		$("#profile_notifications").hide();
 		$("#profile_music").hide();
 		$("#profile_settings").show();
 		$("#profile_nav .nav_item.active").removeClass("active");
@@ -1969,6 +1986,10 @@ function startup(){
 			$("#social_input").css("height", $("#social_input").css("height").substr(0, $("#social_input").css("height").length-2)*1 + scrollTop);
 		}
 	});
+	
+	click_event(".toggle_last_details", function (e){
+		$("#social_last_details").toggleClass("active");
+	}, true);
 
 	click_event(".collect", function (e){
 		save_add_playlist($(e.currentTarget).data("song_id"));
