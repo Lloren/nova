@@ -3,10 +3,10 @@
 				xmlns:android	= "http://schemas.android.com/apk/res/android"
 				id				= "com.nova.dev"
 				version			= "1.0.0">
-	<name>Nova Dev</name>
+	<name>Astra Dev</name>
 	<description>
 	</description>
-	<author email="support@nova.com" href="http://nova.com">
+	<author email="support@astra.com" href="http://astra.com">
 		Nova
 	</author>
 	<content src="index.html" />

@@ -612,6 +612,7 @@ input.genre_selector {
 
 .shown{
 	display: none;
+	min-height: calc(100vh - 180px);
 }
 
 .shown.active{
@@ -1456,6 +1457,14 @@ input.genre_selector {
 .original_details span{
 	color: #999;
 	text-transform: none;
+}
+
+
+.scrolled .top_snap{
+	position: fixed;
+	top: 40px;
+	background: black;
+	z-index: 10;
 }
 
 
